@@ -1,0 +1,68 @@
+---
+title: Export & sharing
+description: How to export results and share them within collaborative workflows.
+icon: share-nodes
+---
+
+Osintly supports card-level and map-level exports today, plus team sharing workflows through project association.
+
+---
+
+## Export formats
+
+| Format | How to access | Notes |
+|---|---|---|
+| **JSON** | Card expansion modal | Available per card. Exports the raw structured data returned by that provider. |
+| **CSV / JSON (map)** | Map synthesis block | Exports the geographic data points from the map view. |
+| **PDF / JSON / DOCX** | Result page header (`Export`) | Export options are visible in the header menu. Actual file generation can vary by rollout/environment. |
+
+---
+
+## Exporting a single card
+
+1. Click any module card to open the expansion modal.
+2. Use the export option in the modal to download the card's data as JSON.
+
+This is available on all plans and does not consume credits.
+
+---
+
+## Exporting map data
+
+When a map panel is available on the result page:
+
+1. Open the map panel menu.
+2. Export map points as **JSON** or **CSV**.
+
+This export includes geocoded markers derived from location fields in result cards.
+
+---
+
+## Exporting from the result header
+
+From the result page header, click **Export** to access available output options.
+ 
+
+---
+
+## Sharing within a team
+
+Results can be linked to a **Team project**, making them available in the shared team workspace.
+
+From the result page header, use **Collaborate** to:
+
+- pick an existing team project, or
+- create a new team project and attach the current search.
+
+The collaborate flow requires:
+
+- being part of a team,
+- choosing a team project (solo projects are rejected for collaboration association).
+
+<Note>Collaboration features require an active team workspace. See [Team collaboration](/features/team-collaboration) for setup details.</Note>
+
+---
+
+## Export and credits
+
+Exporting from an existing result page does not consume credits. The result is already saved - no new query is run on export.

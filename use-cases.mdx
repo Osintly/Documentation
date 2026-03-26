@@ -1,0 +1,158 @@
+---
+title: Use cases
+description: Real-world scenarios where Osintly makes a difference, from a first-time lookup to an enterprise-grade investigation.
+icon: crosshairs
+---
+
+Osintly works for complete beginners running a one-off search and for experienced analysts managing multi-target investigations. The workflows below cover the most common scenarios. Each one gives you a concrete sequence you can follow right now, whatever your background.
+
+<Warning>Always ensure your use of OSINT tools complies with local laws and your jurisdiction's regulations on data collection and privacy.</Warning>
+
+---
+
+## Use cases
+
+### Tracking an individual from a username
+
+A handle found on a forum, a Telegram username, a Reddit account. This is often where investigations start.
+
+<Steps>
+  <Step title="Run a pseudonym search">
+    Go to [Search](https://osint.ly/search), select **Pseudonym**, and enter the handle. Results stream in from social platforms, forums, and leak databases.
+  </Step>
+  <Step title="Identify linked emails or phone numbers">
+    Check the module cards for associated contact data. If you find an email, run a new **Email** search in the same project to expand the profile.
+  </Step>
+  <Step title="Stack searches across modules">
+    Layer results: username to email to phone to IP. Each layer adds context and confirms or rules out connections between accounts.
+  </Step>
+  <Step title="Review breach exposure">
+    The **Leaked Results** and **Breached Accounts** panels show what data appeared in known breaches: password hashes, previous IPs, service names.
+  </Step>
+  <Step title="Generate a timeline with AI Analyst">
+    Open the AI Analyst chat and ask it to build a chronological timeline from the results. Useful for establishing account creation dates and activity patterns.
+
+    <Note>AI Analyst is available on Pro and Advanced plans.</Note>
+  </Step>
+</Steps>
+
+---
+
+### Investigating a suspicious email address
+
+You received a phishing email, a threat, or a contact request you cannot verify. The email address is your starting point.
+
+<Steps>
+  <Step title="Run an email search">
+    Select **Email** and paste the address. The search checks breach databases, registered accounts, and social profiles at the same time.
+  </Step>
+  <Step title="Check Registered Accounts">
+    The **Registered Accounts** panel lists services where this email has an active account. It tells you a lot about the person behind it.
+  </Step>
+  <Step title="Review breach history">
+    **Breached Accounts** shows which data breaches included this address and what fields were exposed: password hash, username, IP, and more.
+  </Step>
+  <Step title="Pivot to the domain">
+    If the email uses a custom domain rather than Gmail or Outlook, run a **Domain** search to understand the infrastructure behind it.
+  </Step>
+</Steps>
+
+<Tip>If the email appears in multiple breaches with different associated usernames, search each username separately for a broader profile.</Tip>
+
+---
+
+### Mapping suspicious infrastructure
+
+You have a domain or IP from a malware sample, a C2 server, or a suspicious redirect. You need to understand what is behind it.
+
+<Steps>
+  <Step title="Start with the domain">
+    Select **Domain** and enter the root domain. Review DNS records, subdomains, WHOIS registration data, and linked IPs.
+  </Step>
+  <Step title="Pivot to each IP">
+    For every IP discovered, run a new **IP address** search. Check ASN, hosting provider, geolocation, and threat intelligence signals.
+  </Step>
+  <Step title="Use the map view">
+    Geographic clustering of IPs can reveal whether infrastructure is centralized or deliberately spread across jurisdictions.
+  </Step>
+  <Step title="Set up a monitor">
+    If the domain is active, create a monitor to get alerted when new DNS records, subdomains, or IP changes appear.
+
+    <Note>Monitoring is available on Pro and Advanced plans.</Note>
+  </Step>
+</Steps>
+
+---
+
+### Tracing a cryptocurrency wallet
+
+A wallet address appears in a fraud report, a ransom payment, or a transaction you need to understand.
+
+<Steps>
+  <Step title="Run a cryptocurrency search">
+    Select **Cryptocurrency** and paste the full wallet address. Osintly returns transaction history, linked addresses, and risk signals.
+  </Step>
+  <Step title="Identify linked wallets">
+    Follow the transaction graph to find wallets that sent or received funds from this address.
+  </Step>
+  <Step title="Cross-reference with other modules">
+    If exchange addresses or usernames surface in the results, run parallel searches on those identifiers.
+  </Step>
+</Steps>
+
+---
+
+### Corporate due diligence
+
+You are evaluating a potential partner, supplier, or acquisition target and need a broad picture quickly.
+
+<Steps>
+  <Step title="Start with the company domain">
+    A **Domain** search surfaces WHOIS registration history, hosting details, subdomains, and any breach exposure linked to the company's infrastructure.
+  </Step>
+  <Step title="Search key personnel emails">
+    If you have emails for founders or executives, run **Email** searches to check for breach exposure or linked accounts.
+  </Step>
+  <Step title="Monitor for changes">
+    Set a domain monitor to track infrastructure changes, new subdomains, or data leak appearances going forward.
+  </Step>
+  <Step title="Export a report">
+    Use **Export to PDF** or **DOCX** to produce a structured deliverable for internal review or legal counsel.
+
+    <Note>Export formats depend on your plan. See [Billing & Plans](/billing/plans-entitlements).</Note>
+  </Step>
+</Steps>
+
+---
+
+### Verifying an anonymous source
+
+A source contacts you via a pseudonymous account. You need to assess credibility without revealing your investigation.
+
+<Steps>
+  <Step title="Mask your query first">
+    Enable **Mask query from result page title** in Search Settings. This keeps the search term out of browser history and tab titles.
+  </Step>
+  <Step title="Search the pseudonym">
+    Run a **Pseudonym** search on the handle, username, or account name provided.
+  </Step>
+  <Step title="Check account age and activity patterns">
+    Module cards surface account creation dates, post history, and activity across platforms. A freshly created account with no activity history is a clear signal.
+  </Step>
+  <Step title="Use AI Analyst to summarize">
+    Ask the AI to summarize all signals into a credibility assessment. You can ask follow-up questions directly in the chat.
+  </Step>
+</Steps>
+
+---
+
+## Need help?
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/guides/quickstart-user">
+    Step-by-step guide to your first search.
+  </Card>
+  <Card title="Community" icon="users" href="https://osint.ly/community">
+    Ask questions and share techniques with other investigators.
+  </Card> 
+</CardGroup>

@@ -1,0 +1,48 @@
+---
+title: Introduction
+description: Build integrations with the Osintly API for search, streaming, and usage tracking.
+icon: code
+---
+
+The Osintly API lets you create searches, stream progress in real time, retrieve leak datasets, and check usage limits.
+
+<Warning>The API is documented, but it is not yet available for purchase.</Warning>
+
+<CardGroup cols={3}>
+  <Card title="REST + SSE" icon="tower-broadcast">
+    Start searches with REST and stream execution updates through Server-Sent Events.
+  </Card>
+  <Card title="Bearer auth" icon="key">
+    Authenticate requests with a bearer token in the Authorization header.
+  </Card>
+  <Card title="Typed schema" icon="file-code">
+    Endpoint contracts are defined in OpenAPI and rendered in the Endpoints section.
+  </Card>
+</CardGroup>
+
+---
+
+## Base URLs
+
+- Production: `https://api.osint.ly`
+- Local development: `http://localhost:8787`
+
+---
+
+## API surface
+
+| Area | Endpoints |
+|---|---|
+| System | `GET /health` |
+| Auth | `GET /` |
+| Usage | `GET /usage` |
+| Search | `POST /search`, `GET /search/{id}`, `GET /search/{id}/stream`, `GET /search/{id}/leaks`, `GET /search/{id}/leaks/{source}` |
+| Webhooks | `POST /webhooks/dispatch` |
+
+---
+
+## Next steps
+
+1. Read [Authentication](/api-reference/authentification)
+2. Run your first request in [Quick Start](/api-reference/quick-start)
+3. Explore endpoint schemas in the **Endpoints** group

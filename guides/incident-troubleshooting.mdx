@@ -1,0 +1,114 @@
+---
+title: Incident and troubleshooting
+description: Diagnose and resolve common user-facing issues quickly.
+icon: screwdriver-wrench
+---
+
+Use this runbook when behavior is not matching expected results on search, monitoring, credits, or access.
+
+<CardGroup cols={3}>
+	<Card title="Search issues" icon="magnifying-glass">
+		No results, missing cards, or partial tabs.
+	</Card>
+	<Card title="Monitoring issues" icon="bell">
+		Missing alerts, delayed runs, or channel delivery problems.
+	</Card>
+	<Card title="Access issues" icon="user-lock">
+		Login problems, workspace visibility, or role restrictions.
+	</Card>
+</CardGroup>
+
+---
+
+## Fast triage checklist
+
+<Steps>
+	<Step title="Identify scope">
+		Confirm whether the issue affects one user, one workspace, or multiple workspaces.
+	</Step>
+	<Step title="Confirm reproducibility">
+		Retry with the same query/target and same settings to verify consistency.
+	</Step>
+	<Step title="Capture IDs and timestamps">
+		Collect search ID, monitor ID, and approximate timestamp with timezone.
+	</Step>
+	<Step title="Check plan and permissions">
+		Validate plan entitlements and workspace role before deeper debugging.
+	</Step>
+</Steps>
+
+---
+
+## Common issues
+
+<AccordionGroup>
+	<Accordion title="Search returns no data" icon="circle-question">
+		Validate these points in order:
+
+		- Selected input type matches the target format
+		- Query has no hidden typo, invalid prefix, or malformed separator
+		- Plan includes expected providers for this search type
+		- Search options did not disable required leak/provider categories
+	</Accordion>
+
+	<Accordion title="Expected panel is missing" icon="table-cells-large">
+		Panels appear only when all conditions are met:
+
+		- Search type supports the panel
+		- Plan includes the required source
+		- Returned payload contains matching fields
+		- Panel toggle is enabled in display settings
+	</Accordion>
+
+	<Accordion title="Credits consumed faster than expected" icon="coins">
+		Check:
+
+		- Number of successful search executions launched
+		- Monitoring frequency and active monitor count
+		- Team credit priority path (bank -> owner -> member)
+		- Whether users are launching new searches instead of reopening history
+	</Accordion>
+
+	<Accordion title="Missing monitoring alerts" icon="triangle-exclamation">
+		Verify:
+
+		- Monitor is active and frequency is correct
+		- Notification channel is configured (email or Discord webhook)
+		- Destination inbox/channel is available and not filtering alerts
+		- Alert status was not already set to resolved during workflow handling
+	</Accordion>
+
+	<Accordion title="Access or auth issues" icon="key">
+		Try:
+
+		- New login session with the same provider
+		- Browser cleanup (cache/cookies) and retry
+		- Role check in team workspace (owner vs member)
+		- Private window test to isolate extension/session conflicts
+	</Accordion>
+</AccordionGroup>
+
+---
+
+## Escalation package
+
+When contacting support, include:
+
+- Workspace name and user email
+- Search ID and/or monitor ID
+- Timestamp and timezone
+- Exact steps to reproduce
+- Screenshot of visible error state
+
+<Tip>
+Support is faster when reproduction steps are deterministic and include the exact input type used.
+</Tip>
+
+---
+
+## Where to escalate
+
+- Product support: [osint.ly/support](https://osint.ly/support)
+- Community channel: [osint.ly/community](https://osint.ly/community)
+- Sales/support for subscription or limit issues: [osint.ly/support/sales](https://osint.ly/support/sales)
+- Technical documentation: [docs.osint.ly](https://docs.osint.ly)

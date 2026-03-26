@@ -1,0 +1,100 @@
+---
+title: AI Analyst
+description: "The conversational assistant on the result page: what it can do, how it works, and its limits."
+icon: robot
+---
+
+AI Analyst is the conversational assistant for result analysis.  
+It helps you interpret your search output, generate visuals, and navigate results faster with natural-language prompts.
+
+<Note>
+AI Analyst is available on Pro and Advanced plans.  
+On Standard, the AI Analyst action is visible but opens an upgrade flow.
+</Note>
+
+---
+
+## Where it appears
+
+AI Analyst is available from the result page header action (**AI Analyst**).  
+When opened, it appears as a right-side panel that can be resized, expanded fullscreen, and closed without losing state.
+
+---
+
+## Conversation behavior
+
+- Conversations are tied to the current result context
+- History is available from the panel
+- Messages are auto-saved when a response finishes
+- You can create multiple conversations (up to 5 per search context)
+
+---
+
+## What AI Analyst can do
+
+<AccordionGroup>
+  <Accordion title="Summarize findings" icon="list">
+    Produces structured summaries from result cards and extracted fields.
+
+    Example: *"Summarize the key findings across modules and flag the strongest signals."*
+  </Accordion>
+
+  <Accordion title="Build a timeline" icon="timeline">
+    Creates a visual chronology from dated events in the results (breaches, activity dates, creation dates, etc.).
+
+    Example: *"Build a timeline of this target using all date-related signals."*
+  </Accordion>
+
+  <Accordion title="Generate charts" icon="chart-line">
+    Renders visual charts (bar, line, area, pie) from result-derived numeric data.
+
+    Example: *"Create a chart of exposure counts by source."*
+  </Accordion>
+
+  <Accordion title="Focus a specific card" icon="crosshairs">
+    Can jump to and highlight a specific result card in the page.
+
+    Example: *"Focus the Hudson Rock card and explain the main indicators."*
+  </Accordion>
+
+  <Accordion title="Filter results in natural language" icon="filter">
+    Applies a results filter query directly to the visible result set.
+
+    Example: *"Show only cards mentioning password hashes."*
+  </Accordion>
+
+  <Accordion title="Web search enrichment" icon="globe">
+    Can run supplementary open-web lookups and return linked sources with snippets.
+
+    Example: *"Search recent reporting related to this domain."*
+  </Accordion>
+
+  <Accordion title="Fetch leak details" icon="database">
+    Can fetch leak/breach records linked to the search from available leak sources and explain them.
+
+    Example: *"Fetch leaked data and summarize the top credential exposures."*
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## How to use it well
+
+1. Ask broad first: summary, strongest leads, anomalies  
+2. Then narrow: one provider, one field, one date range  
+3. Request output format: timeline, chart, concise briefing, action list  
+4. Use card focus/filter commands to move quickly in large result sets
+
+---
+
+## Limitations
+
+- AI Analyst does not replace provider truth; it interprets returned data
+- Output quality depends on result completeness and structure
+- It does not start a new OSINT search job by itself
+- Web enrichment and leak-fetch are supplementary tool actions, not full re-runs of the base search
+- Some complex requests may require follow-up prompts to complete all analysis steps
+
+<Tip>
+For best results, ask for one clear objective per prompt (summary, timeline, chart, or comparison), then iterate.
+</Tip>

@@ -1,0 +1,75 @@
+---
+title: Security and compliance
+description: Practical guidance for secure usage, data handling, and responsible interpretation of OSINT results.
+icon: shield-halved
+---
+
+Osintly helps collect and organize open-source intelligence. Final decisions remain the responsibility of the investigation team.
+
+<Warning>
+OSINT data can be incomplete, outdated, or ambiguous. Always validate critical findings with independent sources before operational, legal, or HR decisions.
+</Warning>
+
+---
+
+## Security principles
+
+<AccordionGroup>
+  <Accordion title="Least exposure" icon="eye-slash">
+    Limit distribution of sensitive search context and share only what collaborators need.
+  </Accordion>
+  <Accordion title="Controlled access" icon="user-lock">
+    Use team roles (owner/admin/editor/viewer) to limit sensitive actions to authorized users.
+  </Accordion>
+  <Accordion title="Traceable workflows" icon="clock-rotate-left">
+    Keep investigations inside projects and history so actions and findings remain auditable.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Data handling in investigations
+
+<Steps>
+  <Step title="Minimize personal data usage">
+    Search only identifiers required for the investigation scope.
+  </Step>
+  <Step title="Separate fact from inference">
+    Record raw evidence and analyst interpretation as separate notes.
+  </Step>
+  <Step title="Preserve context">
+    Keep source references, timestamps, and result exports for reproducibility.
+  </Step>
+  <Step title="Review before sharing">
+    Remove irrelevant personal details when exporting or sharing results externally.
+  </Step>
+</Steps>
+
+---
+
+## Compliance checklist
+
+Use this checklist before formal reporting:
+
+- Lawful basis and internal authorization confirmed
+- Scope and purpose documented
+- Critical findings cross-verified
+- False-positive risk assessed
+- Share/export audience validated
+
+---
+
+## Product boundaries
+
+<Tabs>
+  <Tab title="What Osintly provides">
+    Search launch and streaming UI, result history, monitoring workflows, collaboration features, and export options exposed by the interface.
+  </Tab>
+  <Tab title="What Osintly does not provide">
+    Legal advice, identity certainty guarantees, or automatic final risk decisions.
+  </Tab>
+</Tabs>
+
+<Note>
+For plan features and limits related to monitoring or collaboration, refer to [osint.ly/pricing](https://osint.ly/pricing).
+</Note>

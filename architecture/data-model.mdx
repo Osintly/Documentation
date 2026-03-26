@@ -1,0 +1,78 @@
+---
+title: Data model
+description: Product-level entities used across search execution, monitoring, projects, and team collaboration.
+icon: database
+---
+
+This page summarizes the main entities visible in the product and API flows.
+
+---
+
+## Core entities
+
+| Entity | Purpose | Key fields |
+|---|---|---|
+| Search | One launched search execution | `id`, `type`, `value`, `status`, `created_at`, `user_id`, `project_id`, `team_id`, `search_metadata` |
+| Search Result payload | Stored final payload attached to a search | `result.cards[]`, `result.leaked_data`, `result.breached_accounts[]`, `result.registered_accounts[]` |
+| Stream event | Incremental event consumed by the result page | `taskId`, `moduleId`, `moduleName`, `result`, `timestamp`, `status` |
+| Monitor | Scheduled monitoring definition | `id`, `user_id`, `name`, `type`, `target`, `frequency`, `status` |
+| Monitoring Alert | Alert emitted by monitor processing | `id`, `user_id`, `monitor_id`, `severity`, `message`, `status`, `created_at` |
+| Project | Investigation workspace | `id`, `title`, `description`, `content`, `owner_id`, `team_id`, `created_at`, `updated_at` |
+| Team | Collaboration boundary | `id`, `owner_id`, `name`, `credit_bank_enabled`, `credit_bank_balance`, `use_owner_credits` |
+| Team Membership | User role inside a team | `team_id`, `user_id`, `role` (`owner`, `admin`, `editor`, `viewer`) |
+| Team Invitation | Pending invitation workflow | `team_id`, `email`, `role`, `invitation_code`, `expires_at`, `accepted_at` |
+
+---
+
+## Search and module states
+
+<Tabs>
+  <Tab title="Search status">
+    Typical status flow:
+
+    - `pending`
+    - `running`
+    - `finished`
+    - `error`
+  </Tab>
+  <Tab title="Module delivery">
+    Module outputs are delivered as independent stream events. Cards can arrive in any order and are merged on the client as events are received.
+  </Tab>
+  <Tab title="Panel updates">
+    Synthesis panels are client-computed from available card/result data and only render when relevant data exists.
+  </Tab>
+</Tabs>
+
+---
+
+## Visibility rules
+
+A field, tab, or panel is displayed only when all required conditions are met:
+
+1. The search type supports that view
+2. The plan allows the underlying data source
+3. Matching data is present in returned payloads
+4. The user has not disabled the view in display settings
+
+<Note>
+Missing panel usually means no applicable data was returned, not a rendering issue.
+</Note>
+
+---
+
+## Relationships in practice
+
+<AccordionGroup>
+  <Accordion title="Search -> Module Results" icon="link">
+    One search execution yields multiple module outputs (stream events and/or stored cards).
+  </Accordion>
+  <Accordion title="Search -> Result payload" icon="chart-simple">
+    One search can include cards plus optional leaked, breached, and registered account datasets in its stored result payload.
+  </Accordion>
+  <Accordion title="Team -> Projects -> Searches" icon="users">
+    Teams group projects, and projects can reference saved searches, notes, and attachments.
+  </Accordion>
+  <Accordion title="Monitor -> Alerts" icon="bell">
+    One monitor can generate many alert records over time, each with its own workflow status.
+  </Accordion>
+</AccordionGroup>

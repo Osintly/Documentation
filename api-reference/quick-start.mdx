@@ -1,0 +1,116 @@
+---
+title: Quick Start
+description: Create a search, stream progress, and fetch final results in minutes.
+icon: rocket
+---
+
+This guide walks through the minimal API flow using cURL.
+
+<Note>
+You need a valid bearer token first. See [Authentication](/api-reference/authentification).
+</Note>
+
+## 1) Check service health
+
+```bash
+curl -X GET "https://api.osint.ly/health"
+```
+
+## 2) Validate your token
+
+```bash
+curl -X GET "https://api.osint.ly" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+## 3) Create a search
+
+```bash
+curl -X POST "https://api.osint.ly/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "Email Address",
+    "value": "target@example.com",
+    "options": {
+      "include_breached_accounts": true,
+      "include_registered_accounts": true,
+      "bypass_cache": false
+    }
+  }'
+```
+
+Save the returned `search.id` for the next calls.
+
+## 4) Stream progress (SSE)
+
+```bash
+curl -N -X GET "https://api.osint.ly/search/SEARCH_ID/stream" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+You receive incremental events while the search is running.
+
+## 5) Fetch final result
+
+```bash
+curl -X GET "https://api.osint.ly/search/SEARCH_ID" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+## 6) Fetch leak source payloads
+
+```bash
+# List available leak sources for a search
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/leaks" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+
+# Fetch one source (optional page)
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/leaks/snusbase?page=1" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+## 7) Optional: receive results by webhook
+
+Provide `webhook.url` (and optionally `webhook.secret`) when creating the search:
+
+```json
+{
+  "type": "Email Address",
+  "value": "target@example.com",
+  "webhook": {
+    "url": "https://client.example/webhooks/osintly",
+    "secret": "super-secret-webhook-key"
+  }
+}
+```
+
+When the search completes, your endpoint receives a JSON payload with:
+
+- `searchId`
+- `status` (`finished` or `error`)
+- `result` (`cards`, `leaked_data`, `breached_accounts`, `registered_accounts`)
+- `finishedAt`
+- `search` metadata (`id`, `value`, `type`, `options`, `created_at`)
+
+Full payload details: [Webhooks](/api-reference/webhooks)
+
+---
+
+## Rate limits and usage
+
+Use `GET /usage` to read current global and daily usage windows.
+
+```bash
+curl -X GET "https://api.osint.ly/usage" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+<Tip>
+If you receive `429`, respect `Retry-After` and `X-RateLimit-Reset` headers before retrying.
+</Tip>
+
+## Next steps
+
+- Explore the OpenAPI endpoint docs in the **Endpoints** group
+- Read [Domains](/api-reference/domains) for type values and request patterns

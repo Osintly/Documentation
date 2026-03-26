@@ -1,0 +1,48 @@
+---
+title: Authentication
+description: Authenticate every API request with your bearer token.
+icon: lock
+---
+
+To access protected endpoints, include your API token in the `Authorization` header as a bearer token.
+
+## Header format
+
+```bash
+Authorization: Bearer YOUR_API_KEY
+```
+
+<Note>
+Use the root auth endpoint `GET /` to quickly validate a token.
+</Note>
+
+## Validate token
+
+```bash
+curl -X GET "https://api.osint.ly" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Expected success response:
+
+```json
+{
+  "message": "Authorization Valid",
+  "help": "https://docs.osint.ly/api-reference/quick-start"
+}
+```
+
+## Security Best Practices
+
+- Never commit API keys to git repositories
+- Store tokens in environment variables
+- Use separate keys for development and production
+- Rotate keys immediately after suspected exposure
+
+<Warning>
+If a token is exposed, revoke and replace it before any new deployment.
+</Warning>
+
+## Next Steps
+
+Continue with [Quick Start](/api-reference/quick-start) to create and stream your first search.

@@ -1,0 +1,146 @@
+---
+title: Monitoring & alerts
+description: Track targets over time with scheduled checks and alert history.
+icon: bell
+---
+
+Monitoring lets you track a target over time without repeating manual checks.  
+You create a monitor, choose a schedule, and Osintly records runs and alerts in the Monitoring dashboard.
+
+<Note>
+Monitoring is available on Pro and Advanced plans.
+</Note>
+
+---
+
+## How monitoring works
+
+Each monitor stores:
+
+- a monitor type (Email Registration, Global Search, or Module Query)
+- a target/query
+- a run frequency (`hourly`, `6hours`, `daily`, `weekly`)
+- an active/paused state
+
+When runs execute, monitor metadata is updated (including last run) and alerts can be created when conditions are met.
+
+---
+
+## Monitor types
+
+<AccordionGroup>
+  <Accordion title="Email Registration" icon="envelope">
+    Track a single email-style target for registration/exposure-style changes.
+  </Accordion>
+
+  <Accordion title="Global Search" icon="globe">
+    Track a target using a selected search input type (for example Pseudonym, Email Address, IP Address, Domain Name, etc.).
+    Input validation is enforced against the selected search type.
+  </Accordion>
+
+  <Accordion title="Module Query" icon="cube">
+    Track a query against selected module(s).  
+    Selected modules must be valid and share the same input type.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Creating a monitor
+
+<Steps>
+  <Step title="Open Monitoring">
+    Go to [osint.ly/monitoring](https://osint.ly/monitoring).
+  </Step>
+
+  <Step title="Click Create Monitor">
+    Use **Create Monitor** from the Monitoring dashboard.
+  </Step>
+
+  <Step title="Configure monitor settings">
+    Set:
+    - Name
+    - Frequency
+    - Monitor type
+    - Query/target + type-specific fields
+  </Step>
+
+  <Step title="Save">
+    The monitor is created as **active** (unless you later pause it).
+  </Step>
+</Steps>
+
+<Note>
+In the current interface, monitor creation is managed from the Monitoring dashboard (not from a dedicated “Monitor” button in result header actions).
+</Note>
+
+---
+
+## Frequency and expected run volume
+
+| Frequency | Approx. runs/day | Approx. runs/30 days |
+|---|---:|---:|
+| Hourly | 24 | 720 |
+| Every 6 hours | 4 | 120 |
+| Daily | 1 | 30 |
+| Weekly | ~0.14 | ~4 |
+
+Use this table to estimate operational load and expected alert cadence.
+
+---
+
+## Plan limits
+
+| Plan | Monitoring feature | Max monitors |
+|---|---|---:|
+| Standard | No | 0 |
+| Pro | Yes | 5 |
+| Advanced | Yes | 15 |
+
+If you hit your limit, monitor creation is blocked until you delete monitors or upgrade. See [osint.ly/pricing](https://osint.ly/pricing) for full plan details.
+
+---
+
+## Alerts and status workflow
+
+The Alerts tab provides:
+
+- severity
+- type
+- target
+- message
+- timestamp
+- workflow status
+
+Supported alert statuses:
+
+- `new`
+- `investigating`
+- `resolved`
+
+You can update status directly from the alerts table and remove alerts when needed.
+
+---
+
+## Notification channels
+
+Notification channel settings are managed in **Monitoring → Notification Channels**.
+
+Currently configurable in UI:
+
+- **Email recipient**
+- **Discord webhook**
+
+
+---
+
+## Managing monitors
+
+From the Monitors tab you can:
+
+- Edit monitor configuration
+- Pause/Resume
+- Delete monitor
+- Review last run timestamp
+- View configured channel indicators
+

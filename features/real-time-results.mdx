@@ -1,0 +1,74 @@
+---
+title: Real-time results
+description: How results stream in, how cards are organized, and how to navigate the result page.
+icon: bolt
+---
+
+Results do not load all at once. Osintly streams provider responses progressively through a live event stream, so cards appear as soon as each module responds.
+
+---
+
+## Module cards
+
+Each card represents one provider/module response for the active search.
+
+A card typically includes:
+- Provider identity (name/logo)
+- Key fields returned by the module (for example usernames, emails, links, metadata)
+- Module stats when available
+- Quick actions such as profile/domain link (when provided) and **Expand results**
+
+The exact card set depends on your active plan and enabled sources.
+
+---
+
+## Expanding a card
+
+Click **Expand results** to open the detail modal for that module.
+
+The expansion view includes:
+- Full structured fields returned by the module
+- Additional sections for rich/leak-specific payloads
+- Optional archive shortcut (when a profile link exists)
+- **Export JSON** to download the module payload
+
+---
+
+## Tabs and navigation
+
+Result content is organized in tabs. Tab availability depends on search type and enabled features.
+
+| Tab | What it contains |
+|---|---|
+| **All Results** | Main result cards, plus related sections when available |
+| **Osintly Results** | Core card listing for the current query |
+| **Registered Accounts** | Account-detection results (shown only for compatible searches) |
+| **Leaked Results** | Leak-source records (shown only when leak sources are enabled/available) |
+
+---
+
+## Search and filters
+
+Use the search bar above the tabs to filter visible results without launching a new query.
+
+- The search input applies to the current result view
+- The **Filters** button opens advanced filters (platforms, data types, leak sources, etc.)
+- Filtering and searching are local to the loaded result set (no extra credit usage)
+
+---
+
+## Streaming state and completion
+
+While modules are still responding, the page stays in **Streaming** state and keeps appending new data.
+When all responses are complete, the page switches to **Finished** and shows total execution time.
+
+---
+
+## Result freshness
+
+Results reflect provider data at search time. Some sources are near real-time, others depend on periodic dataset updates.
+
+<Note>
+To refresh an older query, run a new search from the Search page. This launches a new request and costs 1 credit.
+Opening a past result from history does not consume credits.
+</Note>

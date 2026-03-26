@@ -1,0 +1,136 @@
+---
+title: Analysis panels
+description: "Contextual synthesis blocks shown above result tabs: stats, pictures, map, domain, and crypto views."
+icon: chart-bar
+---
+
+Above the result tabs, Osintly shows contextual analysis panels that summarize incoming data while results are still streaming.  
+These panels are dynamic: visibility depends on search type, returned data, plan access, and your display toggles.
+
+---
+
+## How panel visibility works
+
+Panels are controlled by four factors:
+
+1. **Search type** (for example, Domain and Cryptocurrency have dedicated views)
+2. **Data availability** (a panel is hidden if no relevant fields are found)
+3. **Plan access** (some datasets and leak sources are plan-gated)
+4. **User display settings** (Map, Stats, AI, Breach/Pictures, Crypto Chart can be toggled)
+
+Not every result page shows the same layout.
+
+---
+
+## Stats Summary
+
+The Stats panel provides a high-level count snapshot of the current result set:
+
+- **Total Results** (result modules/cards received)
+- **Breached Results**
+- **Registered Accounts**
+- **Leaked Results**
+
+Counts update progressively while streaming continues, then stabilize when the search is finished.
+
+---
+
+## Breach & Pictures block
+
+This section combines two panels side by side:
+
+### Breached Accounts
+Shows breach events tied to the query, with:
+- breach source name
+- breach date (relative + exact date tooltip)
+
+It is an event-level summary panel, not a full raw-field dump.
+
+### Profile Pictures
+Builds a gallery from avatar fields returned by providers.
+- Appears only when image/avatar data exists
+- Supports image download from the panel
+- Useful for cross-account visual comparison
+
+---
+
+## Map View
+
+The map panel is generated from detected location fields in results (not only IP intelligence).
+
+What it uses:
+- `location`
+- `living location`
+
+Behavior:
+- geocodes textual locations
+- places markers with source context
+- supports export as **JSON** and **CSV**
+- supports opening a point in Google Maps
+
+If no valid location values are found, the map panel is not shown.
+
+---
+
+## Domain-specific panels
+
+On **Domain Name** searches, Osintly replaces generic stats with domain-focused synthesis:
+
+### Domain Overview
+KPI-style overview computed from returned module data:
+- subdomains found
+- unique IPs
+- unique ASNs
+- last scan indicator (when available)
+
+### Domain Risk Snapshot
+A heuristic risk summary generated from signals such as:
+- DNS error patterns
+- sensitive subdomain patterns (admin/dev/staging/etc.)
+- infrastructure concentration
+- surface breadth (subdomain volume)
+
+This is a computed exposure signal, not a definitive security verdict.
+
+---
+
+## Cryptocurrency-specific panels
+
+On **Cryptocurrency** searches, Osintly shows a dedicated crypto layout:
+
+### Wallet Stats
+Includes values such as:
+- current balance (with USD valuation)
+- total received
+- total sent
+- risk score (when provided)
+
+### Crypto Chart
+Interactive market price chart with selectable ranges (for example 7/30/90 days).  
+This chart reflects market data, not a full wallet transaction timeline.
+
+---
+
+## Registered Accounts
+
+When enabled for the current search type, this panel/tab shows services checked for account presence:
+
+- Found / Not Found status
+- Domain/service identity
+- Searchable and filterable list
+- Deduplicated service entries
+
+Visibility depends on search type configuration and returned provider data.
+
+---
+
+## Streaming behavior and empty states
+
+Panels are rendered progressively:
+- During streaming, panels can appear empty or partial
+- As new module events arrive, counts and blocks update live
+- Missing panel = no relevant data found (or panel not applicable for this search type/settings)
+
+<Note>
+If a panel is missing, first check search type applicability and enabled display settings, then verify whether providers actually returned matching data.
+</Note>

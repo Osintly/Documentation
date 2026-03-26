@@ -1,0 +1,83 @@
+---
+title: Domains
+description: Search types, options, and request payload patterns for Osintly API integrations.
+icon: globe
+---
+
+Use this page as a quick reference for valid search types and options used by `POST /search`.
+
+---
+
+## Supported search types
+
+| Type value | Typical input |
+|---|---|
+| `Pseudonym` | `john_doe` |
+| `Email Address` | `target@example.com` |
+| `Domain Name` | `example.com` |
+| `Cryptocurrency` | Wallet address |
+| `IP Address` | `8.8.8.8` or IPv6 |
+
+<Note>
+These values must match the OpenAPI enum exactly.
+</Note>
+
+---
+
+## Request shape
+
+```json
+{
+  "type": "Email Address",
+  "value": "target@example.com",
+  "options": {
+    "include_breached_accounts": true,
+    "include_registered_accounts": true,
+    "bypass_cache": false
+  },
+  "webhook": {
+    "url": "https://client.example/webhooks/osintly",
+    "secret": "super-secret-webhook-key"
+  }
+}
+```
+
+---
+
+## Options reference
+
+| Field | Type | Notes |
+|---|---|---|
+| `leakedresults` | `string[]` | Allowed values: Hudson Rock, Leak Check, Snusbase, Breach Base, Breach VIP, Leak Osint |
+| `modules` | `uuid[]` | Restrict execution to selected module IDs |
+| `bypass_cache` | `boolean` | Force a fresh execution |
+| `include_breached_accounts` | `boolean` | Include breached account dataset |
+| `include_registered_accounts` | `boolean` | Include registered account dataset |
+| `registered_accounts_only` | `boolean` | Supported only for `Email Address` |
+
+---
+
+## ID and pagination parameters
+
+- `id` (path): search UUID
+- `source` (path): leak provider source code/name
+- `page` (query): leak source page number, minimum `1`
+
+---
+
+## Common errors
+
+<AccordionGroup>
+  <Accordion title="400 Validation error" icon="triangle-exclamation">
+    Request shape or field values are invalid. Check enum values and data types.
+  </Accordion>
+  <Accordion title="401 Unauthorized" icon="key">
+    Missing or invalid bearer token.
+  </Accordion>
+  <Accordion title="429 Rate limit exceeded" icon="gauge-high">
+    Respect retry headers and retry after the reset window.
+  </Accordion>
+  <Accordion title="503 Dispatch unavailable" icon="server">
+    Search creation failed at dispatch layer. Retry with backoff.
+  </Accordion>
+</AccordionGroup>

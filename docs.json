@@ -1,0 +1,162 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "maple",
+  "name": "Osintly Documentation",
+  "colors": {
+    "primary": "#1e40af",
+    "light": "#1e40af",
+    "dark": "#09090b"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Customer Docs",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "guides/quickstart-user",
+              "use-cases",
+              "guides/credits-explained",
+              "guides/reading-results",
+              "faq"
+            ]
+          },
+          {
+            "group": "Platform Overview",
+            "pages": [
+              "product/product-vision",
+              "product/personas"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/osint-search",
+              "features/real-time-results",
+              "features/analysis-panels",
+              "features/leaks-breaches",
+              "features/ai-analyst",
+              "features/monitoring",
+              "features/investigation-projects",
+              "features/team-collaboration",
+              "features/credits-subscriptions",
+              "features/export-sharing"
+            ]
+          },
+          {
+            "group": "How It Works",
+            "pages": [
+              "architecture/overview",
+              "architecture/data-model",
+              "architecture/rbac-permissions",
+              "architecture/security-compliance"
+            ]
+          },
+          {
+            "group": "Help & Troubleshooting",
+            "pages": [
+              "support/redeem",
+              "runbooks/operations-monitoring",
+              "guides/incident-troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developers (API)",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "API Overview",
+            "pages": [
+              "api-reference/introduction",
+              "api-reference/authentification",
+              "api-reference/quick-start",
+              "api-reference/domains",
+              "api-reference/webhooks"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "openapi": "api-reference/openapi.json"
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Website",
+          "href": "https://osint.ly/",
+          "icon": "link"
+        },
+        {
+          "anchor": "Community",
+          "href": "https://osint.ly/community",
+          "icon": "users"
+        },
+        {
+          "anchor": "Blog",
+          "href": "https://osint.ly/blog",
+          "icon": "newspaper"
+        }
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "background": {
+    "color": {
+      "light": "#ffffff",
+      "dark": "#0a0a0a"
+    }
+  },
+  "contextual": {
+   "options": [
+     "copy",
+     "view",
+     "chatgpt",
+     "claude",
+     "perplexity",
+     "grok",
+     "mcp",
+     "cursor",
+     "vscode"
+   ]
+ },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "https://osint.ly/support"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Website",
+      "href": "https://osint.ly/"
+    }
+  },
+  "footer": {
+    "socials": {
+      "website": "https://osint.ly/",
+      "youtube": "https://www.youtube.com/@osintly",
+      "discord": "https://discord.gg/osintly",
+      "x": "https://twitter.com/osintly",
+      "github": "https://github.com/Osintly",
+      "telegram": "https://t.me/osintly"
+    }
+  },
+  "integrations": {
+    "posthog": {
+      "apiKey": "phc_HEJ9Hwdt4G85AgPYkDkOZ0m5SmQSClFWDoYldiOQ1Hf",
+      "apiHost": "https://us.i.posthog.com"
+    }
+  }
+}

@@ -1,0 +1,177 @@
+---
+title: OSINT Search
+description: Run a single query across multiple providers using six input types.
+icon: magnifying-glass
+---
+
+The Search page is the core of Osintly. You enter one identifier, select the input type, and the platform queries all relevant providers for that type in parallel. Results stream in as each source responds.
+
+<CardGroup cols={3}>
+  <Card title="6 input types" icon="layer-group">
+    From usernames to crypto wallets. One input, all relevant providers.
+  </Card>
+  <Card title="Streaming results" icon="bolt">
+    Results appear as providers respond. No waiting for a full page load.
+  </Card>
+  <Card title="Search history" icon="clock-rotate-left">
+    Every search is saved. Re-open past results at any time at no credit cost.
+  </Card>
+</CardGroup>
+
+---
+
+## Input types
+
+Each input type maps to a dedicated set of providers. Select the one that matches your identifier.
+
+<Tabs>
+  <Tab title="Pseudonym">
+    **What to enter:** A username or handle, exactly as it appears on the platform.
+
+    **What it looks up:** Social profiles, forum accounts, registered services, leak databases.
+
+    **Tips:**
+    - Capitalization may matter. Enter the handle as you found it.
+    - Do not include `@` unless it is part of the handle itself.
+    - If the username appears in breaches, linked emails are often surfaced in the results - use them to pivot to an Email Address search.
+  </Tab>
+  <Tab title="Email Address">
+    **What to enter:** A full email address (`user@domain.com`).
+
+    **What it looks up:** Breach records, registered accounts, social profiles, leak databases.
+
+    **Tips:**
+    - The **Registered Accounts** panel is only available on email searches.
+    - If the email uses a custom domain, pivot to a Domain search to investigate the infrastructure behind it.
+    - Multiple breaches with different associated usernames are a strong signal - search each username separately.
+  </Tab>
+  <Tab title="Phone Number">
+    **What to enter:** A phone number. Including the country code is recommended (`+1 555 000 1234`).
+
+    **What it looks up:** Carrier data, reverse lookup, social and messaging platform links.
+
+    **Tips:**
+    - Spaces and dashes are accepted.
+    - Searches without a country code may still return results depending on the provider, but coverage is reduced.
+  </Tab>
+  <Tab title="IP Address">
+    **What to enter:** An IPv4 or IPv6 address.
+
+    **What it looks up:** Geolocation, ASN, hosting provider, threat intelligence signals.
+
+    **Tips:**
+    - Results include the map view when location data is available.
+    - Chain IP results to Domain or Pseudonym searches to build a broader picture.
+  </Tab>
+  <Tab title="Domain">
+    **What to enter:** The root domain (`example.com`). Full URLs are also accepted - Osintly extracts the root domain automatically.
+
+    **What it looks up:** DNS records, WHOIS, subdomains, linked IPs, risk signals.
+
+    **Tips:**
+    - Do not include `https://` or a trailing path - or paste the full URL and let Osintly parse it.
+    - Subdomains are discovered in the result, not entered manually.
+    - Use the Domain overview block to get a quick risk read before drilling into cards.
+  </Tab>
+  <Tab title="Cryptocurrency">
+    **What to enter:** A full wallet address.
+
+    **What it looks up:** Transaction history, linked wallets, risk and fraud signals.
+
+    **Tips:**
+    - Osintly auto-detects the chain based on address format (Bitcoin, Ethereum, and others). For ambiguous formats, select the chain manually.
+    - Shortened or partial addresses may return no results.
+    - Supported chains vary by provider.
+  </Tab>
+</Tabs>
+
+---
+
+## Input type detection
+
+Osintly auto-detects the input type as you type. The type chip updates based on the format of the identifier - email pattern, IP format, domain structure, wallet prefix, and so on.
+
+You can override the detected type by clicking a different chip at any time. This is useful when the identifier is ambiguous - for example, forcing a Domain search on a string that looks like an email domain.
+
+---
+
+## Running a search
+
+<Steps>
+  <Step title="Go to the Search page">
+    Navigate to [osint.ly/search](https://osint.ly/search). It is the default landing page after login.
+  </Step>
+  <Step title="Enter the identifier">
+    Type or paste the value into the input field. The input type chip updates automatically as you type.
+  </Step>
+  <Step title="Adjust search options if needed">
+    Click the options icon next to the search input to configure leak sources, dorking, and display preferences before launching.
+  </Step>
+  <Step title="Launch the search">
+    Click **Search**. Results stream in as each provider responds. 1 credit is deducted per search launched successfully.
+
+    <Note>Opening a past result from history does not run a new query and does not consume credits.</Note>
+  </Step>
+</Steps>
+
+---
+
+## Search options
+
+Configure search behavior before launching from the options panel next to the input field.
+
+<AccordionGroup>
+  <Accordion title="Leak sources" icon="database">
+    Toggle which leak and breach provider categories are included in the search. Disabling a category means those providers are not queried and their cards do not appear in results.
+
+    Options that exceed your plan are shown but disabled.
+  </Accordion>
+  <Accordion title="Dorking engine" icon="code">
+    Enable OSINT dorking to surface results from indexed public sources using structured search queries. Useful for pseudonym and domain searches where surface-level indexed data may add context.
+  </Accordion>
+  <Accordion title="Open in new tab" icon="arrow-up-right-from-square">
+    Opens the result page in a new browser tab instead of navigating away from the Search page. Useful when running multiple searches in quick succession.
+  </Accordion>
+  <Accordion title="Mask query" icon="eye-slash">
+    Hides the search term from the browser tab title and page heading. The search runs normally - only the visible label is masked. Useful when working in environments where screen visibility is a concern.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Plan limits
+
+Provider coverage depends on your plan. Standard queries a base set of providers. Pro and Advanced unlock additional sources, including premium breach databases and extra leak providers. For full pricing details, see [osint.ly/pricing](https://osint.ly/pricing).
+ 
+
+| Capability | Standard | Pro | Advanced |
+|---|---:|---:|---:|
+| Monthly credits included | 25 | 100 | 200 |
+| Pseudonym search | Yes | Yes | Yes |
+| Email Address search | Yes | Yes | Yes |
+| IP Address search | Yes | Yes | Yes |
+| Phone Number search | No | No | Yes |
+| Domain Name search | No | Yes | Yes |
+| Cryptocurrency search | No | Yes | Yes |
+| Leak sources | No | Yes | Yes |
+| AI Analyst | No | Yes | Yes |
+| Monitoring | No | Yes (up to 5 monitors) | Yes (up to 15 monitors) |
+| Team members | 0 | 5 | 25 |
+| Result sharing | No | No | Yes |
+| Export (PDF / JSON / DOCX) | Yes | Yes | Yes |
+| Priority support | No | No | Yes |
+
+ If a provider is not available on your plan, its card does not appear in results and any related options are disabled in the search settings.
+
+---
+
+## Search history
+
+Every search is saved automatically. Access your full history at [osint.ly/history](https://osint.ly/history).
+
+From the history page you can:
+- Re-open any past result at no credit cost
+- Delete individual entries
+- Select and delete multiple entries at once
+
+<Tip>Use history to resume an investigation without spending credits. Re-open a cached result, then run a fresh search only when you need updated data.</Tip>

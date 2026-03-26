@@ -1,0 +1,143 @@
+---
+title: Quickstart
+description: Go from zero to your first investigation in under five minutes.
+icon: rocket
+---
+
+## Before you start
+
+<Steps>
+  <Step title="Create your account">
+    Go to [Osintly](https://osint.ly/#signup). You can sign up with email/password or via Google, Discord, GitHub, X, LinkedIn, or Facebook.
+
+    <Tip>Enable MFA right after signup. It takes 30 seconds and protects your investigation data.</Tip>
+  </Step>
+  <Step title="Pick a plan">
+    Each search costs credits. Choose based on your expected volume. Full details on [osint.ly/pricing](https://osint.ly/pricing):
+
+    | Plan | Credits/month | Best for |
+    |---|---|---|
+    | Standard (€9.99) | 25 | Occasional solo investigations |
+    | Pro (€24.99) | 100 | Regular analysts, small teams |
+    | Advanced (€94.99) | 200 | Power users, team workspaces |
+
+    <Note>You can upgrade at any time. Credits do not roll over month to month.</Note>
+  </Step>
+  <Step title="Complete your profile">
+    Set your username and avatar. If you're on a team plan, your display name is visible to teammates.
+  </Step>
+</Steps>
+
+---
+
+## Your first search
+
+<Steps>
+  <Step title="Go to the Search page">
+    The [Search page](https://osint.ly/search) is the default landing page when you log in. If you navigated away, click **Search** in the left sidebar to get back.
+  </Step>
+  <Step title="Select the input type">
+    Pick the type that matches your target:
+
+    | Type | Example input |
+    |---|---|
+    | <Icon iconType="solid" icon="at" /> Pseudonym | `johndoe42` |
+    | <Icon iconType="solid" icon="envelope" /> Email Address | `john@example.com` |
+    | <Icon iconType="solid" icon="phone" /> Phone | `+1 555 000 1234` |
+    | <Icon iconType="solid" icon="network-wired" /> IP address | `192.168.1.1` |
+    | <Icon iconType="solid" icon="globe" /> Domain | `example.com` |
+    | <Icon iconType="solid" icon="bitcoin-sign" /> Cryptocurrency | `1A1zP1eP5Q...` |
+  </Step>
+  <Step title="Start the search">
+    Hit **Search**. Results stream in real time via SSE: module cards appear as each source responds. You don't need to wait for everything to finish before reading results.
+  </Step>
+  <Step title="Read the result page">
+    Each module card shows a data source. Click any card to expand linked records, images, and geographic context.
+
+    <AccordionGroup>
+      <Accordion title="Module cards">
+        Each card represents one data source or provider. The number of cards you see depends on your plan: higher plans unlock more providers, including leak and breach sources.
+      </Accordion>
+      <Accordion title="Images tab">
+        Profile pictures and media found during the search are grouped in the Images tab for quick visual cross-referencing.
+      </Accordion>
+      <Accordion title="Leaked Results">
+        Aggregated data from leak databases. Each row shows the fields exposed: password hash, IP, username, and more. Availability depends on your plan.
+      </Accordion>
+      <Accordion title="Breached Accounts">
+        Results from breach-specific providers (Snusbase, Breach VIP, Hudson Rock, LeakCheck, and others). Shows which breach an account appeared in, and when.
+      </Accordion>
+      <Accordion title="Registered Accounts (email only)">
+        Only available on Email searches. Shows services and platforms where this email address has a registered account.
+      </Accordion>
+      <Accordion title="Map view">
+        Any geolocation signals are plotted on an interactive map.
+      </Accordion>
+      <Accordion title="AI Analyst">
+        Available on Pro and Advanced. Open the AI chat to ask questions about the results, generate a timeline, or focus on specific signals. The AI can also run a web search for additional context.
+      </Accordion>
+    </AccordionGroup>
+  </Step>
+  <Step title="Come back to your results anytime">
+    You can leave the result page freely. Every search is saved automatically and accessible from your [history](https://osint.ly/history). From there you can reopen any past result, continue reading, or attach it to a project later.
+
+    <Tip>Create one project per case. It keeps your search history, attachments, and team context together in one place.</Tip>
+  </Step>
+</Steps> 
+
+---
+
+## Common first searches by use case
+
+Five quick starting points. For complete step-by-step workflows on each scenario, see the [Use cases](/use-cases) page.
+
+<AccordionGroup>
+  <Accordion title="Find accounts linked to a username" icon="at">
+    1. Select **Pseudonym** as input type.
+    2. Enter the handle exactly as you found it (case matters on some platforms).
+    3. Review the social profile cards and breach results.
+    4. If you find an email in the results, start a new **Email** search to expand the profile.
+
+    <Tip>Add both searches to the same project to keep the correlation visible.</Tip>
+  </Accordion>
+  <Accordion title="Check if an email appears in breaches" icon="envelope">
+    1. Select **Email Address** as input type.
+    2. Paste the target address.
+    3. Breach results appear in cards from providers like Snusbase, LeakCheck, Hudson Rock, and others. Availability depends on your plan.
+    4. Each breach card shows the data fields exposed (password hash, IP, username, etc.).
+
+    <Note>Breach provider access is gated by plan. Check [Pricing](https://osint.ly/pricing) to see what each plan includes.</Note>
+  </Accordion>
+  <Accordion title="Trace a suspicious IP" icon="network-wired">
+    1. Select **IP address** as input type.
+    2. Enter the IP (IPv4 or IPv6).
+    3. Check geolocation, hosting provider, ASN, and threat intelligence cards.
+  </Accordion>
+  <Accordion title="Map a domain's infrastructure" icon="globe">
+    1. Select **Domain** as input type.
+    2. Enter the root domain without `https://` or trailing slash.
+    3. Review DNS records, subdomains, WHOIS, and linked IP addresses.
+    4. Cross-reference any discovered IPs with a new IP search.
+  </Accordion>
+  <Accordion title="Trace a crypto wallet" icon="bitcoin-sign">
+    1. Select **Cryptocurrency** as input type.
+    2. Paste the full wallet address.
+    3. Review transaction history, linked addresses, and risk signals.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Investigation playbooks" icon="route" href="/guides/investigation-playbooks">
+    Structured multi-step workflows for real cases.
+  </Card>
+  <Card title="Set up a team" icon="users" href="/guides/admin-team-setup">
+    Invite members, assign roles, and manage shared credits.
+  </Card>
+  <Card title="Monitoring & alerts" icon="bell" href="/product/detailed-features">
+    Get notified when new data appears for a target.
+  </Card>
+</CardGroup>

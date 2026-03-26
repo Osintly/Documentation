@@ -1,0 +1,91 @@
+---
+title: What is Osintly
+description: The all-in-one OSINT investigation workspace, accessible to everyone, built with premium cyber-intelligence standards.
+icon: crosshairs
+---
+
+Osintly is an all-in-one OSINT investigation workspace. It combines a broad provider network, AI-assisted analysis, and real-time collaboration in a single interface that works for a first-time user and a senior analyst in exactly the same way.
+
+You provide an identifier. Osintly queries multiple providers in parallel, streams results as they come in, and surfaces patterns across sources automatically. Result quality and freshness vary by provider. Features and provider access depend on your plan.
+
+---
+
+## The problem it solves
+
+OSINT investigation across multiple sources is slow by default. Each tool has its own interface, its own input format, its own result structure. An analyst running a serious investigation spends more time switching between tabs and reformatting data than actually reading it.
+
+Osintly removes that overhead. One query hits all relevant providers at once. Results stream in as they arrive. Everything lands in a structured workspace built for fast reading, cross-referencing, and collaboration. The floor for getting useful results is low. The ceiling for deep investigation is high.
+
+---
+
+## What it covers
+
+Six input types, each mapped to a dedicated set of providers:
+
+| Input type | What it looks up |
+|---|---|
+| **Pseudonym** | Social profiles, forum accounts, leak databases, registered services |
+| **Email Address** | Breach records, registered accounts, social profiles, leak databases |
+| **Phone Number** | Carrier data, reverse lookup, social and messaging platform links |
+| **IP address** | Geolocation, ASN, hosting provider, threat intelligence signals |
+| **Domain** | DNS records, WHOIS, subdomains, linked IPs, risk signals |
+| **Cryptocurrency** | Transaction history, linked wallets, risk and fraud signals |
+
+---
+
+## How results are delivered
+
+Osintly uses server-sent events (SSE) to stream results as each provider responds. Cards appear one by one as data comes in, depending on provider availability and response time. You do not wait for all sources to finish before reading results.
+
+The result page organizes output into module cards, synthesis blocks (map, profile pictures, stats), and filtered tabs (All Results, Osintly Results, Registered Accounts, Leaked Results).
+
+---
+
+## Built-in capabilities
+
+<CardGroup cols={2}>
+  <Card title="AI Analyst" icon="robot">
+    A conversational panel on every result page. Builds timelines, generates charts, filters results, runs web searches, and fetches detailed leaked records on demand. Available on Pro and Advanced plans.
+  </Card>
+  <Card title="Monitoring" icon="bell">
+    Saves a query and re-runs it automatically at a frequency you set. Sends an alert when new data appears. Each execution consumes 1 credit, the same as a manual search. Available on Pro and Advanced plans.
+  </Card>
+  <Card title="Breach & leak data" icon="database">
+    Access to breach and leak providers beyond basic public data. Provider coverage varies by plan. Higher plans unlock more sources.
+  </Card>
+  <Card title="Collaboration" icon="users">
+    Link a result to a team workspace so teammates can view and work on it in real time. Access to collaboration features depends on your plan.
+  </Card>
+</CardGroup>
+
+---
+
+## What Osintly is not
+
+<AccordionGroup>
+  <Accordion title="Not a surveillance tool" icon="eye-slash">
+    Osintly aggregates publicly available and dataset-sourced information. It does not provide real-time location tracking, intercept communications, or access private systems.
+  </Accordion>
+  <Accordion title="Not a replacement for legal process" icon="scale-balanced">
+    Data returned by Osintly is for investigative context. It is not a substitute for official legal discovery, law enforcement requests, or certified background checks.
+  </Accordion>
+  <Accordion title="Not a single source of truth" icon="triangle-exclamation">
+    Results reflect what third-party providers return at the time of the search. Data may be outdated, incomplete, or incorrect depending on the source.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Who uses Osintly" icon="users" href="/product/personas">
+    Common profiles and what each one looks for.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/guides/quickstart-user">
+    Run your first search in under 5 minutes.
+  </Card>
+  <Card title="Use cases" icon="map" href="/use-cases">
+    Concrete investigation workflows.
+  </Card>
+</CardGroup>

@@ -1,0 +1,132 @@
+---
+title: Reading results
+description: What each panel on the result page means and how to get the most out of it.
+icon: table-list
+---
+
+After you run a search, Osintly streams results in real time. This page explains every section of the result page so you know where to look and what each element means.
+
+---
+
+## Page layout
+
+The result page has three main areas:
+
+| Area | What it contains |
+|---|---|
+| **Header** | Actions: Collaborate, AI Analyst, Export, New Search |
+| **Synthesis blocks** | Summary stats, breach profile pictures, map - shown based on what the results contain |
+| **Result tabs** | All Results / Osintly Results / Registered Accounts / Leaked Results |
+
+The **AI Analyst panel** sits on the right side and can be opened or closed independently of the rest of the page.
+
+---
+
+## Module cards
+
+Each card represents one data source queried during the search. Cards stream in as each provider responds - you do not need to wait for all results before reading them.
+
+Click any card to open an **expansion modal**. This shows all structured fields returned by that provider: usernames, emails, phone numbers, dates, and any other data the source exposed. From the modal you can export the card's data as JSON.
+
+The number of cards you see depends on your plan. Higher plans unlock additional providers, including leak and breach sources.
+
+---
+
+## Synthesis blocks
+
+These blocks appear at the top of the result page when relevant data is available. Not all blocks appear on every search - their presence depends on the input type and what the results contain.
+
+<AccordionGroup>
+  <Accordion title="Stats block" icon="chart-bar">
+    A quick summary of what was found: total records, number of providers that returned data, breach count, and similar aggregate figures.
+  </Accordion>
+  <Accordion title="Profile pictures" icon="images">
+    Profile pictures and avatars aggregated from breach records and social sources. Displayed when image data is present in the results. Useful for visual confirmation across accounts.
+  </Accordion>
+  <Accordion title="Map" icon="map">
+    Geographic view built from location and living-location fields detected in the results, when available. This is not limited to IP addresses - it includes any geolocation data returned by providers.
+
+    You can export the map data as CSV or JSON.
+  </Accordion>
+  <Accordion title="Crypto view" icon="bitcoin-sign">
+    Shown on Cryptocurrency searches. Displays a wallet overview, transaction chart, and linked addresses. Specific to this input type.
+  </Accordion>
+  <Accordion title="Domain overview" icon="globe">
+    Shown on Domain searches. Displays a risk summary, DNS records, WHOIS data, and linked infrastructure at a glance.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Result tabs
+
+<AccordionGroup>
+  <Accordion title="All Results" icon="list">
+    Every module card, regardless of source type. Use this tab to get a full view of what was returned across all providers. You can filter and search locally within this tab.
+  </Accordion>
+  <Accordion title="Osintly Results" icon="magnifying-glass">
+    Results from Osintly's own data sources, separated from third-party providers. Filtered view for quick access to first-party data.
+  </Accordion>
+  <Accordion title="Registered Accounts" icon="at">
+    Services where the target has a registered account. Displayed when the results contain account registration data. Visibility depends on the input type and what providers returned.
+  </Accordion>
+  <Accordion title="Leaked Results" icon="database">
+    Raw records from data leak repositories. May include email addresses, usernames, password hashes, and IP addresses extracted from breached datasets. Available providers vary by plan.
+  </Accordion>
+</AccordionGroup>
+
+<Note>Each tab has a local search field and filters. You can narrow down records within any tab without running a new search.</Note>
+
+---
+
+## Header actions
+
+<AccordionGroup>
+  <Accordion title="New Search" icon="magnifying-glass-plus">
+    Start a new search from the current result page without navigating away. Opens the search input with the same input type pre-selected.
+  </Accordion>
+  <Accordion title="Export" icon="file-export">
+    Export the full result set. JSON export is available from individual card expansion modals. CSV and JSON are available for the map data. PDF and DOCX options are present in the interface.
+  </Accordion>
+  <Accordion title="Collaborate" icon="users">
+    Share or link this result to a team project for real-time collaboration. When a result is attached to a team context, teammates can view and annotate it simultaneously.
+  </Accordion>
+  <Accordion title="AI Analyst" icon="robot">
+    Opens or closes the AI Analyst side panel. See the section below for what it can do.
+
+    <Note>AI Analyst is available on Pro and Advanced plans.</Note>
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## AI Analyst
+
+The AI Analyst panel is a conversational interface that works with the data already loaded in your result page. It does not run new searches unless you explicitly ask it to use web search.
+
+What you can ask it to do:
+
+- Build a chronological timeline from account creation dates and activity data
+- Generate charts or visual summaries from structured fields
+- Focus on a specific card or record and explain what it contains
+- Filter results by criteria you describe in natural language
+- Run a web search to supplement what is in the result
+- Fetch and summarize leaked data from a specific breach record
+
+<Note>AI Analyst is available on Pro and Advanced plans.</Note>
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Use cases" icon="crosshairs" href="/use-cases">
+    Complete investigation workflows using the result page.
+  </Card>
+  <Card title="Credits explained" icon="coins" href="/guides/credits-explained">
+    What counts as a credit spend.
+  </Card>
+  <Card title="FAQ" icon="circle-question" href="/faq">
+    Common questions about results and providers.
+  </Card>
+</CardGroup>

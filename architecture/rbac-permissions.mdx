@@ -1,0 +1,76 @@
+---
+title: RBAC and permissions
+description: Access model for solo and team workspaces, including role capabilities and team billing behavior.
+icon: user-shield
+---
+
+Osintly supports solo investigations and team collaboration with a simple role model focused on shared execution and controlled workspace management.
+
+---
+
+## Workspace modes
+
+<CardGroup cols={2}>
+  <Card title="Solo workspace" icon="user">
+    One user owns searches, projects, monitors, and billing context.
+  </Card>
+  <Card title="Team workspace" icon="users">
+    Members collaborate in shared projects and consume credits using team priority rules.
+  </Card>
+</CardGroup>
+
+---
+
+## Roles
+
+| Capability | Owner | Admin | Editor | Viewer |
+|---|---:|---:|---:|---:|
+| View team projects and results | Yes | Yes | Yes | Yes |
+| Create team projects | Yes | Yes | Yes | No |
+| Edit project content | Yes | Yes | Yes | No |
+| Delete projects/files | Yes | Yes | No | No |
+| Invite members | Yes | Yes | No | No |
+| Remove members | Yes | Yes* | No | No |
+| Change member roles | Yes | No | No | No |
+| Update team settings | Yes | No | No | No |
+| Delete team | Yes | No | No | No |
+
+\* Admins can remove members but cannot remove the owner and cannot remove other admins.
+
+---
+
+## Team billing behavior
+
+When a member launches a billable search in team mode, Osintly applies conditional fallback logic:
+
+1. Use team credit bank when enabled and balance is available
+2. Otherwise use owner credits if owner fallback is enabled
+3. Otherwise use the member's own credits
+
+<Note>
+The active source depends on team settings and available balance at execution time.
+</Note>
+
+---
+
+## Access behavior
+
+<AccordionGroup>
+  <Accordion title="Project visibility" icon="folder-open">
+    Team projects are visible to team members. Solo projects stay private to their owner.
+  </Accordion>
+  <Accordion title="Result collaboration" icon="share-nodes">
+    Shared results are accessible to users with access to the corresponding workspace or project.
+  </Accordion>
+  <Accordion title="Monitoring ownership" icon="eye">
+    Monitoring objects are user-scoped in the current implementation and enforced by the authenticated user context.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Operational recommendations
+
+- Keep owner role limited to users responsible for billing and team administration
+- Use project structure to separate investigations by client, incident, or campaign
+- Review monitor counts and active permissions regularly to keep execution predictable

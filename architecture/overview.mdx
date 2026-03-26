@@ -1,0 +1,77 @@
+---
+title: Architecture overview
+description: End-to-end flow from query input to streamed results, analysis panels, and saved history.
+icon: diagram-project
+---
+
+Osintly runs each search through an API-driven pipeline with progressive delivery to the result page.
+
+<CardGroup cols={3}>
+  <Card title="Validated search launch" icon="bolt">
+    Input, plan access, and credit availability are checked before execution is launched.
+  </Card>
+  <Card title="Streaming delivery" icon="tower-broadcast">
+    Result cards and status updates arrive progressively while the search is running.
+  </Card>
+  <Card title="Persistent history" icon="clock-rotate-left">
+    Stored searches can be reopened later without launching a new execution.
+  </Card>
+</CardGroup>
+
+---
+
+## Search lifecycle
+
+<Steps>
+  <Step title="Normalize input">
+    The query is received, trimmed, and validated against the selected or detected input type.
+  </Step>
+  <Step title="Authorize execution">
+    Plan entitlements, team/project access, and billable credit source are validated.
+  </Step>
+  <Step title="Launch execution">
+    The search is launched through the upstream search service.
+  </Step>
+  <Step title="Stream updates">
+    The result page subscribes to stream events and updates cards/status progressively.
+  </Step>
+  <Step title="Persist and index">
+    Search metadata and final result payload are persisted for history and reopening.
+  </Step>
+</Steps>
+
+---
+
+## What the user sees during execution
+
+<Tabs>
+  <Tab title="Header actions">
+    The result header exposes actions such as **Collaborate**, **AI Analyst**, **Export**, and **New Search**.
+  </Tab>
+  <Tab title="Synthesis blocks">
+    Contextual panels (stats, map, breach/pictures, domain, crypto) appear only when relevant data exists.
+  </Tab>
+  <Tab title="Result tabs">
+    Data is organized in tabs including **Leaked Results**, **Breached Accounts**, **Registered Accounts**, and **All Results**.
+  </Tab>
+</Tabs>
+
+---
+
+## Credit and execution behavior
+
+<AccordionGroup>
+  <Accordion title="What consumes credits" icon="coins">
+    Launching a new search execution consumes credits.
+  </Accordion>
+  <Accordion title="What does not consume credits" icon="clock-rotate-left">
+    Opening a result from history does not run a new execution and does not consume credits.
+  </Accordion>
+  <Accordion title="Plan-dependent provider coverage" icon="list-check">
+    The provider set depends on your plan and selected options. Some sources are disabled on lower plans.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+For plan pricing and current entitlements, refer to [osint.ly/pricing](https://osint.ly/pricing).
+</Note>

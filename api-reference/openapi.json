@@ -1,0 +1,1493 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Osintly API",
+    "version": "1.0.0",
+    "description": "OpenAPI specification for the Osintly API service.",
+    "contact": {
+      "name": "Osintly",
+      "url": "https://docs.osint.ly/api-reference/quick-start"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.osint.ly",
+      "description": "Production"
+    },
+    {
+      "url": "http://localhost:8787",
+      "description": "Local development (wrangler dev)"
+    }
+  ],
+  "tags": [
+    {
+      "name": "System",
+      "description": "Health and service checks"
+    },
+    {
+      "name": "Auth",
+      "description": "Authorization validation"
+    },
+    {
+      "name": "Search",
+      "description": "Create, monitor and retrieve search results"
+    },
+    {
+      "name": "Usage",
+      "description": "Rate limit and usage information"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Internal webhook dispatch endpoint"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["System"],
+        "summary": "Health check",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service health",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                },
+                "examples": {
+                  "healthy": {
+                    "value": {
+                      "status": "healthy",
+                      "timestamp": "2026-03-03T12:00:00.000Z",
+                      "service": "api"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Validate bearer token",
+        "operationId": "validateAuthorization",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Authorization valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthValidationResponse"
+                },
+                "examples": {
+                  "ok": {
+                    "value": {
+                      "message": "Authorization Valid",
+                      "help": "https://docs.osint.ly/api-reference/quick-start"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/usage": {
+      "get": {
+        "tags": ["Usage"],
+        "summary": "Get usage and limits",
+        "operationId": "getUsage",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usage limits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageSuccessResponse"
+                },
+                "examples": {
+                  "usage": {
+                    "value": {
+                      "success": true,
+                      "message": "Usage limits fetched",
+                      "limits": {
+                        "allowed": true,
+                        "limits": {
+                          "global": {
+                            "used": 15,
+                            "max": 500
+                          },
+                          "daily": {
+                            "used": 2,
+                            "max": 50
+                          }
+                        }
+                      },
+                      "code": 200
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "description": "Usage retrieval error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Create a new search",
+        "operationId": "createSearch",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchCreateRequest"
+              },
+              "examples": {
+                "emailSearch": {
+                  "summary": "Email search with modules and webhooks",
+                  "value": {
+                    "type": "Email Address",
+                    "value": "target@example.com",
+                    "options": {
+                      "leakedresults": ["Leak Check", "Snusbase"],
+                      "modules": [
+                        "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f"
+                      ],
+                      "bypass_cache": false,
+                      "include_breached_accounts": true,
+                      "include_registered_accounts": true,
+                      "registered_accounts_only": false
+                    },
+                    "webhook": {
+                      "url": "https://client.example/webhooks/osintly",
+                      "secret": "super-secret-webhook-key"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchCreateSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Seconds until reset"
+              },
+              "X-RateLimit-Reset": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Unix timestamp for next reset"
+              },
+              "X-Limits-Global-Used": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Limits-Global-Max": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Limits-Daily-Used": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "X-Limits-Daily-Max": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchCreateRateLimitResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Search dispatch unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchCreateFailureResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/search/{id}": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get search result",
+        "operationId": "getSearchResult",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search result status and payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResultEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/search/{id}/stream": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Stream search progress (SSE)",
+        "description": "Streams progress events with Server-Sent Events. If task is already finished, returns a JSON payload instead.",
+        "operationId": "streamSearch",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE stream or immediate JSON if already completed",
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "sse": {
+                    "value": "event: connected\ndata: connected\\n\\nevent: notice\ndata: {\"message\":\"Leaked results are not streamed. Use /search/:id/leaks/{source}.\"}\\n\\ndata: {\"module\":\"snusbase\",\"status\":\"running\"}\\n\\n"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamFinishedJsonResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/search/{id}/leaks": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get leaks overview for all sources",
+        "operationId": "getLeaksOverview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leaks sources and fetch endpoints",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeaksOverviewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/search/{id}/leaks/{source}": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get leak results for a specific source",
+        "operationId": "getLeaksSource",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          },
+          {
+            "$ref": "#/components/parameters/LeakSource"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leak source payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeakSourceSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid id or page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/ValidationErrorResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LeakSourceErrorResponse"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Source or page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LeakSourceErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API Key"
+      }
+    },
+    "parameters": {
+      "SearchId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "Search UUID"
+      },
+      "LeakSource": {
+        "name": "source",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "snusbase"
+        },
+        "description": "Leak source code/name (case-insensitive)"
+      },
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "description": "Page number for paginated leak sources"
+      },
+      "OsintlyTimestamp": {
+        "name": "x-osintly-timestamp",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Unix epoch milliseconds used for signature validation"
+      },
+      "OsintlySignature": {
+        "name": "x-osintly-signature",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "pattern": "^sha256=.*$"
+        },
+        "description": "HMAC SHA-256 signature generated from timestamp + raw body"
+      }
+    },
+    "responses": {
+      "ValidationError": {
+        "description": "Request validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ValidationErrorResponse"
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/BasicErrorResponse"
+            },
+            "examples": {
+              "unauthorized": {
+                "value": {
+                  "success": false,
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          }
+        }
+      },
+      "InternalError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InternalErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "HealthResponse": {
+        "type": "object",
+        "required": ["status", "timestamp", "service"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["healthy"]
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "service": {
+            "type": "string",
+            "enum": ["api"]
+          }
+        }
+      },
+      "AuthValidationResponse": {
+        "type": "object",
+        "required": ["message", "help"],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "help": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "LimitWindow": {
+        "type": "object",
+        "required": ["used", "max"],
+        "properties": {
+          "used": {
+            "type": ["integer", "null"]
+          },
+          "max": {
+            "type": ["integer", "null"]
+          }
+        }
+      },
+      "UsageLimits": {
+        "type": "object",
+        "required": ["global", "daily"],
+        "properties": {
+          "global": {
+            "$ref": "#/components/schemas/LimitWindow"
+          },
+          "daily": {
+            "$ref": "#/components/schemas/LimitWindow"
+          }
+        }
+      },
+      "CheckLimitsResult": {
+        "type": "object",
+        "required": ["allowed", "limits"],
+        "properties": {
+          "allowed": {
+            "type": "boolean"
+          },
+          "limits": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UsageLimits"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "SearchError": {
+        "type": "object",
+        "required": ["code", "details"],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidationIssue": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "expected": {
+            "type": "string"
+          },
+          "received": {
+            "type": "string"
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ValidationErrorResponse": {
+        "type": "object",
+        "required": ["success", "message", "error"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [false]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["Invalid request parameters"]
+          },
+          "error": {
+            "$ref": "#/components/schemas/SearchError"
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "validation_errors": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ValidationIssue"
+                }
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "BasicErrorResponse": {
+        "type": "object",
+        "required": ["success", "message"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [false]
+          },
+          "message": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/SearchError"
+          },
+          "debug": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "InternalErrorResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BasicErrorResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "enum": ["Internal server error"]
+              }
+            }
+          }
+        ]
+      },
+      "SearchOptions": {
+        "type": "object",
+        "properties": {
+          "leakedresults": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Hudson Rock",
+                "Leak Check",
+                "Snusbase",
+                "Breach Base",
+                "Breach VIP",
+                "Leak Osint"
+              ]
+            }
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "bypass_cache": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_breached_accounts": {
+            "type": "boolean",
+            "default": false
+          },
+          "include_registered_accounts": {
+            "type": "boolean",
+            "default": true
+          },
+          "registered_accounts_only": {
+            "type": "boolean",
+            "default": false,
+            "description": "Supported only for type = Email Address"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WebhookConfig": {
+        "type": "object",
+        "required": ["url"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "secret": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 256
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchType": {
+        "type": "string",
+        "enum": [
+          "Pseudonym",
+          "Email Address",
+          "Domain Name",
+          "Cryptocurrency",
+          "IP Address"
+        ]
+      },
+      "SearchCreateRequest": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/SearchCreatePseudonym"
+          },
+          {
+            "$ref": "#/components/schemas/SearchCreateEmail"
+          },
+          {
+            "$ref": "#/components/schemas/SearchCreateDomain"
+          },
+          {
+            "$ref": "#/components/schemas/SearchCreateCrypto"
+          },
+          {
+            "$ref": "#/components/schemas/SearchCreateIp"
+          }
+        ]
+      },
+      "SearchCreatePseudonym": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["Pseudonym"]
+          },
+          "value": {
+            "type": "string",
+            "description": "Pseudonym to search"
+          },
+          "options": {
+            "$ref": "#/components/schemas/SearchOptions"
+          },
+          "webhook": {
+            "$ref": "#/components/schemas/WebhookConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchCreateEmail": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["Email Address"]
+          },
+          "value": {
+            "type": "string",
+            "format": "email"
+          },
+          "options": {
+            "$ref": "#/components/schemas/SearchOptions"
+          },
+          "webhook": {
+            "$ref": "#/components/schemas/WebhookConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchCreateDomain": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["Domain Name"]
+          },
+          "value": {
+            "type": "string",
+            "description": "Domain name with optional protocol/path"
+          },
+          "options": {
+            "$ref": "#/components/schemas/SearchOptions"
+          },
+          "webhook": {
+            "$ref": "#/components/schemas/WebhookConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchCreateCrypto": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["Cryptocurrency"]
+          },
+          "value": {
+            "type": "string"
+          },
+          "options": {
+            "$ref": "#/components/schemas/SearchOptions"
+          },
+          "webhook": {
+            "$ref": "#/components/schemas/WebhookConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchCreateIp": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["IP Address"]
+          },
+          "value": {
+            "type": "string",
+            "description": "IPv4 or IPv6"
+          },
+          "options": {
+            "$ref": "#/components/schemas/SearchOptions"
+          },
+          "webhook": {
+            "$ref": "#/components/schemas/WebhookConfig"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchCreateSuccessResponse": {
+        "type": "object",
+        "required": ["success", "message", "data", "meta", "code"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [true]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "required": ["search", "job"],
+            "properties": {
+              "search": {
+                "type": "object",
+                "required": ["id", "type", "value", "status"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "type": {
+                    "$ref": "#/components/schemas/SearchType"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "example": "pending"
+                  }
+                }
+              },
+              "job": {
+                "type": "object",
+                "required": ["id", "dispatched_at", "via_cache"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "dispatched_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "via_cache": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "options": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/SearchOptions"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "leakedresults": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": ["bypass_cache"],
+            "properties": {
+              "bypass_cache": {
+                "type": ["boolean", "null"]
+              },
+              "environment": {
+                "type": "string"
+              },
+              "gateway": {
+                "type": "string"
+              }
+            }
+          },
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          }
+        }
+      },
+      "SearchCreateFailureResponse": {
+        "type": "object",
+        "required": ["success", "message", "meta", "code"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [false]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["Failed to create search"]
+          },
+          "error": {
+            "$ref": "#/components/schemas/SearchError"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "search": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["failed"]
+                  }
+                }
+              },
+              "job": {
+                "type": "null"
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "environment": {
+                "type": "string"
+              },
+              "gateway": {
+                "type": "string"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "code": {
+            "type": "integer",
+            "enum": [503]
+          }
+        }
+      },
+      "SearchCreateRateLimitResponse": {
+        "type": "object",
+        "required": ["success", "message", "error", "meta", "code", "limits"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [false]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["Rate limit exceeded"]
+          },
+          "error": {
+            "$ref": "#/components/schemas/SearchError"
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "environment": {
+                "type": "string"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "code": {
+            "type": "integer",
+            "enum": [429]
+          },
+          "limits": {
+            "$ref": "#/components/schemas/CheckLimitsResult"
+          }
+        }
+      },
+      "SearchResultData": {
+        "type": "object",
+        "properties": {
+          "cards": {
+            "nullable": true
+          },
+          "leaked_data": {
+            "nullable": true
+          },
+          "breached_accounts": {
+            "nullable": true
+          },
+          "registered_accounts": {
+            "nullable": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "SearchResultEnvelope": {
+        "type": "object",
+        "required": ["ok", "status", "result", "created_at"],
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "enum": [true]
+          },
+          "status": {
+            "type": "string"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchResultData"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "StreamFinishedJsonResponse": {
+        "type": "object",
+        "required": [
+          "ok",
+          "warning",
+          "id",
+          "value",
+          "type",
+          "status",
+          "result",
+          "created_at"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "enum": [true]
+          },
+          "warning": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "value": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "options": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchOptions"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "result": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SearchResultData"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LeaksOverviewResponse": {
+        "type": "object",
+        "required": ["ok", "search_id", "sources"],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "search_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fetch_endpoints": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/LeakSourceDescriptor"
+            }
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      },
+      "LeakSourceDescriptor": {
+        "type": "object",
+        "required": ["endpoint", "status"],
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "format": "uri"
+          },
+          "status": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "logo": {
+            "type": ["string", "null"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/LeakPaginationDescriptor"
+          }
+        }
+      },
+      "LeakPaginationDescriptor": {
+        "type": "object",
+        "required": ["isBig"],
+        "properties": {
+          "isBig": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "fetchUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "LeakResultEntry": {
+        "type": "object",
+        "required": ["key", "items"],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "additionalProperties": true
+      },
+      "LeakSourceSuccessResponse": {
+        "type": "object",
+        "required": ["ok", "source"],
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "enum": [true]
+          },
+          "source": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "template": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeakResultEntry"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/LeakPageInfo"
+          }
+        },
+        "additionalProperties": true
+      },
+      "LeakPageInfo": {
+        "type": "object",
+        "required": ["currentPage", "totalPages", "hasNextPage"],
+        "properties": {
+          "currentPage": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LeakSourceErrorResponse": {
+        "type": "object",
+        "required": ["ok", "message", "source"],
+        "properties": {
+          "ok": {
+            "type": "boolean",
+            "enum": [false]
+          },
+          "message": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/LeakPageInfo"
+          }
+        },
+        "additionalProperties": true
+      },
+      "UsageSuccessResponse": {
+        "type": "object",
+        "required": ["success", "message", "limits", "code"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [true]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["Usage limits fetched"]
+          },
+          "limits": {
+            "$ref": "#/components/schemas/CheckLimitsResult"
+          },
+          "code": {
+            "type": "integer",
+            "enum": [200]
+          }
+        }
+      },
+      "UsageErrorResponse": {
+        "type": "object",
+        "required": ["success", "message", "error"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [false]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["An error occurred while fetching usage limits"]
+          },
+          "error": {
+            "type": "object",
+            "required": ["message"],
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "WebhookDispatchRequest": {
+        "type": "object",
+        "required": ["searchId"],
+        "properties": {
+          "searchId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WebhookDispatchResponse": {
+        "type": "object",
+        "required": ["success", "status", "body"],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": ["integer", "null"]
+          },
+          "body": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

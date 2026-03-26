@@ -1,0 +1,124 @@
+---
+title: Credits explained
+description: How the credit system works, what each search costs, and what happens when you run out.
+icon: coins
+---
+
+Every search on Osintly costs credits. This page explains what counts as a credit spend, what is free, how expiry works, and how to check your balance.
+
+<Warning>
+  Spending credits (for example, running searches or monitor executions) requires an active subscription on the account. You may buy credits without an active subscription, but they cannot be spent until an active subscription is present.
+</Warning>
+
+---
+
+## What is a credit?
+
+One credit equals one search. A search is defined as a single query against one input type: one username, one email address, one IP, one domain, or one wallet address.
+
+<Note>Browsing results, re-opening a past search from history, exporting, or using AI Analyst does not cost additional credits.</Note>
+
+---
+
+## Credit balance by plan
+
+| Plan | Price | Credits/month |
+|---|---|---|
+| Standard | €9.99/mo | 25 |
+| Pro | €24.99/mo | 100 |
+| Advanced | €94.99/mo | 200 |
+
+**Purchased credits** (bought directly) are valid indefinitely and do not expire.
+
+**Promotional or free credits** may have an expiration date. When they do, the terms of the promotion specify the deadline. Check [osint.ly/terms](https://rewrite.osint.ly/terms#credits) for full details.
+
+<Warning>If your balance reaches 0, new searches are blocked until you purchase more credits or until promotional credits are added. Your history and existing results remain fully accessible.</Warning>
+
+---
+
+## What costs a credit
+
+<AccordionGroup>
+  <Accordion title="Any new search query" icon="magnifying-glass">
+    Running a search against any of the 6 input types (Pseudonym, Email Address, Phone, IP address, Domain, Cryptocurrency) costs 1 credit per query.
+  </Accordion>
+  <Accordion title="Re-running a search" icon="rotate-right">
+    If you run the same query again (for fresh results), it costs 1 credit. The previous result stays in your history regardless.
+  </Accordion>
+  <Accordion title="Monitor executions" icon="bell">
+    Each time a monitor runs, it consumes 1 credit per execution, the same as a manual search.
+
+    If the monitor is run in a team context, the team credit priority logic applies: team bank first, then owner credits, then member credits. See [Credits in a team](#credits-in-a-team) below.
+
+    **Example:** A monitor set to run every 6 hours executes 4 times per day. Over 30 days, that is approximately 120 credit deductions.
+
+    <Note>Monitoring is available on Pro and Advanced plans.</Note>
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## What does not cost a credit
+
+<AccordionGroup>
+  <Accordion title="Viewing past results" icon="clock-rotate-left">
+    Your [search history](https://osint.ly/history) lets you re-open any past result page for free. Results are cached and no new query is sent.
+  </Accordion>
+  <Accordion title="Exporting results" icon="file-export">
+    Exporting to PDF or DOCX from an existing result page does not consume credits. The export formats available depend on your plan.
+  </Accordion>
+  <Accordion title="AI Analyst conversations" icon="robot">
+    Asking questions in the AI Analyst panel on an existing result does not cost credits. AI Analyst is available on Pro and Advanced plans.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Credits in a team
+
+When a search is launched inside a team workspace, credits are deducted following a priority order based on the team settings:
+
+1. **Team credit bank** - if the bank is enabled and has at least 1 credit, the search deducts from it.
+2. **Owner credits** - if the bank is empty or disabled and the "use owner credits" option is enabled, the search deducts from the owner's personal balance.
+3. **Member credits** - if neither of the above applies, the search deducts from the balance of the member who launched the action.
+
+**Example:** A team runs 3 searches (1 credit each).
+
+| Scenario | Result |
+|---|---|
+| Bank enabled, 10 credits available | Bank goes from 10 to 7 credits |
+| Bank empty, owner credits enabled | 3 credits deducted from the owner |
+| Bank empty, owner credits disabled | Each member pays from their own balance |
+
+<Note>These settings are configurable by the team owner in the team settings panel.</Note>
+
+---
+
+## Checking your balance
+
+Your credit balance appears in three places:
+
+- **Sidebar**: shown below your username in the left navigation panel.
+- **Search page**: displayed directly on the [Search page](https://osint.ly/search) before you run a query.
+- **Settings**: go to **Settings > Credits** for your full transaction history, including credit purchases, search deductions, and monitor executions.
+
+---
+
+## Running out of credits
+
+If your balance reaches 0, the search input is disabled and you see a prompt to add credits. Your history and existing results remain fully accessible.
+
+<Tip>If your balance drops to 0, monitor executions fail until credits are available again.</Tip>
+
+---
+
+## Next steps
+
+<CardGroup cols={2}> 
+  <Card title="Quickstart" icon="rocket" href="/guides/quickstart-user">
+    Run your first search.
+  </Card>
+  <Card title="FAQ" icon="circle-question" href="/faq">
+    Common questions about credits and billing.
+  </Card>
+</CardGroup>

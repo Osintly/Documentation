@@ -1,0 +1,107 @@
+---
+title: Leaks & breaches
+description: How Osintly surfaces leak and breach intelligence, where to find it in results, and what varies by plan.
+icon: database
+---
+
+Osintly can enrich a search with leak and breach intelligence when those sources are enabled for your plan.  
+Leak data is streamed progressively and merged into the same result workflow as standard modules.
+
+---
+
+## What Osintly shows
+
+Osintly exposes two related but different datasets:
+
+<AccordionGroup>
+  <Accordion title="Leaked Results (raw leak records)" icon="database">
+    Record-level data fetched from leak repositories.  
+    These records are often heterogeneous (source-dependent) and can include identifiers such as emails, usernames, phone numbers, IPs, hashes, profile fields, and metadata.
+
+    Schema is not identical across sources: field names and completeness vary by dataset.
+  </Accordion>
+
+  <Accordion title="Breached Accounts (breach event summary)" icon="triangle-exclamation">
+    Event-style breach summaries tied to known breach sources and breach dates.  
+    In the current panel view, this is primarily a source/date-oriented summary block (not a full dump of exposed fields).
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Where leak/breach data appears
+
+Leak and breach intelligence is visible in multiple UI areas on the result page:
+
+1. **Leaked Results tab**  
+   Dedicated leak browsing area with source tabs, loading states, and large-dataset handling.
+
+2. **All Results tab**  
+   Leak-related cards can also appear in the broader result flow, alongside other modules.
+
+3. **Breach & Pictures synthesis block (top section)**  
+   Includes a **Breached Accounts** panel (source + date timeline style) and profile picture extraction when available.
+
+---
+
+## Leaked Results tab behavior
+
+The Leaked Results tab is built for large and uneven datasets:
+
+- Source-level tabs are generated from enabled/available leak sources
+- Sources can be loading, resolved, empty, or failed independently
+- Big sources are paginated and appended progressively
+- Empty/No-source states are explicit (so “no data” is distinguishable from “still loading”)
+
+This means one source can be complete while another is still streaming.
+
+---
+
+## Searching and filtering leak data
+
+Use the result search bar and filters to narrow leak output without launching a new search:
+
+- Keyword search across returned leak cards (email fragments, usernames, domains, etc.)
+- Source filters (from enabled leak providers)
+- Data-type filters (when available through the filter modal)
+
+Filtering is local to the loaded result set and does not consume credits.
+
+---
+
+## Provider access by plan 
+
+Leak-source access is plan-gated.
+
+| Capability | Standard | Pro | Advanced |
+|---|---:|---:|---:|
+| Leak source access | No | Yes | Yes |
+| Sources available | None | Snusbase, Breach VIP, Hudson Rock, Leak Check, Leak Osint, Breach Base | Snusbase, Breach VIP, Hudson Rock, Leak Check, Leak Osint, Breach Base |
+
+If your plan does not include leak sources:
+- the Leaked Results tab is disabled/hidden in practice for that search context
+- leak-source options are locked in Search settings
+- those providers are not queried
+
+---
+
+## Source selection and query scope
+
+Before launching a search, leak source scope can be adjusted in Search settings.  
+Only selected + allowed sources are queried for that run.
+
+So two searches with the same identifier can return different leak coverage if source selection differs.
+
+---
+
+## Data interpretation notes
+
+- Leak records are provider-native and may contain duplicates or partial fields
+- Breach dates come from source data and usually represent breach-event timing, not “indexed at” timing
+- “No leaked results” can mean either:
+  - no matches in queried sources, or
+  - source unavailable/failed/rate-limited for that run
+
+<Tip>
+Best practice: pivot across identifiers. If leaks reveal new usernames, emails, or domains, run follow-up searches on each pivot to expand attribution.
+</Tip>

@@ -1,0 +1,117 @@
+---
+title: Webhooks
+description: Configure webhooks on search creation and parse delivery payloads.
+icon: webhook
+---
+
+Osintly can push search completion results to your server.
+
+You configure the webhook when creating a search (`POST /search`) with the `webhook` object:
+
+```json
+{
+  "type": "Email Address",
+  "value": "target@example.com",
+  "webhook": {
+    "url": "https://client.example/webhooks/osintly",
+    "secret": "super-secret-webhook-key"
+  }
+}
+```
+
+## When a webhook is sent
+
+A webhook is attempted after the search reaches a terminal status:
+
+- `finished`
+- `failed`
+
+If no `webhook.url` is provided at search creation, no callback is sent.
+
+## What your webhook endpoint receives
+
+Your endpoint receives a JSON payload with the following shape:
+
+```json
+{
+  "searchId": "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
+  "status": "finished",
+  "result": {
+    "cards": [],
+    "leaked_data": {},
+    "breached_accounts": null,
+    "registered_accounts": null
+  },
+  "finishedAt": "2026-03-03T14:21:30.120Z",
+  "search": {
+    "id": "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
+    "value": "target@example.com",
+    "type": "Email Address",
+    "options": {
+      "include_registered_accounts": true
+    },
+    "created_at": "2026-03-03T14:20:10.010Z"
+  }
+}
+```
+
+### Field reference
+
+| Field | Type | Description |
+|---|---|---|
+| `searchId` | `string (uuid)` | Search identifier |
+| `status` | `"finished" \| "error"` | Final normalized status sent by webhook delivery |
+| `result.cards` | `unknown` | Main aggregated cards payload |
+| `result.leaked_data` | `unknown` | Leaks payload metadata/content |
+| `result.breached_accounts` | `unknown` | Breached account data |
+| `result.registered_accounts` | `unknown` | Registered accounts data |
+| `finishedAt` | `string (date-time)` | Delivery timestamp |
+| `search.id` | `string (uuid)` | Original search id |
+| `search.value` | `string` | Original search value |
+| `search.type` | `string` | Original search type |
+| `search.options` | `object \| null` | Original request options |
+| `search.created_at` | `string (date-time)` | Original search creation timestamp |
+
+## Verify authenticity (recommended)
+
+When you define `webhook.secret`, verify a signature header on your endpoint.
+
+Use this signing format:
+
+- Algorithm: `HMAC-SHA256`
+- Signed input: `timestamp + raw_request_body`
+- Output format: `sha256=<hex_digest>`
+
+### Example verifier (Node.js)
+
+```js
+import crypto from "node:crypto";
+
+function sign(secret, timestamp, rawBody) {
+  const digest = crypto
+    .createHmac("sha256", secret)
+    .update(timestamp + rawBody)
+    .digest("hex");
+  return `sha256=${digest}`;
+}
+
+function verifySignature({ secret, timestamp, rawBody, receivedSignature }) {
+  const expected = sign(secret, timestamp, rawBody);
+  if (expected.length !== receivedSignature.length) return false;
+  return crypto.timingSafeEqual(
+    Buffer.from(expected, "utf8"),
+    Buffer.from(receivedSignature, "utf8")
+  );
+}
+```
+
+## Receiver checklist
+
+- Return `2xx` quickly after validation
+- Process heavy work asynchronously
+- Keep handlers idempotent by deduplicating on `searchId`
+- Log and monitor non-2xx responses from your endpoint
+
+<Tip>
+If you need to re-fetch full data, call `GET /search/{id}` and `GET /search/{id}/leaks` using the `searchId` from the webhook payload.
+</Tip>

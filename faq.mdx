@@ -1,0 +1,126 @@
+---
+title: FAQ
+description: Answers to the most common questions about Osintly.
+icon: circle-question
+---
+
+## Account & access
+
+<AccordionGroup>
+  <Accordion title="How do I create an account?" icon="user-plus">
+    Go to [osint.ly](https://osint.ly/#signup) and use the sign-up flow from the authentication modal. No credit card is required to register.
+  </Accordion>
+
+  <Accordion title="I forgot my password. How do I reset it?" icon="key">
+    Use the **Forgot password** link on the login screen. A reset link will be sent to your registered email address.
+  </Accordion>
+
+  <Accordion title="Can I use Osintly without a paid plan?" icon="circle-info">
+    You can register for free. Running searches requires an active paid plan. See [osint.ly/pricing](https://osint.ly/pricing) for options.
+
+    For more details about credits and spending rules, see [Credits explained](/guides/credits-explained).
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Credits & billing
+
+<AccordionGroup>
+  <Accordion title="Why do I see fewer module cards than someone on a different plan?" icon="layer-group">
+    The number of providers queried depends on your plan. Higher plans unlock additional data sources, including premium breach and leak providers. Standard plan runs a subset of the full provider list.
+  </Accordion>
+
+  <Accordion title="Do unused credits expire?" icon="rotate">
+    Purchased credits do not expire. Promotional or free credits may have an expiration date specified in the promotion terms. See [osint.ly/terms](https://rewrite.osint.ly/terms#credits) for details.
+  </Accordion>
+
+  <Accordion title="Can I get a refund?" icon="money-bill-transfer">
+    All sales are final except where required by applicable law. If you believe a charge was made in error, contact [contact@osint.ly](mailto:contact@osint.ly) with the details.
+  </Accordion>
+
+  <Accordion title="How do I cancel my subscription?" icon="ban">
+    Go to your account settings and open the **Billing** section. You can cancel at any time. Your plan stays active until the end of the current billing period.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Search & results
+
+<AccordionGroup> 
+
+  <Accordion title="Why did my search return no results?" icon="magnifying-glass">
+    Some queries return no results when the target is not present in any of the queried sources. This is a valid result, not an error. Try a different input type (for example, search the associated email instead of the username).
+  </Accordion>
+
+  <Accordion title="Can I search in any language?" icon="language">
+    The query is processed as entered. Osintly does not translate or normalize your input. If the target uses a non-Latin username or script, enter it exactly as it appears.
+  </Accordion>
+
+  <Accordion title="How recent is the data?" icon="calendar">
+    Source freshness varies by provider. Breach databases are updated as new leaks are processed. Real-time sources (live account checks, DNS) return current data at the time of the search.
+  </Accordion>
+
+  <Accordion title="Can I export results on Standard?" icon="file-export">
+    JSON export is available from individual card expansion modals. CSV and JSON are available for map data. PDF and DOCX export options are available on all paid plans. See [Billing & Plans](/billing/plans-entitlements) for the full breakdown.
+  </Accordion>
+
+  <Accordion title="Why do some searches show a different layout?" icon="table-columns">
+    The result page adapts to the input type. Domain searches include a domain overview block with DNS records and risk signals. Cryptocurrency searches include a wallet chart and transaction view. Some blocks (map, registered accounts, leaked results) only appear when the data returned by providers includes the relevant fields.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Features
+
+<AccordionGroup>
+  <Accordion title="What is AI Analyst?" icon="robot">
+    AI Analyst is a conversational panel on the result page. Once results are loaded, you can ask it to build timelines, summarize findings, generate charts, focus on a specific record, or filter results using natural language. It can also run a web search or fetch detailed data from a specific leaked record when asked.
+
+    Available on Pro and Advanced plans.
+  </Accordion>
+
+  <Accordion title="Why is AI Analyst blocked for me?" icon="lock">
+    AI Analyst requires a Pro or Advanced plan. If you are on Standard, the panel is visible but locked. Upgrade your plan to activate it.
+  </Accordion>
+
+  <Accordion title="What does monitoring do?" icon="bell">
+    Monitoring tracks a saved query and runs it automatically at a frequency you set. Each execution deducts 1 credit. You receive an alert when new data appears for that target.
+
+    Available on Pro and Advanced plans.
+  </Accordion>
+
+  <Accordion title="Can I share a result with someone who does not have an account?" icon="share-nodes">
+    The Collaborate feature lets you share a result with teammates. Public sharing options may vary depending on your plan and team configuration.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Legal & privacy
+
+<AccordionGroup>
+  <Accordion title="Is it legal to use Osintly?" icon="scale-balanced">
+    Osintly provides access to publicly available and dataset-sourced information. Whether a specific use is legal depends on your jurisdiction, the purpose of the investigation, and local data protection laws. You are responsible for ensuring your use complies with applicable regulations.
+  </Accordion>
+
+  <Accordion title="Does Osintly store my searches?" icon="database">
+    Your search history is stored in your account and accessible at [osint.ly/history](https://osint.ly/history). You can delete individual entries one by one or select multiple entries for bulk deletion directly from the History page.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Still have a question?
+
+<CardGroup cols={2}>
+  <Card title="Community" icon="users" href="https://osint.ly/community">
+    Ask the community. Investigators share tips and help each other.
+  </Card>
+  <Card title="Contact support" icon="envelope" href="mailto:contact@osint.ly">
+    Reach the team directly at contact@osint.ly.
+  </Card>
+</CardGroup>
+

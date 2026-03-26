@@ -1,0 +1,85 @@
+---
+title: Team collaboration
+description: Create a team, invite members, assign roles, and work together on investigations.
+icon: users
+---
+
+Teams let multiple users share investigations, projects, and credits policies in one workspace.
+
+---
+
+## Creating a team
+
+<Steps>
+  <Step title="Open Team settings">
+    Go to **Settings** and open the **Team** section.
+  </Step>
+  <Step title="Create the team">
+    Click **Create team** and give it a name.
+  </Step>
+  <Step title="Invite members">
+    Enter the email addresses of the people you want to add and choose a role. Invitations are sent by email.
+  </Step>
+</Steps>
+
+<Note>
+Team creation is available on Pro and Advanced plans.
+</Note>
+
+---
+
+## Roles
+
+| Role | Permissions |
+|---|---|
+| **Owner** | Full team control: settings, role changes, deletion, member management |
+| **Admin** | Can invite and remove members (with owner-only restrictions) |
+| **Editor** | Operational contributor role for team workflows |
+| **Viewer** | Restricted role (cannot create team projects) |
+
+---
+
+## Invitations and joining
+
+Invitations are role-based and time-limited.
+
+- Invitees join through an invitation code flow.
+- Invitation must match the invitee account email.
+- A user cannot join if already in another team.
+
+---
+
+## Credit management in a team
+
+Credits in a team context follow a priority order based on settings configured by the owner:
+
+1. **Team credit bank** - if enabled and has at least 1 credit, searches deduct from it first.
+2. **Owner credits** - if the bank is empty or disabled and the "use owner credits" option is on, searches deduct from the owner's balance.
+3. **Member credits** - if neither applies, each member's searches deduct from their own balance.
+
+The owner configures this in the team settings panel.
+
+---
+
+## Real-time collaboration
+
+Team members can collaborate on shared result contexts and team projects.
+
+In shared result views, collaboration state/presence is synchronized (for example, collaborator presence and shared workspace context).
+
+---
+
+## Managing the team
+
+Owner/Admin can:
+
+- Remove a member
+- Invite members
+
+Owner-only actions include:
+
+- Change member roles
+- Update team settings (including credit policy)
+- Delete/dissolve the team
+
+<Warning>Dissolving a team permanently removes access to all team projects for all members. Solo projects belonging to individual members are not affected.</Warning>
