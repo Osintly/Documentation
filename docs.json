@@ -38,6 +38,7 @@
               "features/osint-search",
               "features/real-time-results",
               "features/analysis-panels",
+              "features/card-annotations",
               "features/leaks-breaches",
               "features/ai-analyst",
               "features/monitoring",

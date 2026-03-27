@@ -1,0 +1,170 @@
+---
+title: Card annotations
+description: Tag and annotate search results, add investigation notes, and collaborate with your team in real-time.
+icon: tag
+---
+
+Card Annotations lets you tag and add notes to individual search results, transforming raw findings into actionable intelligence. Team annotations sync in real-time across all members.
+
+<Note>
+This feature is available on all plans.
+</Note>
+
+---
+
+## Core capabilities
+
+<AccordionGroup>
+  <Accordion title="Tagging and labeling" icon="tag">
+    Tag each result with a status:
+    - **Verified** — Confirmed finding, ready for action
+    - **Investigate** — Needs further research or validation
+    - **False Positive** — Not relevant, can be ignored
+    - **Custom tags** — Create your own labels (Follow-up, High Priority, Duplicate, etc.)
+    
+    Tags are color-coded for quick scanning. Each user maintains independent tags per result.
+  </Accordion>
+
+  <Accordion title="Contextual notes" icon="note-sticky">
+    Attach notes (up to 1,000 characters) to any result:
+    
+    ```
+    Tag: Investigate
+    Note: Matched 3 breaches. Check HIPAA compliance.
+    Contact legal team by Friday.
+    ```
+    
+    Use notes for investigation updates, action items, decision rationale, or ticket links.
+  </Accordion>
+
+  <Accordion title="Filtering by tags" icon="filter">
+    Use the Filter panel to narrow results by tags:
+    - Show only "Verified" findings
+    - Focus on "Investigate" items for next sprint
+    - Hide "False Positive" results
+    
+    Filters apply across your team's annotations.
+  </Accordion>
+
+  <Accordion title="Searching notes" icon="magnifying-glass">
+    Use the search bar to find results by tag or note content:
+    - Search "HIPAA" finds all tagged/noted HIPAA references
+    - Search "Follow-up" finds custom tags and notes mentioning follow-up
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Team collaboration
+
+When working on a team search, annotations sync instantly across all members.
+
+**Benefits:**
+- See teammates' tags and notes in real-time (no refresh needed)
+- Hover over tags to see who added them
+- One person tags as "Verified", the whole team sees it immediately
+- Avoid duplicate investigations
+
+From the result page header, use **Collaborate** to:
+- Link the search to a team project
+- Invite team members to contribute
+- View active team members and their activity in the Collaborate panel
+
+<Note>
+Team collaboration requires an active team workspace. See [Team collaboration](/features/team-collaboration) for setup details.
+</Note>
+
+---
+
+## Getting started
+
+### Individual use
+
+<Steps>
+  <Step title="Run a search">
+    Execute any search for an identifier (email, domain, IP, etc.)
+  </Step>
+  <Step title="Hover and click the tag icon">
+    Hover over a result card and click the tag icon in the top-right
+  </Step>
+  <Step title="Choose or create a tag">
+    Select a preset tag (Verified, Investigate, False Positive) or enter a custom label
+  </Step>
+  <Step title="Add a note (optional)">
+    Type investigation notes or context for this result (up to 1,000 characters)
+  </Step>
+  <Step title="Save">
+    Click Save. The tag now appears on the card with your chosen color.
+  </Step>
+</Steps>
+
+From the card, you can:
+- Click the tag again to edit
+- Click the X to remove
+
+### Team collaboration
+
+<Steps>
+  <Step title="Click Collaborate">
+    From the result page header, click **Collaborate**
+  </Step>
+  <Step title="Select or create a team project">
+    Choose an existing team project or create a new one
+  </Step>
+  <Step title="Share with your team">
+    Team members now see all results and your annotations in real-time
+  </Step>
+  <Step title="Tag and discuss">
+    Add tags and notes. Team members see them instantly and can add their own.
+  </Step>
+</Steps>
+
+---
+
+## Use cases
+
+<AccordionGroup>
+  <Accordion title="Security operations" icon="shield">
+    - Tag confirmed threats as "Verified"
+    - Add remediation steps in notes
+    - Filter to "Verified" for incident reporting
+  </Accordion>
+
+  <Accordion title="Fraud investigation" icon="triangle-exclamation">
+    - Create custom tags ("Account Takeover", "Credential Stuffing")
+    - Track progress with notes
+    - Filter by status to track next review items
+    - Team members collaborate without duplicating work
+  </Accordion>
+
+  <Accordion title="Brand protection" icon="shield-heart">
+    - Tag counterfeit or unauthorized use with custom labels
+    - Track takedown requests in notes
+    - Filter for legal team review
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Limitations
+
+- One tag per result per user (everyone maintains independent tags)
+- Notes limited to 1,000 characters
+- Tags are scoped to the current search (create projects for long-term tracking)
+- Real-time sync requires active team collaboration mode
+
+---
+
+## Next steps
+
+<CardGroup cols={3}>
+  <Card title="Organize findings in projects" icon="folder-open" href="/features/investigation-projects">
+    Save annotations to a Team or Solo project for long-term tracking and organization.
+  </Card>
+  <Card title="Share and export results" icon="share-nodes" href="/features/export-sharing">
+    Export annotated results and share them with stakeholders.
+  </Card>
+  <Card title="Set up team collaboration" icon="users" href="/features/team-collaboration">
+    Configure your team workspace for shared annotations and real-time collaboration.
+  </Card>
+</CardGroup>
