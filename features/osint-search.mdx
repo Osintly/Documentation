@@ -105,7 +105,7 @@ You can override the detected type by clicking a different chip at any time. Thi
     Type or paste the value into the input field. The input type chip updates automatically as you type.
   </Step>
   <Step title="Adjust search options if needed">
-    Click the options icon next to the search input to configure leak sources, dorking, and display preferences before launching.
+    Click the options icon next to the search input to configure modules, leak sources, dorking, and display preferences before launching.
   </Step>
   <Step title="Launch the search">
     Click **Search**. Results stream in as each provider responds. 1 credit is deducted per search launched successfully.
@@ -121,6 +121,18 @@ You can override the detected type by clicking a different chip at any time. Thi
 Configure search behavior before launching from the options panel next to the input field.
 
 <AccordionGroup>
+  <Accordion title="Module selection" icon="sliders">
+    Select exactly which modules should run for the current query.
+
+    - Search modules from a dedicated input field
+    - If no module is selected, Osintly runs the default module set for the chosen input type
+    - If one or more modules are selected, execution is restricted to that selection
+
+    Use this when you want to narrow execution to a specific subset of sources.
+    It is useful for targeted checks, signal confirmation, and reducing noise before analysis.
+
+    <Tip>For API usage, map this behavior to `options.modules` in [Domains](/api-reference/domains).</Tip>
+  </Accordion>
   <Accordion title="Leak sources" icon="database">
     Toggle which leak and breach provider categories are included in the search. Disabling a category means those providers are not queried and their cards do not appear in results.
 

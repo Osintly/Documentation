@@ -54,6 +54,14 @@ icon: circle-question
     Some queries return no results when the target is not present in any of the queried sources. This is a valid result, not an error. Try a different input type (for example, search the associated email instead of the username).
   </Accordion>
 
+  <Accordion title="Can I choose which modules run before launching a search?" icon="sliders">
+    Yes. In Search settings, open the **Modules** section and pick the modules to execute.
+
+    If you select no modules, Osintly uses the default module set for the search type. If you select one or more modules, execution is limited to that selection.
+
+    Credits and access rules do not change: module selection follows the same subscription and team credit logic as a standard search.
+  </Accordion>
+
   <Accordion title="Can I search in any language?" icon="language">
     The query is processed as entered. Osintly does not translate or normalize your input. If the target uses a non-Latin username or script, enter it exactly as it appears.
   </Accordion>

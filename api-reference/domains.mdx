@@ -57,6 +57,38 @@ These values must match the OpenAPI enum exactly.
 
 ---
 
+## Module selection behavior (`options.modules`)
+
+Use `options.modules` when you want to restrict execution to a known set of modules.
+
+```json
+{
+  "type": "Email Address",
+  "value": "target@example.com",
+  "options": {
+    "modules": [
+      "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
+      "95c36c17-f76e-4911-bd4e-8ea57515b2fb"
+    ]
+  }
+}
+```
+
+Server-side validation rules:
+
+- Every module ID must exist
+- Every module ID must be listed and currently available
+- Every module ID must be compatible with the selected `type`
+
+Default behavior:
+
+- If `options.modules` is omitted or empty, Osintly runs the default module set for that search type
+- If `options.modules` contains one or more IDs, execution is limited to that set
+
+If validation fails, the API returns `400` with an explicit validation error.
+
+---
+
 ## ID and pagination parameters
 
 - `id` (path): search UUID
