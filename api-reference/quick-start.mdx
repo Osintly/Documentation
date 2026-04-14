@@ -42,6 +42,26 @@ curl -X POST "https://api.osint.ly/search" \
 
 Save the returned `search.id` for the next calls.
 
+### Optional: run selected modules only
+
+```bash
+curl -X POST "https://api.osint.ly/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "type": "Email Address",
+    "value": "target@example.com",
+    "options": {
+      "modules": [
+        "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
+        "95c36c17-f76e-4911-bd4e-8ea57515b2fb"
+      ]
+    }
+  }'
+```
+
+If `options.modules` is empty or omitted, Osintly uses the default module set for the selected search type.
+
 ## 4) Stream progress (SSE)
 
 ```bash
