@@ -45,7 +45,8 @@
               "features/investigation-projects",
               "features/team-collaboration",
               "features/credits-subscriptions",
-              "features/export-sharing"
+              "features/export-sharing",
+              "features/logo-service"
             ]
           },
           {
@@ -78,7 +79,8 @@
               "api-reference/authentification",
               "api-reference/quick-start",
               "api-reference/domains",
-              "api-reference/webhooks"
+              "api-reference/webhooks",
+              "api-reference/logos"
             ]
           },
           {

@@ -1,0 +1,108 @@
+---
+title: Logo Service
+description: Fetch domain logos as images via a simple GET request.
+icon: image
+---
+
+The Osintly Logo Service returns logo images for any domain — PNG, SVG, or ICO — served directly from the edge with CORS enabled.
+
+**Base URL:** `https://logos.osint.ly/{domain}`
+
+<CardGroup cols={3}>
+  <Card title="No API key" icon="lock-open">
+    No authentication required. Just a GET request.
+  </Card>
+  <Card title="CORS enabled" icon="globe">
+    `Access-Control-Allow-Origin: *` — usable directly from any frontend.
+  </Card>
+  <Card title="Long-lived cache" icon="bolt">
+    Logos are cached at the edge and in the browser. Fast on every request.
+  </Card>
+</CardGroup>
+
+---
+
+## Usage
+
+### Basic request
+
+```
+GET https://logos.osint.ly/{domain}
+```
+
+Returns the logo image directly. No redirect.
+
+```
+https://logos.osint.ly/github.com
+https://logos.osint.ly/stripe.com
+https://logos.osint.ly/openai.com
+```
+
+The `www.` prefix is stripped automatically:
+
+```
+https://logos.osint.ly/www.github.com  →  same as github.com
+```
+
+---
+
+## Integration
+
+<CodeGroup>
+
+```html HTML
+<img src="https://logos.osint.ly/github.com" alt="GitHub logo" />
+```
+
+```css CSS
+.logo {
+  background-image: url('https://logos.osint.ly/github.com');
+}
+```
+
+```js JavaScript
+const res = await fetch('https://logos.osint.ly/stripe.com');
+const blob = await res.blob();
+```
+
+```jsx React
+<img src={`https://logos.osint.ly/${domain}`} alt={`${domain} logo`} />
+```
+
+</CodeGroup>
+
+---
+
+## HTTP responses
+
+| Code | Meaning |
+|------|---------|
+| `200` | Logo found and returned |
+| `400` | Missing or invalid domain in the URL |
+| `404` | No logo found for this domain |
+| `429` | Too many requests — retry after 60 seconds |
+| `405` | Method not allowed (only `GET`, `HEAD`, `OPTIONS` are accepted) |
+
+---
+
+## Response headers
+
+| Header | Example value | Description |
+|--------|---------------|-------------|
+| `Content-Type` | `image/png`, `image/svg+xml` | MIME type of the returned logo |
+| `Cache-Control` | `public, s-maxage=2592000, max-age=86400` | Edge cache 30 days, browser cache 1 day |
+| `Access-Control-Allow-Origin` | `*` | CORS — no proxy needed |
+| `X-Logo-Source` | `hunter`, `google`, `r2` | Source used to resolve the logo |
+
+---
+
+## Rate limiting
+
+The service is limited to **1,000 requests per minute per IP** on requests that are not already in the edge cache. This limit may change over time.
+
+When the limit is exceeded, the service returns:
+
+```
+HTTP 429 Too Many Requests
+Retry-After: 60
+```
