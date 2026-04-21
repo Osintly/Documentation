@@ -1,0 +1,54 @@
+---
+title: Logo Service
+description: Embed domain logos anywhere using a single URL — no API key required.
+icon: image
+---
+
+Osintly provides a public logo service at `https://logos.osint.ly` that returns the logo image for any domain. It works directly in browsers, apps, and any HTTP client — no authentication required.
+
+<CardGroup cols={2}>
+  <Card title="One URL per domain" icon="link">
+    `https://logos.osint.ly/github.com` — just swap the domain.
+  </Card>
+  <Card title="Use it anywhere" icon="globe">
+    HTML, CSS, JavaScript, React — CORS enabled for direct browser access.
+  </Card>
+</CardGroup>
+
+---
+
+## How it works
+
+Send a `GET` request with the domain as the path:
+
+```
+GET https://logos.osint.ly/{domain}
+```
+
+The logo image is returned directly — PNG, SVG, or ICO depending on what's available.
+
+**Examples:**
+
+```
+https://logos.osint.ly/avast.com
+https://logos.osint.ly/stripe.com
+https://logos.osint.ly/openai.com
+```
+
+The `www.` prefix is stripped automatically, so `www.github.com` resolves the same as `github.com`.
+
+---
+
+## Quick examples
+
+```html
+<!-- Drop it directly into an <img> tag -->
+<img src="https://logos.osint.ly/github.com" alt="GitHub logo" />
+```
+
+```jsx
+{/* In React, use a template literal */}
+<img src={`https://logos.osint.ly/${domain}`} alt={`${domain} logo`} />
+```
+
+For more integration patterns (CSS, JavaScript) and rate limit details, see the [Logo Service API reference](/api-reference/logos).
