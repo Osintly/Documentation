@@ -1,0 +1,91 @@
+---
+title: Radar
+description: Explore public breach incidents with fast filters, readable incident pages, and practical response guidance.
+icon: satellite-dish
+---
+
+Radar is Osintly's breach intelligence surface. It helps you quickly discover publicly disclosed breaches, understand what was exposed, and decide what to do next.
+
+<CardGroup cols={3}>
+  <Card title="Fast breach feed" icon="list">
+    Scan recent breach events with severity, size, dates, and short summaries.
+  </Card>
+  <Card title="Actionable detail pages" icon="file-lines">
+    Open one breach to get a clear incident view, exposed data types, and context.
+  </Card>
+  <Card title="Practical next steps" icon="shield-check">
+    Get clear actions if you may be affected, plus preventive guidance.
+  </Card>
+</CardGroup>
+
+---
+
+## Where to use Radar
+
+<Tabs>
+  <Tab title="Public view">
+    Browse Radar without signing in to see indexed breach events and open individual breach pages.
+  </Tab>
+  <Tab title="Dashboard view">
+    Use the same breach discovery flow inside the product shell when authenticated.
+  </Tab>
+</Tabs>
+
+---
+
+## What you can do on the Radar feed
+
+At `/radar`, each breach card includes the most useful triage signals:
+
+- breach name and title
+- affected domain (when available)
+- severity label
+- exposed record count
+- breach date and indexed date
+- short readable summary
+
+You can then narrow the list quickly:
+
+<AccordionGroup>
+  <Accordion title="Search" icon="magnifying-glass">
+    Search by breach name, title, or domain to jump directly to relevant incidents.
+  </Accordion>
+  <Accordion title="Severity filter" icon="triangle-exclamation">
+    Focus on `medium`, `high`, or `critical` incidents to prioritize triage.
+  </Accordion>
+  <Accordion title="Exposure filter" icon="filter">
+    Filter by breach size (`All`, `1M+`, `100M+`) to focus on mass-exposure events.
+  </Accordion>
+  <Accordion title="Pagination" icon="table-list">
+    Move through results in pages (12 items per page) instead of loading everything at once.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## What you get on a breach detail page
+
+Open any breach at `/radar/[name]` to get a cleaner incident view:
+
+1. **Core incident facts**: title, organization, severity, exposed records, and key dates.
+2. **Exposed data classes**: what types of data were compromised (emails, names, passwords, phone numbers, etc.).
+3. **Readable breach narrative**: a cleaned, easier-to-read incident explanation.
+4. **Reference links**: source and disclosure links when available.
+
+<Note>
+Radar is built for readability: the goal is to understand impact fast without digging through raw, HTML-heavy breach text.
+</Note>
+
+---
+
+## AI-enhanced context
+
+Some breaches include extra AI-generated analysis to speed up decision-making:
+
+- risk score (0-10) with urgency label
+- structured impact analysis (users, business, sectors, geography)
+- practical response steps if you may be affected
+- preventive guidance for future protection
+- short FAQ for non-specialist users
+- quick classification tags (industry, attack vector, data type, severity factors)
+ 

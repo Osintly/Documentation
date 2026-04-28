@@ -33,20 +33,41 @@
             ]
           },
           {
-            "group": "Features",
+            "group": "Search & Analysis",
             "pages": [
-              "features/osint-search",
-              "features/real-time-results",
-              "features/analysis-panels",
-              "features/card-annotations",
-              "features/leaks-breaches",
-              "features/ai-analyst",
-              "features/monitoring",
-              "features/investigation-projects",
-              "features/team-collaboration",
-              "features/credits-subscriptions",
-              "features/export-sharing",
-              "features/logo-service"
+              "search-analysis/osint-search",
+              "search-analysis/real-time-results",
+              "search-analysis/analysis-panels",
+              "search-analysis/card-annotations",
+              "search-analysis/ai-analyst"
+            ]
+          },
+          {
+            "group": "Breach Intelligence",
+            "pages": [
+              "breach-intelligence/leaks-breaches",
+              "breach-intelligence/radar"
+            ]
+          },
+          {
+            "group": "Investigation & Collaboration",
+            "pages": [
+              "collaboration/investigation-projects",
+              "collaboration/team-collaboration",
+              "collaboration/export-sharing",
+              "collaboration/logo-service"
+            ]
+          },
+          {
+            "group": "Monitoring",
+            "pages": [
+              "operations/monitoring"
+            ]
+          },
+          {
+            "group": "Plans & Credits",
+            "pages": [
+              "billing/credits-subscriptions"
             ]
           },
           {
