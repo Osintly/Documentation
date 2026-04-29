@@ -1,17 +1,17 @@
 ---
 title: Logo Service
-description: Embed domain logos anywhere using a single URL — no API key required.
+description: Embed domain logos anywhere using a single URL - no API key required.
 icon: image
 ---
 
-Osintly provides a public logo service at `https://logos.osint.ly` that returns the logo image for any domain. It works directly in browsers, apps, and any HTTP client — no authentication required.
+Osintly provides a public logo service at `https://logos.osint.ly` that returns the logo image for any domain. It works directly in browsers, apps, and any HTTP client - no authentication required.
 
 <CardGroup cols={2}>
   <Card title="One URL per domain" icon="link">
-    `https://logos.osint.ly/github.com` — just swap the domain.
+    `https://logos.osint.ly/github.com` - just swap the domain.
   </Card>
   <Card title="Use it anywhere" icon="globe">
-    HTML, CSS, JavaScript, React — CORS enabled for direct browser access.
+    HTML, CSS, JavaScript, React - CORS enabled for direct browser access.
   </Card>
 </CardGroup>
 
@@ -21,11 +21,11 @@ Osintly provides a public logo service at `https://logos.osint.ly` that returns 
 
 Send a `GET` request with the domain as the path:
 
-```
+```http
 GET https://logos.osint.ly/{domain}
 ```
 
-The logo image is returned directly — PNG, SVG, or ICO depending on what's available.
+The logo image is returned directly - PNG, SVG, or ICO depending on what is available.
 
 **Examples:**
 
