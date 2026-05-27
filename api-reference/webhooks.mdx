@@ -6,15 +6,19 @@ icon: webhook
 
 Osintly can push search completion results to your server.
 
-You configure the webhook when creating a search (`POST /search`) with the `webhook` object:
+You configure the webhook when creating a search (`POST /search`) with the `delivery.webhook` object:
 
 ```json
 {
-  "type": "Email Address",
-  "value": "target@example.com",
-  "webhook": {
-    "url": "https://client.example/webhooks/osintly",
-    "secret": "super-secret-webhook-key"
+  "query": {
+    "type": "Email Address",
+    "value": "target@example.com"
+  },
+  "delivery": {
+    "webhook": {
+      "url": "https://client.example/webhooks/osintly",
+      "secret": "super-secret-webhook-key"
+    }
   }
 }
 ```
@@ -24,9 +28,9 @@ You configure the webhook when creating a search (`POST /search`) with the `webh
 A webhook is attempted after the search reaches a terminal status:
 
 - `finished`
-- `failed`
+- `error`
 
-If no `webhook.url` is provided at search creation, no callback is sent.
+If no `delivery.webhook.url` is provided at search creation, no callback is sent.
 
 ## What your webhook endpoint receives
 
@@ -74,7 +78,7 @@ Your endpoint receives a JSON payload with the following shape:
 
 ## Verify authenticity (recommended)
 
-When you define `webhook.secret`, verify a signature header on your endpoint.
+When you define `delivery.webhook.secret`, verify a signature header on your endpoint.
 
 Use this signing format:
 
@@ -113,5 +117,5 @@ function verifySignature({ secret, timestamp, rawBody, receivedSignature }) {
 - Log and monitor non-2xx responses from your endpoint
 
 <Tip>
-If you need to re-fetch full data, call `GET /search/{id}` and `GET /search/{id}/leaks` using the `searchId` from the webhook payload.
+If you need to re-fetch full data, call `GET /search/{id}`, `GET /search/{id}/results`, and `GET /search/{id}/results/leaks` using the `searchId` from the webhook payload.
 </Tip>

@@ -30,12 +30,16 @@ curl -X POST "https://api.osint.ly/search" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "type": "Email Address",
-    "value": "target@example.com",
-    "options": {
-      "include_breached_accounts": true,
-      "include_registered_accounts": true,
-      "bypass_cache": false
+    "query": {
+      "type": "Email Address",
+      "value": "target@example.com"
+    },
+    "features": {
+      "breached_accounts": true,
+      "registered_accounts": "include"
+    },
+    "cache": {
+      "mode": "prefer"
     }
   }'
 ```
@@ -49,10 +53,13 @@ curl -X POST "https://api.osint.ly/search" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "type": "Email Address",
-    "value": "target@example.com",
-    "options": {
-      "modules": [
+    "query": {
+      "type": "Email Address",
+      "value": "target@example.com"
+    },
+    "modules": {
+      "mode": "selected",
+      "ids": [
         "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
         "95c36c17-f76e-4911-bd4e-8ea57515b2fb"
       ]
@@ -60,7 +67,7 @@ curl -X POST "https://api.osint.ly/search" \
   }'
 ```
 
-If `options.modules` is empty or omitted, Osintly uses the default module set for the selected search type.
+If `modules` is omitted, Osintly uses the default module set for the selected search type.
 
 ## 4) Stream progress (SSE)
 
@@ -71,36 +78,47 @@ curl -N -X GET "https://api.osint.ly/search/SEARCH_ID/stream" \
 
 You receive incremental events while the search is running.
 
-## 5) Fetch final result
+## 5) Fetch search state
 
 ```bash
 curl -X GET "https://api.osint.ly/search/SEARCH_ID" \
   -H "Authorization: Bearer $OSINTLY_API_KEY"
 ```
 
-## 6) Fetch leak source payloads
+## 6) Fetch final structured results
 
 ```bash
-# List available leak sources for a search
-curl -X GET "https://api.osint.ly/search/SEARCH_ID/leaks" \
-  -H "Authorization: Bearer $OSINTLY_API_KEY"
-
-# Fetch one source (optional page)
-curl -X GET "https://api.osint.ly/search/SEARCH_ID/leaks/snusbase?page=1" \
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/results" \
   -H "Authorization: Bearer $OSINTLY_API_KEY"
 ```
 
-## 7) Optional: receive results by webhook
+## 7) Fetch leak source payloads
 
-Provide `webhook.url` (and optionally `webhook.secret`) when creating the search:
+```bash
+# List available leak sources for a search
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/results/leaks" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+
+# Fetch one source (optional page)
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/results/leaks/snusbase?page=1" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+## 8) Optional: receive results by webhook
+
+Provide `delivery.webhook.url` (and optionally `delivery.webhook.secret`) when creating the search:
 
 ```json
 {
-  "type": "Email Address",
-  "value": "target@example.com",
-  "webhook": {
-    "url": "https://client.example/webhooks/osintly",
-    "secret": "super-secret-webhook-key"
+  "query": {
+    "type": "Email Address",
+    "value": "target@example.com"
+  },
+  "delivery": {
+    "webhook": {
+      "url": "https://client.example/webhooks/osintly",
+      "secret": "super-secret-webhook-key"
+    }
   }
 }
 ```
@@ -112,6 +130,8 @@ When the search completes, your endpoint receives a JSON payload with:
 - `result` (`cards`, `leaked_data`, `breached_accounts`, `registered_accounts`)
 - `finishedAt`
 - `search` metadata (`id`, `value`, `type`, `options`, `created_at`)
+
+The webhook payload contains the aggregated stored result payload, while `GET /search/{id}/results` and `GET /search/{id}/results/leaks` expose the normalized API shapes for retrieval.
 
 Full payload details: [Webhooks](/api-reference/webhooks)
 

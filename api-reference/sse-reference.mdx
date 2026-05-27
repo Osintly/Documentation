@@ -1,0 +1,61 @@
+---
+title: SSE Reference
+description: Real-time Server-Sent Events emitted by GET /search/{id}/stream.
+icon: tower-broadcast
+---
+
+Use `GET /search/{id}/stream` to follow search execution in real time.
+
+## Event types
+
+### `connected`
+
+Sent immediately after the SSE connection is established.
+
+```text
+event: connected
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","timestamp":"2026-05-27T12:00:00.000Z"}
+```
+
+### `module.result`
+
+Sent when one module emits a result card.
+
+```text
+event: module.result
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","module":{"id":"github","name":"GitHub"},"card":{"github_001":{"username":"target"}},"timestamp":"2026-05-27T12:00:02.000Z"}
+```
+
+Fields:
+
+- `search_id`: search UUID
+- `module.id`: module identifier when available
+- `module.name`: module display name
+- `card`: raw card payload
+- `timestamp`: event time
+
+### `search.finished`
+
+Sent when the search reaches a terminal state.
+
+```text
+event: search.finished
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","status":"completed","totals":{"module_results":1},"execution_time_ms":8234,"timestamp":"2026-05-27T12:00:08.000Z"}
+```
+
+Possible values for `status`:
+
+- `completed`
+- `failed`
+
+Optional fields:
+
+- `totals.module_results`
+- `execution_time_ms`
+- `error`
+
+## Notes
+
+- Keep the connection open until `search.finished`
+- The stream is additive: fetch `GET /search/{id}/results` for the normalized final payload
+- Leak results are retrieved separately through `GET /search/{id}/results/leaks`

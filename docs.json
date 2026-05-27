@@ -99,6 +99,7 @@
               "api-reference/introduction",
               "api-reference/authentification",
               "api-reference/quick-start",
+              "api-reference/sse-reference",
               "api-reference/domains",
               "api-reference/webhooks",
               "api-reference/logos"
