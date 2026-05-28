@@ -226,7 +226,8 @@
                         "premium_modules_only": false
                       },
                       "sherlockeye": {
-                        "api_key": "se_xxx"
+                        "api_key": "se_xxx",
+                        "additional_modules": ["digital_accounts_expansion"]
                       }
                     }
                   }
@@ -492,6 +493,16 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/SearchId"
+          },
+          {
+            "name": "provider",
+            "in": "query",
+            "required": false,
+            "description": "Filter the response to a single BYOK provider. When omitted, all available BYOK providers for the search are returned.",
+            "schema": {
+              "type": "string",
+              "enum": ["osint_industries", "sherlockeye"]
+            }
           }
         ],
         "responses": {
@@ -523,6 +534,38 @@
                               "mapping_version": 1,
                               "started_at": "2026-05-27T12:00:03.000Z",
                               "finished_at": "2026-05-27T12:00:18.000Z",
+                              "raw": []
+                            }
+                          }
+                        }
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:20.000Z"
+                      }
+                    }
+                  },
+                  "sherlockeye_only": {
+                    "summary": "Filter to Sherlockeye only",
+                    "value": {
+                      "data": {
+                        "mode": "default",
+                        "providers": {
+                          "sherlockeye": {
+                            "status": "success",
+                            "result_count": 4,
+                            "started_at": "2026-05-27T12:00:03.000Z",
+                            "finished_at": "2026-05-27T12:00:14.000Z",
+                            "mapping_version": 1,
+                            "error": null,
+                            "raw": {
+                              "provider": "sherlockeye",
+                              "search_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                              "result_count": 4,
+                              "status": "success",
+                              "mapping_version": 1,
+                              "started_at": "2026-05-27T12:00:03.000Z",
+                              "finished_at": "2026-05-27T12:00:14.000Z",
                               "raw": []
                             }
                           }
@@ -1211,6 +1254,27 @@
         },
         "additionalProperties": false
       },
+      "SearchByokSherlockeyeProvider": {
+        "type": "object",
+        "required": ["api_key"],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "External provider API key sent with the search request and not returned by the API."
+          },
+          "additional_modules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Optional Sherlockeye async search modules to request in addition to the default search. type and value are derived from the Osintly search and cannot be overridden."
+          }
+        },
+        "additionalProperties": false
+      },
       "SearchByok": {
         "type": "object",
         "properties": {
@@ -1224,7 +1288,7 @@
             "$ref": "#/components/schemas/SearchByokOsintIndustriesProvider"
           },
           "sherlockeye": {
-            "$ref": "#/components/schemas/SearchByokProvider"
+            "$ref": "#/components/schemas/SearchByokSherlockeyeProvider"
           }
         },
         "description": "Bring your own external OSINT provider API keys for this search.",

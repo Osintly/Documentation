@@ -127,11 +127,12 @@ When the search completes, your endpoint receives a JSON payload with:
 
 - `searchId`
 - `status` (`finished` or `error`)
-- `result` (`cards`, `leaked_data`, `breached_accounts`, `registered_accounts`)
 - `finishedAt`
 - `search` metadata (`id`, `value`, `type`, `options`, `created_at`)
+- `summary` counts
+- `links` to retrieve state, results, BYOK details, and leaks
 
-The webhook payload contains the aggregated stored result payload, while `GET /search/{id}/results` and `GET /search/{id}/results/leaks` expose the normalized API shapes for retrieval.
+The webhook is a lightweight completion notification. Use the returned links to fetch the full normalized payloads from the API.
 
 Full payload details: [Webhooks](/api-reference/webhooks)
 

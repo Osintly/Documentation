@@ -4,7 +4,7 @@ description: Configure webhooks on search creation and parse delivery payloads.
 icon: webhook
 ---
 
-Osintly can push search completion results to your server.
+Osintly can push a lightweight search completion notification to your server.
 
 You configure the webhook when creating a search (`POST /search`) with the `delivery.webhook` object:
 
@@ -40,12 +40,6 @@ Your endpoint receives a JSON payload with the following shape:
 {
   "searchId": "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
   "status": "finished",
-  "result": {
-    "cards": [],
-    "leaked_data": {},
-    "breached_accounts": null,
-    "registered_accounts": null
-  },
   "finishedAt": "2026-03-03T14:21:30.120Z",
   "search": {
     "id": "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
@@ -55,6 +49,18 @@ Your endpoint receives a JSON payload with the following shape:
       "include_registered_accounts": true
     },
     "created_at": "2026-03-03T14:20:10.010Z"
+  },
+  "summary": {
+    "module_results": 24,
+    "leak_sources": 2,
+    "breached_accounts": 1,
+    "registered_accounts": 7
+  },
+  "links": {
+    "state": "https://api.osint.ly/search/4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
+    "results": "https://api.osint.ly/search/4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f/results",
+    "byok": "https://api.osint.ly/search/4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f/byok",
+    "leaks": "https://api.osint.ly/search/4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f/results/leaks"
   }
 }
 ```
@@ -65,16 +71,20 @@ Your endpoint receives a JSON payload with the following shape:
 |---|---|---|
 | `searchId` | `string (uuid)` | Search identifier |
 | `status` | `"finished" \| "error"` | Final normalized status sent by webhook delivery |
-| `result.cards` | `unknown` | Main aggregated cards payload |
-| `result.leaked_data` | `unknown` | Leaks payload metadata/content |
-| `result.breached_accounts` | `unknown` | Breached account data |
-| `result.registered_accounts` | `unknown` | Registered accounts data |
 | `finishedAt` | `string (date-time)` | Delivery timestamp |
 | `search.id` | `string (uuid)` | Original search id |
 | `search.value` | `string` | Original search value |
 | `search.type` | `string` | Original search type |
 | `search.options` | `object \| null` | Original request options |
 | `search.created_at` | `string (date-time)` | Original search creation timestamp |
+| `summary.module_results` | `integer` | Count of stored module and normalized BYOK result cards |
+| `summary.leak_sources` | `integer` | Count of successful persisted leak providers |
+| `summary.breached_accounts` | `integer` | Count of breached account entries |
+| `summary.registered_accounts` | `integer` | Count of registered account entries |
+| `links.state` | `string (uri)` | Retrieve the search state |
+| `links.results` | `string (uri)` | Retrieve normalized search results |
+| `links.byok` | `string (uri)` | Retrieve BYOK provider details |
+| `links.leaks` | `string (uri)` | Retrieve leak source overview |
 
 ## Verify authenticity (recommended)
 
@@ -117,5 +127,5 @@ function verifySignature({ secret, timestamp, rawBody, receivedSignature }) {
 - Log and monitor non-2xx responses from your endpoint
 
 <Tip>
-If you need to re-fetch full data, call `GET /search/{id}`, `GET /search/{id}/results`, and `GET /search/{id}/results/leaks` using the `searchId` from the webhook payload.
+Use the webhook as a completion signal, then fetch the full data you need from the links included in the payload.
 </Tip>
