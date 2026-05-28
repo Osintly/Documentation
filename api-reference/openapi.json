@@ -46,6 +46,7 @@
       "get": {
         "tags": ["System"],
         "summary": "Health check",
+        "description": "Return a lightweight service health response to confirm that the API is reachable and responding.",
         "operationId": "getHealth",
         "responses": {
           "200": {
@@ -74,6 +75,7 @@
       "get": {
         "tags": ["Auth"],
         "summary": "Validate bearer token",
+        "description": "Validate the current bearer token and confirm that the API key can access protected endpoints.",
         "operationId": "validateAuthorization",
         "security": [
           {
@@ -109,6 +111,7 @@
       "get": {
         "tags": ["Usage"],
         "summary": "Get usage and limits",
+        "description": "Return current API usage, allowance state, and request limits for the authenticated API key.",
         "operationId": "getUsage",
         "security": [
           {
@@ -168,6 +171,7 @@
       "post": {
         "tags": ["Search"],
         "summary": "Create a new search",
+        "description": "Queue a new OSINT search with optional module selection, leak sources, account features, delivery settings, cache mode, and BYOK provider configuration.",
         "operationId": "createSearch",
         "security": [
           {
@@ -183,7 +187,7 @@
               },
               "examples": {
                 "email_search": {
-                  "summary": "Email search with selected modules and webhook",
+                  "summary": "Email search with selected modules, webhook and BYOK",
                   "value": {
                     "query": {
                       "type": "Email Address",
@@ -210,6 +214,19 @@
                       "webhook": {
                         "url": "https://client.example/webhooks/osintly",
                         "secret": "super-secret-webhook-key"
+                      }
+                    },
+                    "byok": {
+                      "mode": "default",
+                      "osint_industries": {
+                        "api_key": "oi_xxx",
+                        "timeout": 80,
+                        "exact_match": true,
+                        "premium": false,
+                        "premium_modules_only": false
+                      },
+                      "sherlockeye": {
+                        "api_key": "se_xxx"
                       }
                     }
                   }
@@ -282,6 +299,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Get search state",
+        "description": "Return the current lifecycle state of a search, including summary counters, webhook delivery status, and follow-up links.",
         "operationId": "getSearchState",
         "security": [
           {
@@ -333,6 +351,7 @@
                         "links": {
                           "stream": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/stream",
                           "results": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/results",
+                          "byok": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/byok",
                           "leaks": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/results/leaks"
                         }
                       },
@@ -362,6 +381,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Get search results",
+        "description": "Return normalized search results for standard modules and BYOK providers, along with breached and registered account outputs when available.",
         "operationId": "getSearchResults",
         "security": [
           {
@@ -408,8 +428,105 @@
                             ]
                           }
                         ],
+                        "byok": [
+                          {
+                            "provider": "osint_industries",
+                            "cards": [
+                              {
+                                "byok_osint_industries": {
+                                  "items": [
+                                    {
+                                      "label": "Domain",
+                                      "value": "example.com",
+                                      "copy": true,
+                                      "isdate": false,
+                                      "islink": false
+                                    }
+                                  ],
+                                  "stats": [],
+                                  "additional": [],
+                                  "informations": {
+                                    "title": "Example"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ],
                         "breached_accounts": [],
                         "registered_accounts": []
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:20.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
+    "/search/{id}/byok": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get BYOK provider results",
+        "description": "Return BYOK provider execution status, result counters, errors, and stored provider payloads for a search.",
+        "operationId": "getSearchByok",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "BYOK provider status, metadata, and stored payloads",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchByokResponse"
+                },
+                "examples": {
+                  "byok": {
+                    "value": {
+                      "data": {
+                        "mode": "default",
+                        "providers": {
+                          "osint_industries": {
+                            "status": "success",
+                            "result_count": 12,
+                            "started_at": "2026-05-27T12:00:03.000Z",
+                            "finished_at": "2026-05-27T12:00:18.000Z",
+                            "mapping_version": 1,
+                            "error": null,
+                            "raw": {
+                              "provider": "osint_industries",
+                              "search_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                              "result_count": 12,
+                              "status": "success",
+                              "mapping_version": 1,
+                              "started_at": "2026-05-27T12:00:03.000Z",
+                              "finished_at": "2026-05-27T12:00:18.000Z",
+                              "raw": []
+                            }
+                          }
+                        }
                       },
                       "meta": {
                         "environment": "production",
@@ -437,6 +554,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Get leaks overview",
+        "description": "List persisted leak sources for a search with their status, counts, pagination hints, and fetch URLs.",
         "operationId": "getSearchLeaksOverview",
         "security": [
           {
@@ -502,6 +620,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Get leak source results",
+        "description": "Return normalized results for a single persisted leak source, including pagination data and the result template.",
         "operationId": "getSearchLeakSource",
         "security": [
           {
@@ -594,6 +713,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Stream search results",
+        "description": "Open a Server-Sent Events stream for real-time search progress, module results, BYOK events, leak status updates, and final completion.",
         "operationId": "streamSearch",
         "security": [
           {
@@ -1047,6 +1167,70 @@
         },
         "additionalProperties": false
       },
+      "SearchByokProvider": {
+        "type": "object",
+        "required": ["api_key"],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "External provider API key sent with the search request and not returned by the API."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchByokOsintIndustriesProvider": {
+        "type": "object",
+        "required": ["api_key"],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "External provider API key sent with the search request and not returned by the API."
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 25,
+            "maximum": 80,
+            "description": "OSINT Industries execution timeout in seconds. type and query are derived from the search and cannot be overridden."
+          },
+          "exact_match": {
+            "type": "boolean",
+            "description": "Forwarded to OSINT Industries when supported by the selected query type."
+          },
+          "premium": {
+            "type": "boolean",
+            "description": "Enable premium OSINT Industries modules."
+          },
+          "premium_modules_only": {
+            "type": "boolean",
+            "description": "Only run premium OSINT Industries modules."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchByok": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["default", "only"],
+            "default": "default",
+            "description": "Use BYOK providers in addition to the standard pipeline, or exclusively when set to only."
+          },
+          "osint_industries": {
+            "$ref": "#/components/schemas/SearchByokOsintIndustriesProvider"
+          },
+          "sherlockeye": {
+            "$ref": "#/components/schemas/SearchByokProvider"
+          }
+        },
+        "description": "Bring your own external OSINT provider API keys for this search.",
+        "additionalProperties": false,
+        "minProperties": 1
+      },
       "SearchCreateRequest": {
         "type": "object",
         "required": ["query"],
@@ -1068,6 +1252,9 @@
           },
           "delivery": {
             "$ref": "#/components/schemas/SearchDelivery"
+          },
+          "byok": {
+            "$ref": "#/components/schemas/SearchByok"
           }
         },
         "additionalProperties": false
@@ -1087,7 +1274,7 @@
       },
       "SearchLinks": {
         "type": "object",
-        "required": ["self", "stream", "results", "leaks"],
+        "required": ["self", "stream", "results", "byok", "leaks"],
         "properties": {
           "self": {
             "type": "string",
@@ -1098,6 +1285,10 @@
             "format": "uri"
           },
           "results": {
+            "type": "string",
+            "format": "uri"
+          },
+          "byok": {
             "type": "string",
             "format": "uri"
           },
@@ -1254,13 +1445,17 @@
               },
               "links": {
                 "type": "object",
-                "required": ["stream", "results", "leaks"],
+                "required": ["stream", "results", "byok", "leaks"],
                 "properties": {
                   "stream": {
                     "type": "string",
                     "format": "uri"
                   },
                   "results": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "byok": {
                     "type": "string",
                     "format": "uri"
                   },
@@ -1283,7 +1478,7 @@
         "properties": {
           "data": {
             "type": "object",
-            "required": ["modules", "breached_accounts", "registered_accounts"],
+            "required": ["modules", "byok", "breached_accounts", "registered_accounts"],
             "properties": {
               "modules": {
                 "type": "array",
@@ -1302,6 +1497,26 @@
                           "type": "string"
                         }
                       }
+                    },
+                    "cards": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              },
+              "byok": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["provider", "cards"],
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "enum": ["osint_industries", "sherlockeye"]
                     },
                     "cards": {
                       "type": "array",
@@ -1385,6 +1600,86 @@
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchByokResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["mode", "providers"],
+            "properties": {
+              "mode": {
+                "type": ["string", "null"],
+                "enum": ["default", "only", null]
+              },
+              "providers": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "osint_industries": {
+                    "$ref": "#/components/schemas/SearchByokProviderResponse"
+                  },
+                  "sherlockeye": {
+                    "$ref": "#/components/schemas/SearchByokProviderResponse"
+                  }
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchByokProviderResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "result_count",
+          "started_at",
+          "finished_at",
+          "mapping_version",
+          "error",
+          "raw"
+        ],
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "result_count": {
+            "type": "integer"
+          },
+          "started_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "mapping_version": {
+            "type": ["integer", "null"]
+          },
+          "error": {
+            "type": ["string", "null"]
+          },
+          "raw": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              }
+            ]
           }
         }
       },

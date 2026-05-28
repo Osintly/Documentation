@@ -41,6 +41,37 @@ The Osintly API lets you create searches, stream progress in real time, retrieve
 
 ---
 
+## BYOK providers
+
+Osintly API can also act as a hub for supported external providers through BYOK (Bring Your Own Key). Instead of integrating each provider separately, you can send your provider credentials once in the search request and retrieve their results through the same Osintly search lifecycle, streaming flow, and normalized result endpoints.
+
+Currently documented BYOK providers include:
+
+- [OSINT Industries](https://docs.osint.industries/reference/search-request-streamed-1)
+- [Sherlockeye](https://api.sherlockeye.io/)
+
+With BYOK, Osintly does not become the source of truth for those providers. Their reliability, uptime, response quality, billing rules, rate limits, and result freshness remain dependent on the external services themselves. Osintly integrates their APIs as faithfully as possible based on their public documentation and observed behavior.
+
+We make a best effort to keep BYOK integrations aligned with provider documentation. When providers change their request or response formats, we work to keep the Osintly BYOK layer up to date, but external changes may temporarily affect behavior until the integration is refreshed.
+
+<Note>
+BYOK is designed as an API multiplier: it lets you orchestrate first-party Osintly search capabilities and third-party providers from a single entry point.
+</Note>
+
+## Why use Osintly API with BYOK instead of calling providers directly?
+
+- One integration surface: use one authentication model, one search payload pattern, and one retrieval flow instead of maintaining separate clients for each provider.
+- Unified orchestration: run first-party Osintly modules, leaks, account features, and BYOK providers inside the same search execution.
+- Real-time streaming: consume progress through one SSE stream instead of building separate async handling for each provider.
+- Normalized outputs: retrieve provider results in a shape that is easier to combine with the rest of your Osintly workflow.
+- Shared retrieval model: use the same search id to access status, results, BYOK provider details, leak pages, and webhooks.
+- Less glue code: avoid rebuilding request validation, job coordination, persistence, and response normalization for every provider.
+- Easier product integration: if your application already uses Osintly for search, BYOK lets you extend coverage without creating a second integration architecture.
+
+Direct provider integrations can still make sense if you only need a single provider and want full control over every low-level request detail. BYOK is most useful when you want Osintly to remain the operational hub for your OSINT pipeline.
+
+---
+
 ## Next steps
 
 1. Read [Authentication](/api-reference/authentification)
