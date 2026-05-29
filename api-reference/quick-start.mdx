@@ -136,6 +136,23 @@ The webhook is a lightweight completion notification. Use the returned links to 
 
 Full payload details: [Webhooks](/api-reference/webhooks)
 
+## 9) Recommended: clean up completed searches
+
+After you have fetched and stored the data you need, delete completed searches you no longer need:
+
+```bash
+curl -X POST "https://api.osint.ly/search/delete" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": ["SEARCH_ID"]
+  }'
+```
+
+Use this only after the search is terminal. Deletion requests are all-or-nothing and support up to `100` IDs per call.
+
+Cleanup guidance: [Search Retention](/api-reference/search-retention)
+
 ---
 
 ## Rate limits and usage

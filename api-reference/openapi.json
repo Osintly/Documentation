@@ -296,6 +296,89 @@
         }
       }
     },
+    "/search/delete": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Queue bulk deletion of searches",
+        "description": "Queue asynchronous deletion of one or more completed searches. The request accepts between 1 and 100 search IDs. The batch is all-or-nothing: every provided search ID must belong to the authenticated caller and every search must already be in a terminal state (`finished` or `failed`), otherwise nothing is queued.",
+        "operationId": "deleteSearches",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchDeleteRequest"
+              },
+              "examples": {
+                "bulk_delete": {
+                  "value": {
+                    "ids": [
+                      "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                      "7a1f1a8f-9c3a-47b0-8f2d-4efb9a84a5b0"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Deletion queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDeleteResponse"
+                },
+                "examples": {
+                  "accepted": {
+                    "value": {
+                      "data": {
+                        "accepted": true,
+                        "deletion": {
+                          "requested_count": 2,
+                          "queued_ids": [
+                            "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                            "7a1f1a8f-9c3a-47b0-8f2d-4efb9a84a5b0"
+                          ]
+                        }
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-29T12:00:00.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
     "/search/{id}": {
       "get": {
         "tags": ["Search"],
@@ -1323,6 +1406,23 @@
         },
         "additionalProperties": false
       },
+      "SearchDeleteRequest": {
+        "type": "object",
+        "required": ["ids"],
+        "properties": {
+          "ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Search IDs to delete as a single all-or-nothing batch. Minimum 1 ID, maximum 100 IDs per request. Every ID must belong to the authenticated caller, and every referenced search must already be in a terminal state (`finished` or `failed`). If one ID is invalid, inaccessible, or still active, the whole request is rejected."
+          }
+        },
+        "additionalProperties": false
+      },
       "ResponseMeta": {
         "type": "object",
         "required": ["timestamp"],
@@ -1526,6 +1626,41 @@
                   "leaks": {
                     "type": "string",
                     "format": "uri"
+                  }
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchDeleteResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["accepted", "deletion"],
+            "properties": {
+              "accepted": {
+                "type": "boolean",
+                "enum": [true]
+              },
+              "deletion": {
+                "type": "object",
+                "required": ["requested_count", "queued_ids"],
+                "properties": {
+                  "requested_count": {
+                    "type": "integer"
+                  },
+                  "queued_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
                   }
                 }
               }

@@ -36,7 +36,7 @@ The Osintly API lets you create searches, stream progress in real time, retrieve
 | System | `GET /health` |
 | Auth | `GET /` |
 | Usage | `GET /usage` |
-| Search | `POST /search`, `GET /search/{id}`, `GET /search/{id}/results`, `GET /search/{id}/stream`, `GET /search/{id}/results/leaks`, `GET /search/{id}/results/leaks/{source}` |
+| Search | `POST /search`, `POST /search/delete`, `GET /search/{id}`, `GET /search/{id}/results`, `GET /search/{id}/stream`, `GET /search/{id}/results/leaks`, `GET /search/{id}/results/leaks/{source}` |
 | Webhooks | `POST /webhooks/dispatch` |
 
 ---
@@ -76,5 +76,6 @@ Direct provider integrations can still make sense if you only need a single prov
 
 1. Read [Authentication](/api-reference/authentification)
 2. Run your first request in [Quick Start](/api-reference/quick-start)
-3. Read the [SSE Reference](/api-reference/sse-reference)
-4. Explore endpoint schemas in the **Endpoints** group
+3. Review [Search Retention](/api-reference/search-retention) for cleanup guidance
+4. Read the [SSE Reference](/api-reference/sse-reference)
+5. Explore endpoint schemas in the **Endpoints** group
