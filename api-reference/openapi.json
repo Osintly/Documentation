@@ -201,6 +201,7 @@
                     },
                     "leaks": {
                       "mode": "selected",
+                      "custom_mapping": true,
                       "sources": ["Leak Check", "Snusbase"]
                     },
                     "features": {
@@ -1232,6 +1233,11 @@
             "type": "string",
             "enum": ["default", "selected", "none"],
             "default": "default"
+          },
+          "custom_mapping": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable Osintly custom leak mapping. Disabled by default."
           },
           "sources": {
             "type": "array",
