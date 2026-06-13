@@ -36,8 +36,13 @@ The Osintly API lets you create searches, stream progress in real time, retrieve
 | System | `GET /health` |
 | Auth | `GET /` |
 | Usage | `GET /usage` |
+| Radar (Public) | `GET /radar/breaches`, `GET /radar/breaches/{name}` |
 | Search | `POST /search`, `POST /search/delete`, `GET /search/{id}`, `GET /search/{id}/results`, `GET /search/{id}/stream`, `GET /search/{id}/results/leaks`, `GET /search/{id}/results/leaks/{source}` |
 | Webhooks | `POST /webhooks/dispatch` |
+
+<Note>
+Radar endpoints are public and can be integrated by anyone without an API key.
+</Note>
 
 ---
 
