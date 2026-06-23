@@ -1,12 +1,10 @@
 ---
 title: Introduction
-description: Build integrations with the Osintly API for search, streaming, and usage tracking.
+description: Build integrations with the Osintly API for search, Radar, streaming, and usage tracking.
 icon: code
 ---
 
-The Osintly API lets you create searches, stream progress in real time, retrieve leak datasets, and check usage limits.
-
-<Warning>The API is documented, but it is not yet available for purchase.</Warning>
+The Osintly API lets you create searches, stream progress in real time, retrieve leak datasets, access Radar breach intelligence, and check usage limits.
 
 <CardGroup cols={3}>
   <Card title="REST + SSE" icon="tower-broadcast">
@@ -25,7 +23,6 @@ The Osintly API lets you create searches, stream progress in real time, retrieve
 ## Base URLs
 
 - Production: `https://api.osint.ly`
-- Local development: `http://localhost:8787`
 
 ---
 
@@ -36,13 +33,33 @@ The Osintly API lets you create searches, stream progress in real time, retrieve
 | System | `GET /health` |
 | Auth | `GET /` |
 | Usage | `GET /usage` |
-| Radar (Public) | `GET /radar/breaches`, `GET /radar/breaches/{name}` |
-| Search | `POST /search`, `POST /search/delete`, `GET /search/{id}`, `GET /search/{id}/results`, `GET /search/{id}/stream`, `GET /search/{id}/results/leaks`, `GET /search/{id}/results/leaks/{source}` |
-| Webhooks | `POST /webhooks/dispatch` |
+| Radar (Free plan) | `GET /radar/breaches`, `GET /radar/breaches/{name}` |
+| Search | `POST /search`, `POST /search/module/once`, `POST /search/delete`, `GET /search/{id}`, `GET /search/{id}/results`, `GET /search/{id}/byok`, `GET /search/{id}/stream`, `GET /search/{id}/results/leaks`, `GET /search/{id}/results/leaks/{source}` |
+| Webhook delivery | Configured in `POST /search` with `delivery.webhook` |
 
 <Note>
-Radar endpoints are public and can be integrated by anyone without an API key.
+Radar is free to use, but not anonymous: you still need an Osintly account and a free API key.
 </Note>
+
+---
+
+## Plans and capacity
+
+- API plans and Osintly app plans are separate products: you can have both, either one, or neither.
+- If you only have an API plan, you can use API endpoints but you do not automatically get access to the Osintly app plan features.
+- Free API plan currently provides API key access and unlimited Radar endpoint access (`GET /radar/breaches`, `GET /radar/breaches/{name}`).
+- Free API plan may evolve over time.
+- Search API capacity (RPM and concurrency) depends on your active API plan and is enforced at runtime.
+- If capacity is exhausted, you may receive `429 RATE_LIMIT_EXCEEDED`/`RATE_LIMIT_RPM_EXCEEDED` or `409 MAX_CONCURRENCY_EXCEEDED`.
+
+Read full details in [API Plans & Capacity](/api-reference/api-plans-capacity).
+
+---
+
+## Legal and ethical use
+
+- Terms of Use: [https://osint.ly/terms](https://osint.ly/terms)
+- Ethics Policy: [https://osint.ly/ethics](https://osint.ly/ethics)
 
 ---
 

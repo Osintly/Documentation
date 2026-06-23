@@ -1,0 +1,96 @@
+---
+title: API Plans & Capacity
+description: Plan activation, billing separation, API key limits, concurrency, and processing TTL behavior.
+icon: gauge-high
+---
+
+This page documents how Osintly API plans work, how they differ from Osintly app plans, and how runtime capacity is enforced.
+
+## Plan model
+
+- Osintly API plans and Osintly app plans are separate.
+- You can have:
+  - both plans
+  - API plan only
+  - app plan only
+  - neither
+- If you have an API plan without an Osintly app plan, you get API access only.
+
+## Free API plan
+
+- The Free API plan can evolve over time.
+- Current behavior: free API key access plus unlimited Radar API access.
+- Radar endpoints still require authentication with an API key.
+
+## How to claim Free API plan
+
+Free API plan is not automatically active on every account.
+
+To activate it:
+
+1. Open [https://osint.ly/workspace/api](https://osint.ly/workspace/api)
+2. Accept Terms and Ethics
+3. Claim the Free API plan
+4. Create your API key
+
+## Plan lifecycle behavior
+
+### Canceling a paid API plan
+
+When a paid API plan is canceled, subscription access switches back to Free API automatically.
+
+### Downgrade with lower API key quota
+
+If you downgrade to a plan with a lower API key limit:
+
+- extra keys are marked as `revoked`
+- extra keys are not deleted
+- to create new keys or un-revoke old keys, you must be compliant with the new key limit
+
+## Billing separation
+
+- API billing: [https://osint.ly/workspace/api#workspace-api-billing](https://osint.ly/workspace/api#workspace-api-billing)
+- Osintly app billing: [https://osint.ly/settings/billing](https://osint.ly/settings/billing)
+
+## Capacity and limits
+
+Search endpoints enforce plan-based runtime limits.
+
+- Requests per minute can return:
+  - `429 RATE_LIMIT_RPM_EXCEEDED`
+- Global/day usage windows can return:
+  - `429 RATE_LIMIT_EXCEEDED`
+- Concurrency cap can return:
+  - `409 MAX_CONCURRENCY_EXCEEDED`
+
+Use `GET /usage` to inspect current limits and remaining allowance.
+
+## Concurrency and sharding behavior
+
+- Search orchestration can split modules into shards.
+- Current max shard count is `3`.
+- When runner capacity is saturated, stream emits `search.progress` events with wait messages.
+- When capacity returns, progress events continue with shard progression messages (for example `shard 2/3 progress 9/12`).
+
+See [SSE Reference](/api-reference/sse-reference) for concrete stream examples.
+
+## Processing timeout (stuck searches)
+
+If a search remains in `queued` or `running` and exceeds the orchestration TTL, it is failed automatically.
+
+- Default TTL: `3,600,000 ms` (1 hour)
+- After TTL, the run is marked failed and cleaned up by the orchestrator
+- TTL can be overridden by environment configuration
+
+If a search appears stuck, use:
+
+1. `GET /search/{id}` for current status
+2. `GET /search/{id}/stream` to inspect progress events
+3. `GET /search/{id}/results` once terminal
+
+## Legal and ethics
+
+Using the API implies responsible and compliant usage.
+
+- Terms of Use: [https://osint.ly/terms](https://osint.ly/terms)
+- Ethics Policy: [https://osint.ly/ethics](https://osint.ly/ethics)

@@ -13,10 +13,6 @@
     {
       "url": "https://api.osint.ly",
       "description": "Production"
-    },
-    {
-      "url": "http://localhost:8787",
-      "description": "Local development (wrangler dev)"
     }
   ],
   "tags": [
@@ -38,11 +34,11 @@
     },
     {
       "name": "Radar",
-      "description": "Public breach intelligence endpoints"
+      "description": "Breach intelligence endpoints (free with API key)"
     },
     {
       "name": "Webhooks",
-      "description": "Internal webhook dispatch endpoint"
+      "description": "Webhook callback payloads configured from search creation"
     }
   ],
   "paths": {
@@ -175,8 +171,13 @@
       "get": {
         "tags": ["Radar"],
         "summary": "List Radar breaches",
-        "description": "Return public breach entries with filtering, sorting, and pagination. This endpoint is public and does not require bearer authentication.",
+        "description": "Return breach entries with filtering, sorting, and pagination. Radar is available on the Free plan and requires a bearer API key.",
         "operationId": "listRadarBreaches",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "name": "page",
@@ -278,6 +279,12 @@
           "400": {
             "$ref": "#/components/responses/ValidationError"
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequiredError"
+          },
           "500": {
             "$ref": "#/components/responses/InternalError"
           }
@@ -287,9 +294,14 @@
     "/radar/breaches/{name}": {
       "get": {
         "tags": ["Radar"],
-        "summary": "Get Radar breach by name",
-        "description": "Return one public breach record by its exact breach name. This endpoint is public and does not require bearer authentication.",
+        "summary": "Get Radar details",
+        "description": "Return one breach record by its exact breach name. Radar is available on the Free plan and requires a bearer API key.",
         "operationId": "getRadarBreachByName",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "parameters": [
           {
             "$ref": "#/components/parameters/RadarBreachName"
@@ -308,6 +320,12 @@
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequiredError"
           },
           "404": {
             "description": "Breach not found",
@@ -468,11 +486,113 @@
         }
       }
     },
+    "/search/module/once": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Run one module immediately",
+        "description": "Execute a single module against one query target and return immediate cards in the same response. This endpoint runs only the provided module and does not require stream consumption.",
+        "operationId": "runModuleOnce",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModuleRunOnceRequest"
+              },
+              "examples": {
+                "single_module": {
+                  "summary": "Run X (Twitter) module for one pseudonym",
+                  "value": {
+                    "query": {
+                      "type": "Pseudonym",
+                      "value": "EstePrimeWorld"
+                    },
+                    "module_id": "2e48da48-0f14-457c-92d4-c44cd68b3fdc",
+                    "cache": {
+                      "mode": "prefer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Module executed and immediate cards returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModuleRunOnceResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "search": {
+                          "id": "aff38600-cf11-45cc-a489-8706dcaaab88",
+                          "status": "finished",
+                          "created_at": "2026-06-14T19:20:14.209Z",
+                          "completed_at": "2026-06-14T19:20:16.419Z"
+                        },
+                        "module": {
+                          "id": "2e48da48-0f14-457c-92d4-c44cd68b3fdc",
+                          "name": "X (Twitter)"
+                        },
+                        "cards": [
+                          {
+                            "x_twitter_001": {
+                              "items": [
+                                {
+                                  "label": "Username",
+                                  "value": "EstePrimeWorld",
+                                  "copy": true,
+                                  "isdate": false,
+                                  "islink": false
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-06-14T19:20:16.419Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "429": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
     "/search/delete": {
       "post": {
         "tags": ["Search"],
-        "summary": "Queue bulk deletion of searches",
-        "description": "Queue asynchronous deletion of one or more completed searches. The request accepts between 1 and 100 search IDs. The batch is all-or-nothing: every provided search ID must belong to the authenticated caller and every search must already be in a terminal state (`finished` or `failed`), otherwise nothing is queued.",
+        "summary": "Delete multiple searches",
+        "description": "Request asynchronous deletion of one or more completed searches. The request accepts between 1 and 100 search IDs. The batch is all-or-nothing: every provided search ID must belong to the authenticated caller and every search must already be in a terminal state (`finished` or `failed`), otherwise nothing is deleted.",
         "operationId": "deleteSearches",
         "security": [
           {
@@ -501,7 +621,7 @@
         },
         "responses": {
           "202": {
-            "description": "Deletion queued",
+            "description": "Deletion accepted",
             "content": {
               "application/json": {
                 "schema": {
@@ -1131,6 +1251,30 @@
           }
         }
       },
+      "PlanFeatureRequiredError": {
+        "description": "Plan feature required",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SearchApiErrorResponse"
+            },
+            "examples": {
+              "radar_feature_missing": {
+                "value": {
+                  "error": {
+                    "code": "PLAN_FEATURE_REQUIRED",
+                    "message": "Plan feature required",
+                    "details": "Your plan does not include the radar feature"
+                  },
+                  "meta": {
+                    "timestamp": "2026-06-23T12:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "InternalError": {
         "description": "Internal server error",
         "content": {
@@ -1184,7 +1328,7 @@
                   "error": {
                     "code": "RUN_NOT_FOUND",
                     "message": "Search run not available",
-                    "details": "No Trigger run is associated with this search"
+                    "details": "No active run is associated with this search"
                   },
                   "meta": {
                     "environment": "production",
@@ -1592,6 +1736,80 @@
           }
         },
         "additionalProperties": false
+      },
+      "ModuleRunOnceRequest": {
+        "type": "object",
+        "required": ["query", "module_id"],
+        "properties": {
+          "query": {
+            "$ref": "#/components/schemas/SearchQuery"
+          },
+          "module_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "ID of the module to execute. Exactly one module is executed per request."
+          },
+          "cache": {
+            "$ref": "#/components/schemas/SearchCache"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ModuleRunOnceResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["search", "module", "cards"],
+            "properties": {
+              "search": {
+                "type": "object",
+                "required": ["id", "status", "created_at", "completed_at"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pending", "processing", "finished", "failed"]
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "completed_at": {
+                    "type": ["string", "null"],
+                    "format": "date-time"
+                  }
+                }
+              },
+              "module": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "cards": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
       },
       "SearchDeleteRequest": {
         "type": "object",
