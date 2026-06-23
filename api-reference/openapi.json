@@ -13,10 +13,6 @@
     {
       "url": "https://api.osint.ly",
       "description": "Production"
-    },
-    {
-      "url": "http://localhost:8787",
-      "description": "Local development (wrangler dev)"
     }
   ],
   "tags": [
@@ -37,8 +33,12 @@
       "description": "Rate limit and usage information"
     },
     {
+      "name": "Radar",
+      "description": "Breach intelligence endpoints (free with API key)"
+    },
+    {
       "name": "Webhooks",
-      "description": "Internal webhook dispatch endpoint"
+      "description": "Webhook callback payloads configured from search creation"
     }
   ],
   "paths": {
@@ -46,6 +46,7 @@
       "get": {
         "tags": ["System"],
         "summary": "Health check",
+        "description": "Return a lightweight service health response to confirm that the API is reachable and responding.",
         "operationId": "getHealth",
         "responses": {
           "200": {
@@ -74,6 +75,7 @@
       "get": {
         "tags": ["Auth"],
         "summary": "Validate bearer token",
+        "description": "Validate the current bearer token and confirm that the API key can access protected endpoints.",
         "operationId": "validateAuthorization",
         "security": [
           {
@@ -109,6 +111,7 @@
       "get": {
         "tags": ["Usage"],
         "summary": "Get usage and limits",
+        "description": "Return current API usage, allowance state, and request limits for the authenticated API key.",
         "operationId": "getUsage",
         "security": [
           {
@@ -124,7 +127,7 @@
                   "$ref": "#/components/schemas/UsageSuccessResponse"
                 },
                 "examples": {
-                  "usage": {
+                  "limits": {
                     "value": {
                       "success": true,
                       "message": "Usage limits fetched",
@@ -132,7 +135,7 @@
                         "allowed": true,
                         "limits": {
                           "global": {
-                            "used": 15,
+                            "used": 12,
                             "max": 500
                           },
                           "daily": {
@@ -164,10 +167,200 @@
         }
       }
     },
+    "/radar/breaches": {
+      "get": {
+        "tags": ["Radar"],
+        "summary": "List Radar breaches",
+        "description": "Return breach entries with filtering, sorting, and pagination. Radar is available on the Free plan and requires a bearer API key.",
+        "operationId": "listRadarBreaches",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 12
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search by breach name, title, or domain"
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["all", "critical", "high", "medium"],
+              "default": "all"
+            }
+          },
+          {
+            "name": "exposure",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["all", "100k+", "1m+", "10m+", "100m+"],
+              "default": "all"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "example": "2024-01-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "example": "2024-12-31"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "recently-added",
+                "breach-newest",
+                "breach-oldest",
+                "largest-exposure"
+              ],
+              "default": "recently-added"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Radar breach list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RadarBreachesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequiredError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
+    "/radar/breaches/{name}": {
+      "get": {
+        "tags": ["Radar"],
+        "summary": "Get Radar details",
+        "description": "Return one breach record by its exact breach name. Radar is available on the Free plan and requires a bearer API key.",
+        "operationId": "getRadarBreachByName",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RadarBreachName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Radar breach details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RadarBreachResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequiredError"
+          },
+          "404": {
+            "description": "Breach not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchApiErrorResponse"
+                },
+                "examples": {
+                  "not_found": {
+                    "value": {
+                      "error": {
+                        "code": "NOT_FOUND",
+                        "message": "Breach not found"
+                      },
+                      "meta": {
+                        "timestamp": "2026-06-13T12:00:00.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalError"
+          }
+        }
+      }
+    },
     "/search": {
       "post": {
         "tags": ["Search"],
         "summary": "Create a new search",
+        "description": "Queue a new OSINT search with optional module selection, leak sources, account features, delivery settings, cache mode, and BYOK provider configuration.",
         "operationId": "createSearch",
         "security": [
           {
@@ -182,24 +375,50 @@
                 "$ref": "#/components/schemas/SearchCreateRequest"
               },
               "examples": {
-                "emailSearch": {
-                  "summary": "Email search with modules and webhooks",
+                "email_search": {
+                  "summary": "Email search with selected modules, webhook and BYOK",
                   "value": {
-                    "type": "Email Address",
-                    "value": "target@example.com",
-                    "options": {
-                      "leakedresults": ["Leak Check", "Snusbase"],
-                      "modules": [
-                        "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f"
-                      ],
-                      "bypass_cache": false,
-                      "include_breached_accounts": true,
-                      "include_registered_accounts": true,
-                      "registered_accounts_only": false
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
                     },
-                    "webhook": {
-                      "url": "https://client.example/webhooks/osintly",
-                      "secret": "super-secret-webhook-key"
+                    "modules": {
+                      "mode": "selected",
+                      "ids": [
+                        "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f"
+                      ]
+                    },
+                    "leaks": {
+                      "mode": "selected",
+                      "custom_mapping": true,
+                      "sources": ["Leak Check", "Snusbase"]
+                    },
+                    "features": {
+                      "breached_accounts": true,
+                      "registered_accounts": "include"
+                    },
+                    "cache": {
+                      "mode": "prefer"
+                    },
+                    "delivery": {
+                      "webhook": {
+                        "url": "https://client.example/webhooks/osintly",
+                        "secret": "super-secret-webhook-key"
+                      }
+                    },
+                    "byok": {
+                      "mode": "default",
+                      "osint_industries": {
+                        "api_key": "oi_xxx",
+                        "timeout": 80,
+                        "exact_match": true,
+                        "premium": false,
+                        "premium_modules_only": false
+                      },
+                      "sherlockeye": {
+                        "api_key": "se_xxx",
+                        "additional_modules": ["digital_accounts_expansion"]
+                      }
                     }
                   }
                 }
@@ -213,73 +432,241 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchCreateSuccessResponse"
+                  "$ref": "#/components/schemas/SearchCreateResponse"
+                },
+                "examples": {
+                  "queued": {
+                    "value": {
+                      "data": {
+                        "search": {
+                          "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                          "status": "pending",
+                          "query": {
+                            "type": "Email Address",
+                            "value": "target@example.com"
+                          },
+                          "created_at": "2026-05-27T12:00:00.000Z"
+                        },
+                        "execution": {
+                          "run_id": "run_1234567890",
+                          "cache_mode": "prefer"
+                        },
+                        "links": {
+                          "self": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851",
+                          "stream": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/stream",
+                          "results": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/results",
+                          "leaks": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/results/leaks"
+                        }
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:00.000Z"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/ValidationError"
+            "$ref": "#/components/responses/SearchApiError"
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "429": {
-            "description": "Rate limit exceeded",
-            "headers": {
-              "Retry-After": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Seconds until reset"
-              },
-              "X-RateLimit-Reset": {
-                "schema": {
-                  "type": "string"
-                },
-                "description": "Unix timestamp for next reset"
-              },
-              "X-Limits-Global-Used": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "X-Limits-Global-Max": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "X-Limits-Daily-Used": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "X-Limits-Daily-Max": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SearchCreateRateLimitResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/SearchApiError"
           },
           "503": {
-            "description": "Search dispatch unavailable",
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
+    "/search/module/once": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Run one module immediately",
+        "description": "Execute a single module against one query target and return immediate cards in the same response. This endpoint runs only the provided module and does not require stream consumption.",
+        "operationId": "runModuleOnce",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ModuleRunOnceRequest"
+              },
+              "examples": {
+                "single_module": {
+                  "summary": "Run X (Twitter) module for one pseudonym",
+                  "value": {
+                    "query": {
+                      "type": "Pseudonym",
+                      "value": "EstePrimeWorld"
+                    },
+                    "module_id": "2e48da48-0f14-457c-92d4-c44cd68b3fdc",
+                    "cache": {
+                      "mode": "prefer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Module executed and immediate cards returned",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchCreateFailureResponse"
+                  "$ref": "#/components/schemas/ModuleRunOnceResponse"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "data": {
+                        "search": {
+                          "id": "aff38600-cf11-45cc-a489-8706dcaaab88",
+                          "status": "finished",
+                          "created_at": "2026-06-14T19:20:14.209Z",
+                          "completed_at": "2026-06-14T19:20:16.419Z"
+                        },
+                        "module": {
+                          "id": "2e48da48-0f14-457c-92d4-c44cd68b3fdc",
+                          "name": "X (Twitter)"
+                        },
+                        "cards": [
+                          {
+                            "x_twitter_001": {
+                              "items": [
+                                {
+                                  "label": "Username",
+                                  "value": "EstePrimeWorld",
+                                  "copy": true,
+                                  "isdate": false,
+                                  "islink": false
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-06-14T19:20:16.419Z"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "429": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
           "500": {
-            "$ref": "#/components/responses/InternalError"
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
+    "/search/delete": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Delete multiple searches",
+        "description": "Request asynchronous deletion of one or more completed searches. The request accepts between 1 and 100 search IDs. The batch is all-or-nothing: every provided search ID must belong to the authenticated caller and every search must already be in a terminal state (`finished` or `failed`), otherwise nothing is deleted.",
+        "operationId": "deleteSearches",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchDeleteRequest"
+              },
+              "examples": {
+                "bulk_delete": {
+                  "value": {
+                    "ids": [
+                      "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                      "7a1f1a8f-9c3a-47b0-8f2d-4efb9a84a5b0"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Deletion accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchDeleteResponse"
+                },
+                "examples": {
+                  "accepted": {
+                    "value": {
+                      "data": {
+                        "accepted": true,
+                        "deletion": {
+                          "requested_count": 2,
+                          "queued_ids": [
+                            "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                            "7a1f1a8f-9c3a-47b0-8f2d-4efb9a84a5b0"
+                          ]
+                        }
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-29T12:00:00.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "409": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "503": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
           }
         }
       }
@@ -287,8 +674,9 @@
     "/search/{id}": {
       "get": {
         "tags": ["Search"],
-        "summary": "Get search result",
-        "operationId": "getSearchResult",
+        "summary": "Get search state",
+        "description": "Return the current lifecycle state of a search, including summary counters, webhook delivery status, and follow-up links.",
+        "operationId": "getSearchState",
         "security": [
           {
             "bearerAuth": []
@@ -301,81 +689,76 @@
         ],
         "responses": {
           "200": {
-            "description": "Search result status and payload",
+            "description": "Search state and summary",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchResultEnvelope"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalError"
-          }
-        }
-      }
-    },
-    "/search/{id}/stream": {
-      "get": {
-        "tags": ["Search"],
-        "summary": "Stream search progress (SSE)",
-        "description": "Streams progress events with Server-Sent Events. If task is already finished, returns a JSON payload instead.",
-        "operationId": "streamSearch",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/SearchId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "SSE stream or immediate JSON if already completed",
-            "content": {
-              "text/event-stream": {
-                "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/SearchStateResponse"
                 },
                 "examples": {
-                  "sse": {
-                    "value": "event: connected\ndata: connected\\n\\nevent: notice\ndata: {\"message\":\"Leaked results are not streamed. Use /search/:id/leaks/{source}.\"}\\n\\ndata: {\"module\":\"snusbase\",\"status\":\"running\"}\\n\\n"
+                  "processing": {
+                    "value": {
+                      "data": {
+                        "search": {
+                          "id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                          "status": "processing",
+                          "query": {
+                            "type": "Email Address",
+                            "value": "target@example.com"
+                          },
+                          "created_at": "2026-05-27T12:00:00.000Z",
+                          "started_at": "2026-05-27T12:00:02.000Z",
+                          "completed_at": null
+                        },
+                        "summary": {
+                          "module_results": 0,
+                          "breached_accounts": 0,
+                          "registered_accounts": 0,
+                          "leak_sources": 0
+                        },
+                        "delivery": {
+                          "webhook": {
+                            "status": "pending",
+                            "attempts": 0,
+                            "sent_at": null,
+                            "last_attempt_at": null
+                          }
+                        },
+                        "links": {
+                          "stream": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/stream",
+                          "results": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/results",
+                          "byok": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/byok",
+                          "leaks": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/results/leaks"
+                        }
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:05.000Z"
+                      }
+                    }
                   }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StreamFinishedJsonResponse"
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/ValidationError"
+            "$ref": "#/components/responses/SearchApiError"
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "500": {
-            "$ref": "#/components/responses/InternalError"
+            "$ref": "#/components/responses/SearchApiError"
           }
         }
       }
     },
-    "/search/{id}/leaks": {
+    "/search/{id}/results": {
       "get": {
         "tags": ["Search"],
-        "summary": "Get leaks overview for all sources",
-        "operationId": "getLeaksOverview",
+        "summary": "Get search results",
+        "description": "Return normalized search results for standard modules and BYOK providers, along with breached and registered account outputs when available.",
+        "operationId": "getSearchResults",
         "security": [
           {
             "bearerAuth": []
@@ -388,32 +771,275 @@
         ],
         "responses": {
           "200": {
-            "description": "Leaks sources and fetch endpoints",
+            "description": "Modules, breached accounts and registered accounts results",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LeaksOverviewResponse"
+                  "$ref": "#/components/schemas/SearchResultsResponse"
+                },
+                "examples": {
+                  "results": {
+                    "value": {
+                      "data": {
+                        "modules": [
+                          {
+                            "module": {
+                              "id": null,
+                              "name": "GitHub"
+                            },
+                            "cards": [
+                              {
+                                "github": {
+                                  "items": [
+                                    {
+                                      "label": "Username",
+                                      "value": "target",
+                                      "copy": true,
+                                      "isdate": false,
+                                      "islink": false
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ],
+                        "byok": [
+                          {
+                            "provider": "osint_industries",
+                            "cards": [
+                              {
+                                "byok_osint_industries": {
+                                  "items": [
+                                    {
+                                      "label": "Domain",
+                                      "value": "example.com",
+                                      "copy": true,
+                                      "isdate": false,
+                                      "islink": false
+                                    }
+                                  ],
+                                  "stats": [],
+                                  "additional": [],
+                                  "informations": {
+                                    "title": "Example"
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        ],
+                        "breached_accounts": [],
+                        "registered_accounts": []
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:20.000Z"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/components/responses/ValidationError"
+            "$ref": "#/components/responses/SearchApiError"
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "500": {
-            "$ref": "#/components/responses/InternalError"
+            "$ref": "#/components/responses/SearchApiError"
           }
         }
       }
     },
-    "/search/{id}/leaks/{source}": {
+    "/search/{id}/byok": {
       "get": {
         "tags": ["Search"],
-        "summary": "Get leak results for a specific source",
-        "operationId": "getLeaksSource",
+        "summary": "Get BYOK provider results",
+        "description": "Return BYOK provider execution status, result counters, errors, and stored provider payloads for a search.",
+        "operationId": "getSearchByok",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          },
+          {
+            "name": "provider",
+            "in": "query",
+            "required": false,
+            "description": "Filter the response to a single BYOK provider. When omitted, all available BYOK providers for the search are returned.",
+            "schema": {
+              "type": "string",
+              "enum": ["osint_industries", "sherlockeye"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "BYOK provider status, metadata, and stored payloads",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchByokResponse"
+                },
+                "examples": {
+                  "byok": {
+                    "value": {
+                      "data": {
+                        "mode": "default",
+                        "providers": {
+                          "osint_industries": {
+                            "status": "success",
+                            "result_count": 12,
+                            "started_at": "2026-05-27T12:00:03.000Z",
+                            "finished_at": "2026-05-27T12:00:18.000Z",
+                            "mapping_version": 1,
+                            "error": null,
+                            "raw": {
+                              "provider": "osint_industries",
+                              "search_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                              "result_count": 12,
+                              "status": "success",
+                              "mapping_version": 1,
+                              "started_at": "2026-05-27T12:00:03.000Z",
+                              "finished_at": "2026-05-27T12:00:18.000Z",
+                              "raw": []
+                            }
+                          }
+                        }
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:20.000Z"
+                      }
+                    }
+                  },
+                  "sherlockeye_only": {
+                    "summary": "Filter to Sherlockeye only",
+                    "value": {
+                      "data": {
+                        "mode": "default",
+                        "providers": {
+                          "sherlockeye": {
+                            "status": "success",
+                            "result_count": 4,
+                            "started_at": "2026-05-27T12:00:03.000Z",
+                            "finished_at": "2026-05-27T12:00:14.000Z",
+                            "mapping_version": 1,
+                            "error": null,
+                            "raw": {
+                              "provider": "sherlockeye",
+                              "search_id": "d290f1ee-6c54-4b01-90e6-d701748f0851",
+                              "result_count": 4,
+                              "status": "success",
+                              "mapping_version": 1,
+                              "started_at": "2026-05-27T12:00:03.000Z",
+                              "finished_at": "2026-05-27T12:00:14.000Z",
+                              "raw": []
+                            }
+                          }
+                        }
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:20.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
+    "/search/{id}/results/leaks": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get leaks overview",
+        "description": "List persisted leak sources for a search with their status, counts, pagination hints, and fetch URLs.",
+        "operationId": "getSearchLeaksOverview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leaks sources overview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchLeaksOverviewResponse"
+                },
+                "examples": {
+                  "overview": {
+                    "value": {
+                      "data": {
+                        "sources": [
+                          {
+                            "name": "Snusbase",
+                            "key": "snusbase",
+                            "status": "success",
+                            "count": 214,
+                            "fetch_url": "https://api.osint.ly/search/d290f1ee-6c54-4b01-90e6-d701748f0851/results/leaks/snusbase",
+                            "pagination": {
+                              "page_size": 100,
+                              "total_pages": 3
+                            },
+                            "logo": null,
+                            "description": null
+                          }
+                        ]
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:30.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
+    "/search/{id}/results/leaks/{source}": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get leak source results",
+        "description": "Return normalized results for a single persisted leak source, including pagination data and the result template.",
+        "operationId": "getSearchLeakSource",
         "security": [
           {
             "bearerAuth": []
@@ -432,47 +1058,115 @@
         ],
         "responses": {
           "200": {
-            "description": "Leak source payload",
+            "description": "Leak source items",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LeakSourceSuccessResponse"
+                  "$ref": "#/components/schemas/SearchLeakSourceResponse"
+                },
+                "examples": {
+                  "page_1": {
+                    "value": {
+                      "data": {
+                        "source": {
+                          "name": "Snusbase",
+                          "key": "snusbase",
+                          "status": "success",
+                          "logo": null,
+                          "description": null
+                        },
+                        "pagination": {
+                          "page": 1,
+                          "page_size": 100,
+                          "total_pages": 3,
+                          "has_next_page": true
+                        },
+                        "template": {
+                          "informations": [],
+                          "stats": [],
+                          "additional": []
+                        },
+                        "results": [
+                          {
+                            "key": "snusbase-collection-1",
+                            "items": [
+                              {
+                                "label": "Email",
+                                "value": "target@example.com",
+                                "copy": true,
+                                "isdate": false,
+                                "islink": false
+                              }
+                            ]
+                          }
+                        ],
+                        "count": 214
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:32.000Z"
+                      }
+                    }
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid id or page",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/ValidationErrorResponse"
-                    },
-                    {
-                      "$ref": "#/components/schemas/LeakSourceErrorResponse"
-                    }
-                  ]
-                }
-              }
-            }
+            "$ref": "#/components/responses/SearchApiError"
           },
           "401": {
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "404": {
-            "description": "Source or page not found",
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
+    "/search/{id}/stream": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Stream search results",
+        "description": "Open a Server-Sent Events stream for real-time search progress, module results, BYOK events, leak status updates, and final completion.",
+        "operationId": "streamSearch",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server-Sent Events stream",
             "content": {
-              "application/json": {
+              "text/event-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/LeakSourceErrorResponse"
+                  "type": "string"
+                },
+                "examples": {
+                  "stream": {
+                    "value": "event: connected\ndata: {\"search_id\":\"d290f1ee-6c54-4b01-90e6-d701748f0851\",\"timestamp\":\"2026-05-27T12:00:00.000Z\"}\n\nevent: module.result\ndata: {\"search_id\":\"d290f1ee-6c54-4b01-90e6-d701748f0851\",\"module\":{\"id\":\"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f\",\"name\":\"GitHub\"},\"card\":{\"github_001\":{\"username\":\"target\"}},\"timestamp\":\"2026-05-27T12:00:02.000Z\"}\n\nevent: search.finished\ndata: {\"search_id\":\"d290f1ee-6c54-4b01-90e6-d701748f0851\",\"status\":\"completed\",\"totals\":{\"module_results\":1},\"timestamp\":\"2026-05-27T12:00:08.000Z\"}\n\n"
+                  }
                 }
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "500": {
-            "$ref": "#/components/responses/InternalError"
+            "$ref": "#/components/responses/SearchApiError"
           }
         }
       }
@@ -505,7 +1199,7 @@
           "type": "string",
           "example": "snusbase"
         },
-        "description": "Leak source code/name (case-insensitive)"
+        "description": "Leak source key"
       },
       "Page": {
         "name": "page",
@@ -517,24 +1211,15 @@
         },
         "description": "Page number for paginated leak sources"
       },
-      "OsintlyTimestamp": {
-        "name": "x-osintly-timestamp",
-        "in": "header",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "description": "Unix epoch milliseconds used for signature validation"
-      },
-      "OsintlySignature": {
-        "name": "x-osintly-signature",
-        "in": "header",
+      "RadarBreachName": {
+        "name": "name",
+        "in": "path",
         "required": true,
         "schema": {
           "type": "string",
-          "pattern": "^sha256=.*$"
+          "minLength": 1
         },
-        "description": "HMAC SHA-256 signature generated from timestamp + raw body"
+        "description": "Exact breach name (URL-encoded)"
       }
     },
     "responses": {
@@ -566,12 +1251,104 @@
           }
         }
       },
+      "PlanFeatureRequiredError": {
+        "description": "Plan feature required",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SearchApiErrorResponse"
+            },
+            "examples": {
+              "radar_feature_missing": {
+                "value": {
+                  "error": {
+                    "code": "PLAN_FEATURE_REQUIRED",
+                    "message": "Plan feature required",
+                    "details": "Your plan does not include the radar feature"
+                  },
+                  "meta": {
+                    "timestamp": "2026-06-23T12:00:00.000Z"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "InternalError": {
         "description": "Internal server error",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/InternalErrorResponse"
+            }
+          }
+        }
+      },
+      "SearchApiError": {
+        "description": "Search API error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SearchApiErrorResponse"
+            },
+            "examples": {
+              "validation_error": {
+                "value": {
+                  "error": {
+                    "code": "VALIDATION_ERROR",
+                    "message": "Invalid request parameters",
+                    "details": [
+                      {
+                        "path": "query.value",
+                        "message": "query.value must be a valid email"
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "timestamp": "2026-05-27T12:00:00.000Z"
+                  }
+                }
+              },
+              "rate_limited": {
+                "value": {
+                  "error": {
+                    "code": "RATE_LIMIT_EXCEEDED",
+                    "message": "Rate limit exceeded",
+                    "details": "API usage limits have been reached"
+                  },
+                  "meta": {
+                    "environment": "production",
+                    "timestamp": "2026-05-27T12:00:00.000Z"
+                  }
+                }
+              },
+              "run_not_found": {
+                "value": {
+                  "error": {
+                    "code": "RUN_NOT_FOUND",
+                    "message": "Search run not available",
+                    "details": "No active run is associated with this search"
+                  },
+                  "meta": {
+                    "environment": "production",
+                    "timestamp": "2026-05-27T12:00:00.000Z"
+                  }
+                }
+              },
+              "leak_source_not_found": {
+                "value": {
+                  "error": {
+                    "code": "LEAK_SOURCE_NOT_FOUND",
+                    "message": "Leak source not found",
+                    "details": "No leaked results source matches 'unknown-source'"
+                  },
+                  "meta": {
+                    "environment": "production",
+                    "timestamp": "2026-05-27T12:00:00.000Z"
+                  }
+                }
+              }
             }
           }
         }
@@ -652,79 +1429,44 @@
           }
         }
       },
-      "SearchError": {
+      "ValidationIssue": {
         "type": "object",
-        "required": ["code", "details"],
+        "required": ["path", "message"],
         "properties": {
-          "code": {
+          "path": {
             "type": "string"
           },
-          "details": {
+          "message": {
             "type": "string"
           }
         }
       },
-      "ValidationIssue": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "string"
-          },
-          "expected": {
-            "type": "string"
-          },
-          "received": {
-            "type": "string"
-          },
-          "path": {
-            "type": "array",
-            "items": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
-            }
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": true
-      },
       "ValidationErrorResponse": {
         "type": "object",
-        "required": ["success", "message", "error"],
+        "required": ["error", "meta"],
         "properties": {
-          "success": {
-            "type": "boolean",
-            "enum": [false]
-          },
-          "message": {
-            "type": "string",
-            "enum": ["Invalid request parameters"]
-          },
           "error": {
-            "$ref": "#/components/schemas/SearchError"
-          },
-          "meta": {
             "type": "object",
+            "required": ["code", "message", "details"],
             "properties": {
-              "validation_errors": {
+              "code": {
+                "type": "string",
+                "enum": ["VALIDATION_ERROR"]
+              },
+              "message": {
+                "type": "string",
+                "enum": ["Invalid request parameters"]
+              },
+              "details": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ValidationIssue"
                 }
-              },
-              "timestamp": {
-                "type": "string",
-                "format": "date-time"
               }
-            },
-            "additionalProperties": true
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
           }
         }
       },
@@ -738,13 +1480,6 @@
           },
           "message": {
             "type": "string"
-          },
-          "error": {
-            "$ref": "#/components/schemas/SearchError"
-          },
-          "debug": {
-            "type": "object",
-            "additionalProperties": true
           }
         },
         "additionalProperties": true
@@ -765,46 +1500,101 @@
           }
         ]
       },
-      "SearchOptions": {
+      "SearchType": {
+        "type": "string",
+        "enum": [
+          "Pseudonym",
+          "Email Address",
+          "Domain Name",
+          "Cryptocurrency",
+          "IP Address"
+        ]
+      },
+      "LeakSourceValue": {
+        "type": "string",
+        "enum": [
+          "Hudson Rock",
+          "Leak Check",
+          "Snusbase",
+          "Breach Base",
+          "Leak Osint"
+        ]
+      },
+      "SearchQuery": {
+        "type": "object",
+        "required": ["type", "value"],
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/SearchType"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchModules": {
         "type": "object",
         "properties": {
-          "leakedresults": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "Hudson Rock",
-                "Leak Check",
-                "Snusbase",
-                "Breach Base",
-                "Breach VIP",
-                "Leak Osint"
-              ]
-            }
+          "mode": {
+            "type": "string",
+            "enum": ["all", "selected"],
+            "default": "all"
           },
-          "modules": {
+          "ids": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchLeaks": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["default", "selected", "none"],
+            "default": "default"
           },
-          "bypass_cache": {
-            "type": "boolean",
-            "default": false
-          },
-          "include_breached_accounts": {
-            "type": "boolean",
-            "default": false
-          },
-          "include_registered_accounts": {
-            "type": "boolean",
-            "default": true
-          },
-          "registered_accounts_only": {
+          "custom_mapping": {
             "type": "boolean",
             "default": false,
-            "description": "Supported only for type = Email Address"
+            "description": "Enable Osintly custom leak mapping. Disabled by default."
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeakSourceValue"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchFeatures": {
+        "type": "object",
+        "properties": {
+          "breached_accounts": {
+            "type": "boolean",
+            "default": false
+          },
+          "registered_accounts": {
+            "type": "string",
+            "enum": ["exclude", "include", "only"],
+            "default": "include"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchCache": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["prefer", "bypass"],
+            "default": "prefer"
           }
         },
         "additionalProperties": false
@@ -825,598 +1615,1019 @@
         },
         "additionalProperties": false
       },
-      "SearchType": {
-        "type": "string",
-        "enum": [
-          "Pseudonym",
-          "Email Address",
-          "Domain Name",
-          "Cryptocurrency",
-          "IP Address"
-        ]
-      },
-      "SearchCreateRequest": {
-        "oneOf": [
-          {
-            "$ref": "#/components/schemas/SearchCreatePseudonym"
-          },
-          {
-            "$ref": "#/components/schemas/SearchCreateEmail"
-          },
-          {
-            "$ref": "#/components/schemas/SearchCreateDomain"
-          },
-          {
-            "$ref": "#/components/schemas/SearchCreateCrypto"
-          },
-          {
-            "$ref": "#/components/schemas/SearchCreateIp"
-          }
-        ]
-      },
-      "SearchCreatePseudonym": {
+      "SearchDelivery": {
         "type": "object",
-        "required": ["type", "value"],
         "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["Pseudonym"]
-          },
-          "value": {
-            "type": "string",
-            "description": "Pseudonym to search"
-          },
-          "options": {
-            "$ref": "#/components/schemas/SearchOptions"
-          },
           "webhook": {
             "$ref": "#/components/schemas/WebhookConfig"
           }
         },
         "additionalProperties": false
       },
-      "SearchCreateEmail": {
+      "SearchByokProvider": {
         "type": "object",
-        "required": ["type", "value"],
+        "required": ["api_key"],
         "properties": {
-          "type": {
+          "api_key": {
             "type": "string",
-            "enum": ["Email Address"]
-          },
-          "value": {
-            "type": "string",
-            "format": "email"
-          },
-          "options": {
-            "$ref": "#/components/schemas/SearchOptions"
-          },
-          "webhook": {
-            "$ref": "#/components/schemas/WebhookConfig"
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "External provider API key sent with the search request and not returned by the API."
           }
         },
         "additionalProperties": false
       },
-      "SearchCreateDomain": {
+      "SearchByokOsintIndustriesProvider": {
         "type": "object",
-        "required": ["type", "value"],
+        "required": ["api_key"],
         "properties": {
-          "type": {
+          "api_key": {
             "type": "string",
-            "enum": ["Domain Name"]
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "External provider API key sent with the search request and not returned by the API."
           },
-          "value": {
-            "type": "string",
-            "description": "Domain name with optional protocol/path"
-          },
-          "options": {
-            "$ref": "#/components/schemas/SearchOptions"
-          },
-          "webhook": {
-            "$ref": "#/components/schemas/WebhookConfig"
-          }
-        },
-        "additionalProperties": false
-      },
-      "SearchCreateCrypto": {
-        "type": "object",
-        "required": ["type", "value"],
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["Cryptocurrency"]
-          },
-          "value": {
-            "type": "string"
-          },
-          "options": {
-            "$ref": "#/components/schemas/SearchOptions"
-          },
-          "webhook": {
-            "$ref": "#/components/schemas/WebhookConfig"
-          }
-        },
-        "additionalProperties": false
-      },
-      "SearchCreateIp": {
-        "type": "object",
-        "required": ["type", "value"],
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": ["IP Address"]
-          },
-          "value": {
-            "type": "string",
-            "description": "IPv4 or IPv6"
-          },
-          "options": {
-            "$ref": "#/components/schemas/SearchOptions"
-          },
-          "webhook": {
-            "$ref": "#/components/schemas/WebhookConfig"
-          }
-        },
-        "additionalProperties": false
-      },
-      "SearchCreateSuccessResponse": {
-        "type": "object",
-        "required": ["success", "message", "data", "meta", "code"],
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "enum": [true]
-          },
-          "message": {
-            "type": "string"
-          },
-          "data": {
-            "type": "object",
-            "required": ["search", "job"],
-            "properties": {
-              "search": {
-                "type": "object",
-                "required": ["id", "type", "value", "status"],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uuid"
-                  },
-                  "type": {
-                    "$ref": "#/components/schemas/SearchType"
-                  },
-                  "value": {
-                    "type": "string"
-                  },
-                  "status": {
-                    "type": "string",
-                    "example": "pending"
-                  }
-                }
-              },
-              "job": {
-                "type": "object",
-                "required": ["id", "dispatched_at", "via_cache"],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uuid"
-                  },
-                  "dispatched_at": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "via_cache": {
-                    "type": "boolean"
-                  }
-                }
-              },
-              "options": {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/SearchOptions"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "leakedresults": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            }
-          },
-          "meta": {
-            "type": "object",
-            "required": ["bypass_cache"],
-            "properties": {
-              "bypass_cache": {
-                "type": ["boolean", "null"]
-              },
-              "environment": {
-                "type": "string"
-              },
-              "gateway": {
-                "type": "string"
-              }
-            }
-          },
-          "code": {
+          "timeout": {
             "type": "integer",
-            "enum": [200]
-          }
-        }
-      },
-      "SearchCreateFailureResponse": {
-        "type": "object",
-        "required": ["success", "message", "meta", "code"],
-        "properties": {
-          "success": {
+            "minimum": 25,
+            "maximum": 80,
+            "description": "OSINT Industries execution timeout in seconds. type and query are derived from the search and cannot be overridden."
+          },
+          "exact_match": {
             "type": "boolean",
-            "enum": [false]
+            "description": "Forwarded to OSINT Industries when supported by the selected query type."
           },
-          "message": {
-            "type": "string",
-            "enum": ["Failed to create search"]
-          },
-          "error": {
-            "$ref": "#/components/schemas/SearchError"
-          },
-          "data": {
-            "type": "object",
-            "properties": {
-              "search": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uuid"
-                  },
-                  "status": {
-                    "type": "string",
-                    "enum": ["failed"]
-                  }
-                }
-              },
-              "job": {
-                "type": "null"
-              }
-            }
-          },
-          "meta": {
-            "type": "object",
-            "properties": {
-              "environment": {
-                "type": "string"
-              },
-              "gateway": {
-                "type": "string"
-              },
-              "timestamp": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
-          },
-          "code": {
-            "type": "integer",
-            "enum": [503]
-          }
-        }
-      },
-      "SearchCreateRateLimitResponse": {
-        "type": "object",
-        "required": ["success", "message", "error", "meta", "code", "limits"],
-        "properties": {
-          "success": {
+          "premium": {
             "type": "boolean",
-            "enum": [false]
+            "description": "Enable premium OSINT Industries modules."
           },
-          "message": {
-            "type": "string",
-            "enum": ["Rate limit exceeded"]
-          },
-          "error": {
-            "$ref": "#/components/schemas/SearchError"
-          },
-          "meta": {
-            "type": "object",
-            "properties": {
-              "environment": {
-                "type": "string"
-              },
-              "timestamp": {
-                "type": "string",
-                "format": "date-time"
-              }
-            }
-          },
-          "code": {
-            "type": "integer",
-            "enum": [429]
-          },
-          "limits": {
-            "$ref": "#/components/schemas/CheckLimitsResult"
-          }
-        }
-      },
-      "SearchResultData": {
-        "type": "object",
-        "properties": {
-          "cards": {
-            "nullable": true
-          },
-          "leaked_data": {
-            "nullable": true
-          },
-          "breached_accounts": {
-            "nullable": true
-          },
-          "registered_accounts": {
-            "nullable": true
+          "premium_modules_only": {
+            "type": "boolean",
+            "description": "Only run premium OSINT Industries modules."
           }
         },
-        "additionalProperties": true
+        "additionalProperties": false
       },
-      "SearchResultEnvelope": {
+      "SearchByokSherlockeyeProvider": {
         "type": "object",
-        "required": ["ok", "status", "result", "created_at"],
+        "required": ["api_key"],
         "properties": {
-          "ok": {
-            "type": "boolean",
-            "enum": [true]
-          },
-          "status": {
-            "type": "string"
-          },
-          "result": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SearchResultData"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "created_at": {
+          "api_key": {
             "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "StreamFinishedJsonResponse": {
-        "type": "object",
-        "required": [
-          "ok",
-          "warning",
-          "id",
-          "value",
-          "type",
-          "status",
-          "result",
-          "created_at"
-        ],
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "enum": [true]
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "External provider API key sent with the search request and not returned by the API."
           },
-          "warning": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "value": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "options": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SearchOptions"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "status": {
-            "type": "string"
-          },
-          "result": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SearchResultData"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "LeaksOverviewResponse": {
-        "type": "object",
-        "required": ["ok", "search_id", "sources"],
-        "properties": {
-          "ok": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
-          },
-          "search_id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "sources": {
+          "additional_modules": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "minItems": 1,
+            "description": "Optional Sherlockeye async search modules to request in addition to the default search. type and value are derived from the Osintly search and cannot be overridden."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchByok": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": ["default", "only"],
+            "default": "default",
+            "description": "Use BYOK providers in addition to the standard pipeline, or exclusively when set to only."
           },
-          "fetch_endpoints": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/LeakSourceDescriptor"
-            }
+          "osint_industries": {
+            "$ref": "#/components/schemas/SearchByokOsintIndustriesProvider"
           },
+          "sherlockeye": {
+            "$ref": "#/components/schemas/SearchByokSherlockeyeProvider"
+          }
+        },
+        "description": "Bring your own external OSINT provider API keys for this search.",
+        "additionalProperties": false,
+        "minProperties": 1
+      },
+      "SearchCreateRequest": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "$ref": "#/components/schemas/SearchQuery"
+          },
+          "modules": {
+            "$ref": "#/components/schemas/SearchModules"
+          },
+          "leaks": {
+            "$ref": "#/components/schemas/SearchLeaks"
+          },
+          "features": {
+            "$ref": "#/components/schemas/SearchFeatures"
+          },
+          "cache": {
+            "$ref": "#/components/schemas/SearchCache"
+          },
+          "delivery": {
+            "$ref": "#/components/schemas/SearchDelivery"
+          },
+          "byok": {
+            "$ref": "#/components/schemas/SearchByok"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ModuleRunOnceRequest": {
+        "type": "object",
+        "required": ["query", "module_id"],
+        "properties": {
+          "query": {
+            "$ref": "#/components/schemas/SearchQuery"
+          },
+          "module_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "ID of the module to execute. Exactly one module is executed per request."
+          },
+          "cache": {
+            "$ref": "#/components/schemas/SearchCache"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ModuleRunOnceResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
           "data": {
             "type": "object",
-            "additionalProperties": true
+            "required": ["search", "module", "cards"],
+            "properties": {
+              "search": {
+                "type": "object",
+                "required": ["id", "status", "created_at", "completed_at"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pending", "processing", "finished", "failed"]
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "completed_at": {
+                    "type": ["string", "null"],
+                    "format": "date-time"
+                  }
+                }
+              },
+              "module": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "cards": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchDeleteRequest": {
+        "type": "object",
+        "required": ["ids"],
+        "properties": {
+          "ids": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Search IDs to delete as a single all-or-nothing batch. Minimum 1 ID, maximum 100 IDs per request. Every ID must belong to the authenticated caller, and every referenced search must already be in a terminal state (`finished` or `failed`). If one ID is invalid, inaccessible, or still active, the whole request is rejected."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ResponseMeta": {
+        "type": "object",
+        "required": ["timestamp"],
+        "properties": {
+          "environment": {
+            "type": "string"
           },
           "timestamp": {
             "type": "string",
             "format": "date-time"
           }
-        },
-        "additionalProperties": true
+        }
       },
-      "LeakSourceDescriptor": {
+      "SearchLinks": {
         "type": "object",
-        "required": ["endpoint", "status"],
+        "required": ["self", "stream", "results", "byok", "leaks"],
         "properties": {
-          "endpoint": {
+          "self": {
             "type": "string",
             "format": "uri"
           },
+          "stream": {
+            "type": "string",
+            "format": "uri"
+          },
+          "results": {
+            "type": "string",
+            "format": "uri"
+          },
+          "byok": {
+            "type": "string",
+            "format": "uri"
+          },
+          "leaks": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "SearchCreateResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["search", "execution", "links"],
+            "properties": {
+              "search": {
+                "type": "object",
+                "required": ["id", "status", "query", "created_at"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pending", "processing", "finished", "failed"]
+                  },
+                  "query": {
+                    "$ref": "#/components/schemas/SearchQuery"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              },
+              "execution": {
+                "type": "object",
+                "required": ["run_id", "cache_mode"],
+                "properties": {
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "cache_mode": {
+                    "type": "string",
+                    "enum": ["prefer", "bypass"]
+                  }
+                }
+              },
+              "links": {
+                "$ref": "#/components/schemas/SearchLinks"
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchStateResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["search", "summary", "delivery", "links"],
+            "properties": {
+              "search": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "status",
+                  "query",
+                  "created_at",
+                  "started_at",
+                  "completed_at"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["pending", "processing", "finished", "failed"]
+                  },
+                  "query": {
+                    "$ref": "#/components/schemas/SearchQuery"
+                  },
+                  "created_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "started_at": {
+                    "type": ["string", "null"],
+                    "format": "date-time"
+                  },
+                  "completed_at": {
+                    "type": ["string", "null"],
+                    "format": "date-time"
+                  }
+                }
+              },
+              "summary": {
+                "type": "object",
+                "required": [
+                  "module_results",
+                  "breached_accounts",
+                  "registered_accounts",
+                  "leak_sources"
+                ],
+                "properties": {
+                  "module_results": {
+                    "type": "integer"
+                  },
+                  "breached_accounts": {
+                    "type": "integer"
+                  },
+                  "registered_accounts": {
+                    "type": "integer"
+                  },
+                  "leak_sources": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "delivery": {
+                "type": "object",
+                "required": ["webhook"],
+                "properties": {
+                  "webhook": {
+                    "type": "object",
+                    "required": ["status", "attempts", "sent_at", "last_attempt_at"],
+                    "properties": {
+                      "status": {
+                        "type": ["string", "null"]
+                      },
+                      "attempts": {
+                        "type": "integer"
+                      },
+                      "sent_at": {
+                        "type": ["string", "null"],
+                        "format": "date-time"
+                      },
+                      "last_attempt_at": {
+                        "type": ["string", "null"],
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              },
+              "links": {
+                "type": "object",
+                "required": ["stream", "results", "byok", "leaks"],
+                "properties": {
+                  "stream": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "results": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "byok": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "leaks": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchDeleteResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["accepted", "deletion"],
+            "properties": {
+              "accepted": {
+                "type": "boolean",
+                "enum": [true]
+              },
+              "deletion": {
+                "type": "object",
+                "required": ["requested_count", "queued_ids"],
+                "properties": {
+                  "requested_count": {
+                    "type": "integer"
+                  },
+                  "queued_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchResultsResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["modules", "byok", "breached_accounts", "registered_accounts"],
+            "properties": {
+              "modules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["module", "cards"],
+                  "properties": {
+                    "module": {
+                      "type": "object",
+                      "required": ["id", "name"],
+                      "properties": {
+                        "id": {
+                          "type": ["string", "null"]
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "cards": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              },
+              "byok": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["provider", "cards"],
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "enum": ["osint_industries", "sherlockeye"]
+                    },
+                    "cards": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              },
+              "breached_accounts": {
+                "type": "array",
+                "items": {}
+              },
+              "registered_accounts": {
+                "type": "array",
+                "items": {}
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchLeaksOverviewResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["sources"],
+            "properties": {
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "key", "status", "count", "fetch_url"],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "fetch_url": {
+                      "type": "string",
+                      "format": "uri"
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "page_size": {
+                          "type": "integer"
+                        },
+                        "total_pages": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "logo": {
+                      "type": ["string", "null"]
+                    },
+                    "description": {
+                      "type": ["string", "null"]
+                    },
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchByokResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": ["mode", "providers"],
+            "properties": {
+              "mode": {
+                "type": ["string", "null"],
+                "enum": ["default", "only", null]
+              },
+              "providers": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "osint_industries": {
+                    "$ref": "#/components/schemas/SearchByokProviderResponse"
+                  },
+                  "sherlockeye": {
+                    "$ref": "#/components/schemas/SearchByokProviderResponse"
+                  }
+                }
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "SearchByokProviderResponse": {
+        "type": "object",
+        "required": [
+          "status",
+          "result_count",
+          "started_at",
+          "finished_at",
+          "mapping_version",
+          "error",
+          "raw"
+        ],
+        "properties": {
           "status": {
             "type": "string"
+          },
+          "result_count": {
+            "type": "integer"
+          },
+          "started_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "finished_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "mapping_version": {
+            "type": ["integer", "null"]
+          },
+          "error": {
+            "type": ["string", "null"]
+          },
+          "raw": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              }
+            ]
+          }
+        }
+      },
+      "SearchLeakSourceResponse": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "type": "object",
+              "required": ["source", "pagination", "template", "results", "count"],
+            "properties": {
+              "source": {
+                "type": "object",
+                "required": ["name", "key", "status"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "logo": {
+                    "type": ["string", "null"]
+                  },
+                  "description": {
+                    "type": ["string", "null"]
+                  }
+                }
+              },
+              "pagination": {
+                "type": "object",
+                "required": ["page", "page_size", "total_pages", "has_next_page"],
+                "properties": {
+                  "page": {
+                    "type": "integer"
+                  },
+                  "page_size": {
+                    "type": "integer"
+                  },
+                  "total_pages": {
+                    "type": "integer"
+                  },
+                  "has_next_page": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "template": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "results": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["key", "items"],
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "stats": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "additional": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  }
+                }
+              },
+              "count": {
+                "type": "integer"
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
+      },
+      "RadarSeverity": {
+        "type": "string",
+        "enum": ["critical", "high", "medium"]
+      },
+      "RadarBreachListItem": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "title",
+          "domain",
+          "breachDate",
+          "addedDate",
+          "pwnCount",
+          "severity",
+          "shortDescription"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
           },
           "name": {
             "type": "string"
           },
-          "logo": {
+          "title": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "breachDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "addedDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "pwnCount": {
+            "type": "integer"
+          },
+          "severity": {
+            "$ref": "#/components/schemas/RadarSeverity"
+          },
+          "shortDescription": {
             "type": ["string", "null"]
+          }
+        }
+      },
+      "RadarPagination": {
+        "type": "object",
+        "required": [
+          "page",
+          "limit",
+          "total",
+          "totalPages",
+          "hasNext",
+          "hasPrev"
+        ],
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "total": {
+            "type": "integer"
+          },
+          "totalPages": {
+            "type": "integer"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrev": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RadarBreachesResponse": {
+        "type": "object",
+        "required": ["breaches", "pagination"],
+        "properties": {
+          "breaches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RadarBreachListItem"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/RadarPagination"
+          }
+        }
+      },
+      "RadarBreach": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "title",
+          "domain",
+          "breachDate",
+          "addedDate",
+          "modifiedDate",
+          "pwnCount",
+          "description",
+          "shortDescription",
+          "severity",
+          "dataClasses",
+          "isVerified",
+          "isFabricated",
+          "isSensitive",
+          "isRetired",
+          "isSpamList",
+          "isMalware",
+          "isSubscriptionFree",
+          "isStealerLog",
+          "logoPath",
+          "attribution",
+          "disclosureUrl",
+          "aiEnrichments"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "breachDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "addedDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "modifiedDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "pwnCount": {
+            "type": "integer"
           },
           "description": {
             "type": "string"
           },
-          "error": {
-            "type": "string"
+          "shortDescription": {
+            "type": ["string", "null"]
           },
-          "pagination": {
-            "$ref": "#/components/schemas/LeakPaginationDescriptor"
-          }
-        }
-      },
-      "LeakPaginationDescriptor": {
-        "type": "object",
-        "required": ["isBig"],
-        "properties": {
-          "isBig": {
-            "type": "boolean"
+          "severity": {
+            "$ref": "#/components/schemas/RadarSeverity"
           },
-          "totalPages": {
-            "type": "integer"
-          },
-          "pageSize": {
-            "type": "integer"
-          },
-          "fetchUrl": {
-            "type": "string"
-          }
-        }
-      },
-      "LeakResultEntry": {
-        "type": "object",
-        "required": ["key", "items"],
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "items": {
-            "type": "array",
-            "items": {}
-          }
-        },
-        "additionalProperties": true
-      },
-      "LeakSourceSuccessResponse": {
-        "type": "object",
-        "required": ["ok", "source"],
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "enum": [true]
-          },
-          "source": {
-            "type": "string"
-          },
-          "count": {
-            "type": "integer"
-          },
-          "template": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "results": {
+          "dataClasses": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/LeakResultEntry"
+              "type": "string"
             }
           },
-          "pagination": {
-            "$ref": "#/components/schemas/LeakPageInfo"
-          }
-        },
-        "additionalProperties": true
-      },
-      "LeakPageInfo": {
-        "type": "object",
-        "required": ["currentPage", "totalPages", "hasNextPage"],
-        "properties": {
-          "currentPage": {
-            "type": "integer"
-          },
-          "totalPages": {
-            "type": "integer"
-          },
-          "pageSize": {
-            "type": "integer"
-          },
-          "hasNextPage": {
+          "isVerified": {
             "type": "boolean"
+          },
+          "isFabricated": {
+            "type": "boolean"
+          },
+          "isSensitive": {
+            "type": "boolean"
+          },
+          "isRetired": {
+            "type": "boolean"
+          },
+          "isSpamList": {
+            "type": "boolean"
+          },
+          "isMalware": {
+            "type": "boolean"
+          },
+          "isSubscriptionFree": {
+            "type": "boolean"
+          },
+          "isStealerLog": {
+            "type": "boolean"
+          },
+          "logoPath": {
+            "type": ["string", "null"]
+          },
+          "attribution": {
+            "type": ["string", "null"]
+          },
+          "disclosureUrl": {
+            "type": ["string", "null"]
+          },
+          "aiEnrichments": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              }
+            ]
           }
         }
       },
-      "LeakSourceErrorResponse": {
+      "RadarBreachResponse": {
         "type": "object",
-        "required": ["ok", "message", "source"],
+        "required": ["breach"],
         "properties": {
-          "ok": {
-            "type": "boolean",
-            "enum": [false]
-          },
-          "message": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          },
-          "pagination": {
-            "$ref": "#/components/schemas/LeakPageInfo"
+          "breach": {
+            "$ref": "#/components/schemas/RadarBreach"
           }
-        },
-        "additionalProperties": true
+        }
+      },
+      "SearchApiErrorResponse": {
+        "type": "object",
+        "required": ["error", "meta"],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": ["code", "message"],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ValidationIssue"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
       },
       "UsageSuccessResponse": {
         "type": "object",

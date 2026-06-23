@@ -1,0 +1,80 @@
+---
+title: Search Retention
+description: Why completed searches should be deleted regularly and how to remove them safely.
+icon: trash
+---
+
+Osintly stores search outputs so you can fetch state, normalized results, leak payloads, and webhook-linked data after execution completes.
+
+For long-running integrations, we recommend deleting searches you no longer need.
+
+## Why periodic deletion is recommended
+
+- Reduce accumulated stored result volume over time
+- Keep your own retained dataset focused on active investigations
+- Minimize stale search data that is no longer useful to your workflow
+- Make lifecycle ownership explicit in client applications
+
+Deleting a search also removes its stored result payloads. There is no separate API to delete only the result blobs while keeping the search record.
+
+## Delete completed searches
+
+Use `POST /search/delete` to remove one or more searches that belong to the authenticated API key.
+
+```bash
+curl -X POST "https://api.osint.ly/search/delete" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": [
+      "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f"
+    ]
+  }'
+```
+
+You can also delete multiple searches in one request:
+
+```bash
+curl -X POST "https://api.osint.ly/search/delete" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": [
+      "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
+      "95c36c17-f76e-4911-bd4e-8ea57515b2fb"
+    ]
+  }'
+```
+
+## Request rules
+
+- Send between `1` and `100` search IDs per request
+- Every search ID must belong to the authenticated API key
+- Every search must already be in a terminal state
+- Searches still `pending` or `processing` are rejected
+- Deletion is all-or-nothing for the full request
+
+If any ID is invalid, inaccessible, duplicated after normalization, or still active, the request is rejected and nothing is deleted.
+
+## Response behavior
+
+Successful deletion requests return `202 Accepted`.
+
+This means the deletion has been accepted for asynchronous processing. Your application should treat the request as background work rather than an immediate hard delete confirmation.
+
+## Recommended client pattern
+
+1. Create and monitor the search normally
+2. Fetch the final data your system needs
+3. Persist only the fields you want to keep in your own system
+4. Periodically call `POST /search/delete` for completed searches you no longer need in Osintly
+
+<Tip>
+If you run searches continuously, schedule cleanup as a recurring job instead of relying on manual deletion.
+</Tip>
+
+## Related docs
+
+- [Quick Start](/api-reference/quick-start)
+- [Introduction](/api-reference/introduction)
+- [Delete Searches endpoint](/api-reference/endpoint/delete)

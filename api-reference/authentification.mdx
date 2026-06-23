@@ -4,7 +4,15 @@ description: Authenticate every API request with your bearer token.
 icon: lock
 ---
 
-To access protected endpoints, include your API token in the `Authorization` header as a bearer token.
+All API endpoints require a bearer token in the `Authorization` header.
+
+<Note>
+Radar is included in the Free plan, but it still requires authentication. Create an Osintly account, generate a free API key, then call `GET /radar/breaches` and `GET /radar/breaches/{name}` with that key.
+</Note>
+
+<Note>
+If your key belongs to a plan without Radar enabled, these endpoints return `403` with `PLAN_FEATURE_REQUIRED`.
+</Note>
 
 ## Header format
 
@@ -32,6 +40,13 @@ Expected success response:
 }
 ```
 
+## Example Radar request (free API key)
+
+```bash
+curl -X GET "https://api.osint.ly/radar/breaches?limit=3&sortBy=recently-added" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
 ## Security Best Practices
 
 - Never commit API keys to git repositories
@@ -42,6 +57,11 @@ Expected success response:
 <Warning>
 If a token is exposed, revoke and replace it before any new deployment.
 </Warning>
+
+## Terms and ethics
+
+- Terms of Use: [https://osint.ly/terms](https://osint.ly/terms)
+- Ethics Policy: [https://osint.ly/ethics](https://osint.ly/ethics)
 
 ## Next Steps
 

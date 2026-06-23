@@ -98,7 +98,10 @@
             "pages": [
               "api-reference/introduction",
               "api-reference/authentification",
+              "api-reference/api-plans-capacity",
               "api-reference/quick-start",
+              "api-reference/search-retention",
+              "api-reference/sse-reference",
               "api-reference/domains",
               "api-reference/webhooks",
               "api-reference/logos"

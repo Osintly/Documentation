@@ -28,45 +28,54 @@ These values must match the OpenAPI enum exactly.
 
 ```json
 {
-  "type": "Email Address",
-  "value": "target@example.com",
-  "options": {
-    "include_breached_accounts": true,
-    "include_registered_accounts": true,
-    "bypass_cache": false
+  "query": {
+    "type": "Email Address",
+    "value": "target@example.com"
   },
-  "webhook": {
-    "url": "https://client.example/webhooks/osintly",
-    "secret": "super-secret-webhook-key"
+  "features": {
+    "breached_accounts": true,
+    "registered_accounts": "include"
+  },
+  "cache": {
+    "mode": "prefer"
+  },
+  "delivery": {
+    "webhook": {
+      "url": "https://client.example/webhooks/osintly",
+      "secret": "super-secret-webhook-key"
+    }
   }
 }
 ```
 
 ---
 
-## Options reference
+## Request sections
 
 | Field | Type | Notes |
 |---|---|---|
-| `leakedresults` | `string[]` | Allowed values: Hudson Rock, Leak Check, Snusbase, Breach Base, Breach VIP, Leak Osint |
-| `modules` | `uuid[]` | Restrict execution to selected module IDs |
-| `bypass_cache` | `boolean` | Force a fresh execution |
-| `include_breached_accounts` | `boolean` | Include breached account dataset |
-| `include_registered_accounts` | `boolean` | Include registered account dataset |
-| `registered_accounts_only` | `boolean` | Supported only for `Email Address` |
+| `query` | `object` | Required. Contains `type` and `value`. |
+| `modules` | `object` | Optional. Use `mode: "selected"` plus `ids` to restrict execution. |
+| `leaks` | `object` | Optional. Use `mode: "selected"` plus `sources` to restrict leak providers. |
+| `features` | `object` | Optional. Controls `breached_accounts` and `registered_accounts`. |
+| `cache` | `object` | Optional. Use `mode: "bypass"` to force a fresh execution. |
+| `delivery` | `object` | Optional. Configure `delivery.webhook`. |
 
 ---
 
-## Module selection behavior (`options.modules`)
+## Module selection behavior (`modules`)
 
-Use `options.modules` when you want to restrict execution to a known set of modules.
+Use `modules` when you want to restrict execution to a known set of modules.
 
 ```json
 {
-  "type": "Email Address",
-  "value": "target@example.com",
-  "options": {
-    "modules": [
+  "query": {
+    "type": "Email Address",
+    "value": "target@example.com"
+  },
+  "modules": {
+    "mode": "selected",
+    "ids": [
       "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
       "95c36c17-f76e-4911-bd4e-8ea57515b2fb"
     ]
@@ -78,12 +87,13 @@ Server-side validation rules:
 
 - Every module ID must exist
 - Every module ID must be listed and currently available
-- Every module ID must be compatible with the selected `type`
+- Every module ID must be compatible with the selected `query.type`
 
 Default behavior:
 
 - If `options.modules` is omitted or empty, Osintly runs the default module set for that search type
-- If `options.modules` contains one or more IDs, execution is limited to that set
+- If `modules` is omitted, Osintly runs the default module set for that search type
+- If `modules.mode` is `selected`, execution is limited to `modules.ids`
 
 If validation fails, the API returns `400` with an explicit validation error.
 

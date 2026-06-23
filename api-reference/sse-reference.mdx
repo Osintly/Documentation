@@ -1,0 +1,234 @@
+---
+title: SSE Reference
+description: Real-time Server-Sent Events emitted by GET /search/{id}/stream.
+icon: tower-broadcast
+---
+
+Use `GET /search/{id}/stream` to follow search execution in real time.
+
+## Concrete stream example
+
+Run this against an existing `SEARCH_ID`:
+
+```bash
+curl -N -X GET "https://api.osint.ly/search/SEARCH_ID/stream" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+Typical successful session:
+
+```text
+event: connected
+data: {"search_id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","timestamp":"2026-06-23T14:10:01.000Z"}
+
+event: search.progress
+data: {"search_id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","status":"running","message":"orchestration started","timestamp":"2026-06-23T14:10:01.100Z"}
+
+event: module.result
+data: {"search_id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","module":{"id":"github","name":"GitHub"},"card":{"github_001":{"username":"target","profile_url":"https://github.com/target"}},"timestamp":"2026-06-23T14:10:03.000Z"}
+
+event: module.result
+data: {"search_id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","module":{"id":"gravatar","name":"Gravatar"},"card":{"gravatar_001":{"email_hash":"md5:...","profile_url":"https://gravatar.com/..."}},"timestamp":"2026-06-23T14:10:05.000Z"}
+
+event: search.finished
+data: {"search_id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","status":"completed","totals":{"module_results":2},"execution_time_ms":8120,"timestamp":"2026-06-23T14:10:09.000Z"}
+```
+
+Typical BYOK session (providers + completion):
+
+```text
+event: connected
+data: {"search_id":"f1d0de6e-5f8e-42de-b88d-4b895be61d40","timestamp":"2026-06-23T14:20:01.000Z"}
+
+event: byok.result
+data: {"search_id":"f1d0de6e-5f8e-42de-b88d-4b895be61d40","provider":"osint_industries","card":{"source":"github","username":"target","url":"https://github.com/target"},"timestamp":"2026-06-23T14:20:02.500Z"}
+
+event: byok.result
+data: {"search_id":"f1d0de6e-5f8e-42de-b88d-4b895be61d40","provider":"sherlockeye","card":{"byok_sherlockeye":{"source":"social","handle":"target"}},"timestamp":"2026-06-23T14:20:03.100Z"}
+
+event: byok.finished
+data: {"search_id":"f1d0de6e-5f8e-42de-b88d-4b895be61d40","provider":"osint_industries","status":"success","resultCount":7,"timestamp":"2026-06-23T14:20:06.900Z"}
+
+event: byok.finished
+data: {"search_id":"f1d0de6e-5f8e-42de-b88d-4b895be61d40","provider":"sherlockeye","status":"no_results","resultCount":0,"timestamp":"2026-06-23T14:20:07.200Z"}
+
+event: search.finished
+data: {"search_id":"f1d0de6e-5f8e-42de-b88d-4b895be61d40","status":"completed","totals":{"module_results":7},"execution_time_ms":10004,"timestamp":"2026-06-23T14:20:11.000Z"}
+```
+
+Typical sharding/capacity session:
+
+```text
+event: search.progress
+data: {"search_id":"8d904b9c-60fa-4b33-a6ee-1bc6ab55ee8f","status":"running","message":"waiting runner capacity (status poll: 2 reachable, 0 available)","timestamp":"2026-06-23T14:25:00.000Z"}
+
+event: search.progress
+data: {"search_id":"8d904b9c-60fa-4b33-a6ee-1bc6ab55ee8f","status":"running","message":"shard 1/3 progress 4/12","result_cards_count":11,"timestamp":"2026-06-23T14:25:15.000Z"}
+
+event: search.progress
+data: {"search_id":"8d904b9c-60fa-4b33-a6ee-1bc6ab55ee8f","status":"running","message":"shard 2/3 progress 9/12","result_cards_count":26,"timestamp":"2026-06-23T14:25:22.000Z"}
+```
+
+Typical failed session:
+
+```text
+event: connected
+data: {"search_id":"95c36c17-f76e-4911-bd4e-8ea57515b2fb","timestamp":"2026-06-23T14:15:00.000Z"}
+
+event: search.finished
+data: {"search_id":"95c36c17-f76e-4911-bd4e-8ea57515b2fb","status":"failed","error":"NO_ELIGIBLE_RUNNER","timestamp":"2026-06-23T14:15:01.000Z"}
+```
+
+## Event types
+
+### `connected`
+
+Sent immediately after the SSE connection is established.
+
+```text
+event: connected
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","timestamp":"2026-05-27T12:00:00.000Z"}
+```
+
+### `module.result`
+
+Sent when one module emits a result card.
+
+```text
+event: module.result
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","module":{"id":"github","name":"GitHub"},"card":{"github_001":{"username":"target"}},"timestamp":"2026-05-27T12:00:02.000Z"}
+```
+
+Fields:
+
+- `search_id`: search UUID
+- `module.id`: module identifier when available
+- `module.name`: module display name
+- `card`: raw card payload
+- `timestamp`: event time
+
+### `search.progress`
+
+Sent during orchestration and shard execution.
+
+```text
+event: search.progress
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","status":"running","message":"shard 1/3 progress 6/18","result_cards_count":13,"timestamp":"2026-05-27T12:00:05.000Z"}
+```
+
+Fields:
+
+- `status`: `queued` or `running`
+- `message`: human-readable progress (for example capacity waits or shard progress)
+- `result_cards_count`: optional running count
+
+### `byok.result`
+
+Sent when a BYOK provider emits one raw card event.
+
+```text
+event: byok.result
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","provider":"osint_industries","card":{"source":"github","username":"target"},"timestamp":"2026-05-27T12:00:06.000Z"}
+```
+
+Fields:
+
+- `provider`: `osint_industries` or `sherlockeye`
+- `card`: provider-emitted card payload
+
+### `byok.finished`
+
+Sent once per provider when provider execution completes.
+
+```text
+event: byok.finished
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","provider":"sherlockeye","status":"success","resultCount":4,"timestamp":"2026-05-27T12:00:09.000Z"}
+```
+
+Possible `status` values:
+
+- `success`
+- `no_results`
+- `failed`
+
+### `search.finished`
+
+Sent when the search reaches a terminal state.
+
+```text
+event: search.finished
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","status":"completed","totals":{"module_results":1},"execution_time_ms":8234,"timestamp":"2026-05-27T12:00:08.000Z"}
+```
+
+Possible values for `status`:
+
+- `completed`
+- `failed`
+
+Optional fields:
+
+- `totals.module_results`
+- `execution_time_ms`
+- `error`
+
+### `leak.status`
+
+Sent for each leak source as it executes.
+
+```text
+event: leak.status
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","leaked_code":"snusbase","status":"success","result_count":42,"timestamp":"2026-05-27T12:00:07.000Z"}
+```
+
+### `leaks.finished`
+
+Sent when all leak providers have finished or been skipped.
+
+```text
+event: leaks.finished
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","executed_codes":["snusbase"],"skipped_codes":["hudsonrock"],"failed_codes":[],"timestamp":"2026-05-27T12:00:08.000Z"}
+```
+
+### `registered_accounts`
+
+Sent during registered-account checks.
+
+```text
+event: registered_accounts
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","event":"registered_accounts","type":"result","module":{"name":"Google"},"timestamp":"2026-05-27T12:00:06.000Z"}
+```
+
+### `breached_accounts`
+
+Sent when breached-account aggregation is ready.
+
+```text
+event: breached_accounts
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","event":"breached_accounts","resultCount":2,"results":[{"source":"BreachDirectory"}],"timestamp":"2026-05-27T12:00:08.000Z"}
+```
+
+## Sharding model
+
+For module execution, the orchestrator can split selected modules into shards and run them across multiple runners.
+
+- Max shard count is currently `3`
+- Shards are assigned from runner capacity snapshots
+- If all runners are saturated, periodic `search.progress` events report waiting status
+- When capacity returns, execution resumes and progress messages include shard ratios (for example `shard 2/3 progress 9/12`)
+
+Sharding details are implementation-level and may evolve, but these stream signals are stable integration points.
+
+## Resume and reconnection
+
+Streams support resuming from an index:
+
+- Query params: `start_index`, `cursor`, or `from`
+- Header: `Last-Event-ID`
+
+When available, each streamed event includes an SSE `id:` field. Store the last received id and reconnect from it after disconnects.
+
+## Notes
+
+- Keep the connection open until `search.finished`
+- The stream is additive: fetch `GET /search/{id}/results` for the normalized final payload
+- Leak results are retrieved separately through `GET /search/{id}/results/leaks`

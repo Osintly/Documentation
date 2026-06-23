@@ -23,6 +23,15 @@ curl -X GET "https://api.osint.ly" \
   -H "Authorization: Bearer $OSINTLY_API_KEY"
 ```
 
+## 2.1) Optional: test Radar (free plan)
+
+Radar access is free, but still requires an authenticated API key.
+
+```bash
+curl -X GET "https://api.osint.ly/radar/breaches?limit=2&sortBy=recently-added" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
 ## 3) Create a search
 
 ```bash
@@ -30,12 +39,16 @@ curl -X POST "https://api.osint.ly/search" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "type": "Email Address",
-    "value": "target@example.com",
-    "options": {
-      "include_breached_accounts": true,
-      "include_registered_accounts": true,
-      "bypass_cache": false
+    "query": {
+      "type": "Email Address",
+      "value": "target@example.com"
+    },
+    "features": {
+      "breached_accounts": true,
+      "registered_accounts": "include"
+    },
+    "cache": {
+      "mode": "prefer"
     }
   }'
 ```
@@ -49,10 +62,13 @@ curl -X POST "https://api.osint.ly/search" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "type": "Email Address",
-    "value": "target@example.com",
-    "options": {
-      "modules": [
+    "query": {
+      "type": "Email Address",
+      "value": "target@example.com"
+    },
+    "modules": {
+      "mode": "selected",
+      "ids": [
         "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
         "95c36c17-f76e-4911-bd4e-8ea57515b2fb"
       ]
@@ -60,7 +76,7 @@ curl -X POST "https://api.osint.ly/search" \
   }'
 ```
 
-If `options.modules` is empty or omitted, Osintly uses the default module set for the selected search type.
+If `modules` is omitted, Osintly uses the default module set for the selected search type.
 
 ## 4) Stream progress (SSE)
 
@@ -71,36 +87,77 @@ curl -N -X GET "https://api.osint.ly/search/SEARCH_ID/stream" \
 
 You receive incremental events while the search is running.
 
-## 5) Fetch final result
+Concrete output example:
+
+```text
+event: connected
+data: {"search_id":"SEARCH_ID","timestamp":"2026-06-23T14:10:01.000Z"}
+
+event: module.result
+data: {"search_id":"SEARCH_ID","module":{"id":"github","name":"GitHub"},"card":{"github_001":{"username":"target"}},"timestamp":"2026-06-23T14:10:03.000Z"}
+
+event: search.finished
+data: {"search_id":"SEARCH_ID","status":"completed","totals":{"module_results":1},"timestamp":"2026-06-23T14:10:09.000Z"}
+```
+
+Concrete BYOK stream output example:
+
+```text
+event: byok.result
+data: {"search_id":"SEARCH_ID","provider":"osint_industries","card":{"source":"github","username":"target"},"timestamp":"2026-06-23T14:11:03.000Z"}
+
+event: byok.finished
+data: {"search_id":"SEARCH_ID","provider":"osint_industries","status":"success","resultCount":6,"timestamp":"2026-06-23T14:11:08.000Z"}
+```
+
+If modules are sharded across runners, you can also receive `search.progress` messages such as:
+
+```text
+event: search.progress
+data: {"search_id":"SEARCH_ID","status":"running","message":"shard 1/3 progress 5/12","result_cards_count":17,"timestamp":"2026-06-23T14:11:04.000Z"}
+```
+
+## 5) Fetch search state
 
 ```bash
 curl -X GET "https://api.osint.ly/search/SEARCH_ID" \
   -H "Authorization: Bearer $OSINTLY_API_KEY"
 ```
 
-## 6) Fetch leak source payloads
+## 6) Fetch final structured results
 
 ```bash
-# List available leak sources for a search
-curl -X GET "https://api.osint.ly/search/SEARCH_ID/leaks" \
-  -H "Authorization: Bearer $OSINTLY_API_KEY"
-
-# Fetch one source (optional page)
-curl -X GET "https://api.osint.ly/search/SEARCH_ID/leaks/snusbase?page=1" \
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/results" \
   -H "Authorization: Bearer $OSINTLY_API_KEY"
 ```
 
-## 7) Optional: receive results by webhook
+## 7) Fetch leak source payloads
 
-Provide `webhook.url` (and optionally `webhook.secret`) when creating the search:
+```bash
+# List available leak sources for a search
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/results/leaks" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+
+# Fetch one source (optional page)
+curl -X GET "https://api.osint.ly/search/SEARCH_ID/results/leaks/snusbase?page=1" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+## 8) Optional: receive results by webhook
+
+Provide `delivery.webhook.url` (and optionally `delivery.webhook.secret`) when creating the search:
 
 ```json
 {
-  "type": "Email Address",
-  "value": "target@example.com",
-  "webhook": {
-    "url": "https://client.example/webhooks/osintly",
-    "secret": "super-secret-webhook-key"
+  "query": {
+    "type": "Email Address",
+    "value": "target@example.com"
+  },
+  "delivery": {
+    "webhook": {
+      "url": "https://client.example/webhooks/osintly",
+      "secret": "super-secret-webhook-key"
+    }
   }
 }
 ```
@@ -109,11 +166,31 @@ When the search completes, your endpoint receives a JSON payload with:
 
 - `searchId`
 - `status` (`finished` or `error`)
-- `result` (`cards`, `leaked_data`, `breached_accounts`, `registered_accounts`)
 - `finishedAt`
 - `search` metadata (`id`, `value`, `type`, `options`, `created_at`)
+- `summary` counts
+- `links` to retrieve state, results, BYOK details, and leaks
+
+The webhook is a lightweight completion notification. Use the returned links to fetch the full normalized payloads from the API.
 
 Full payload details: [Webhooks](/api-reference/webhooks)
+
+## 9) Recommended: clean up completed searches
+
+After you have fetched and stored the data you need, delete completed searches you no longer need:
+
+```bash
+curl -X POST "https://api.osint.ly/search/delete" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ids": ["SEARCH_ID"]
+  }'
+```
+
+Use this only after the search is terminal. Deletion requests are all-or-nothing and support up to `100` IDs per call.
+
+Cleanup guidance: [Search Retention](/api-reference/search-retention)
 
 ---
 
@@ -129,6 +206,11 @@ curl -X GET "https://api.osint.ly/usage" \
 <Tip>
 If you receive `429`, respect `Retry-After` and `X-RateLimit-Reset` headers before retrying.
 </Tip>
+
+## Terms and ethics
+
+- Terms of Use: [https://osint.ly/terms](https://osint.ly/terms)
+- Ethics Policy: [https://osint.ly/ethics](https://osint.ly/ethics)
 
 ## Next steps
 
