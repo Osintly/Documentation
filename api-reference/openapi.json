@@ -33,10 +33,6 @@
       "description": "Rate limit and usage information"
     },
     {
-      "name": "Modules",
-      "description": "Public OSINT module catalog endpoints"
-    },
-    {
       "name": "Radar",
       "description": "Breach intelligence endpoints (free with API key)"
     },
@@ -113,7 +109,7 @@
     },
     "/modules": {
       "get": {
-        "tags": ["Modules"],
+        "tags": ["Search"],
         "summary": "List modules",
         "description": "Return listed OSINT modules with their IDs, catalog metadata, pagination, featured modules, and aggregations. Requires a bearer API key.",
         "operationId": "listModules",
