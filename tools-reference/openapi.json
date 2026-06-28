@@ -1,0 +1,1308 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Osintly Tools API",
+    "version": "1.0.0",
+    "description": "OpenAPI specification for Osintly direct enrichment tools.",
+    "contact": {
+      "name": "Osintly",
+      "url": "https://docs.osint.ly/tools-reference/introduction"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.osint.ly",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Tools Catalog",
+      "description": "Discover available tools, metadata, and route costs."
+    },
+    {
+      "name": "Domain Intelligence",
+      "description": "Direct domain enrichment endpoints."
+    },
+    {
+      "name": "IP Intelligence",
+      "description": "Direct IP address enrichment endpoints."
+    }
+  ],
+  "paths": {
+    "/tools": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "List tools",
+        "description": "List tools available to the authenticated account.",
+        "operationId": "listTools",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "All",
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "featuredOnly",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "true",
+                    "false",
+                    "1",
+                    "0"
+                  ]
+                }
+              ],
+              "default": false
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 250
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 120,
+              "default": ""
+            }
+          },
+          {
+            "name": "searchType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 80,
+              "default": "All"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "popular",
+                "usage-desc",
+                "usage-asc",
+                "recent",
+                "name-asc",
+                "name-desc",
+                "rating"
+              ],
+              "default": "popular"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "preview",
+                "full"
+              ],
+              "default": "full"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tools catalog response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "example": {
+                  "data": [
+                    {
+                      "name": "Domain Intelligence",
+                      "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
+                      "image": "/tools/domain-intelligence.png",
+                      "routePath": "/domain-intelligence",
+                      "categories": [
+                        "Infrastructure",
+                        "Reputation"
+                      ],
+                      "featured": true
+                    },
+                    {
+                      "name": "IP Intelligence",
+                      "description": "Investigate IP geolocation, network ownership, routing, registration, reverse DNS, exposed services, hosted domains, and reputation signals.",
+                      "image": "/tools/ip-intelligence.png",
+                      "routePath": "/ip-intelligence",
+                      "categories": [
+                        "Infrastructure",
+                        "Reputation"
+                      ],
+                      "featured": true
+                    }
+                  ],
+                  "meta": {
+                    "page": 1,
+                    "limit": 250,
+                    "total": 2,
+                    "timestamp": "2026-06-28T12:00:00.000Z"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          }
+        }
+      }
+    },
+    "/tools/{tool}/infos": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "Get tool info",
+        "description": "Read public metadata for one tool.",
+        "operationId": "getToolInfo",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ToolPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolInfo"
+                },
+                "example": {
+                  "name": "Domain Intelligence",
+                  "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
+                  "image": "/tools/domain-intelligence.png",
+                  "routePath": "/domain-intelligence"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/tools/{tool}/costs": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "Get tool route costs",
+        "description": "Read per-route pricing for one tool.",
+        "operationId": "getToolCosts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ToolPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool route cost payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "example": {
+                  "routes": {
+                    "GET /": {
+                      "type": "free",
+                      "credits": 0
+                    },
+                    "GET /infos": {
+                      "type": "free",
+                      "credits": 0
+                    },
+                    "POST /dns": {
+                      "type": "free",
+                      "credits": 0
+                    },
+                    "POST /ssl": {
+                      "type": "free",
+                      "credits": 0
+                    },
+                    "POST /all": {
+                      "type": "core-search",
+                      "credits": 1
+                    },
+                    "POST /reputation": {
+                      "type": "core-search",
+                      "credits": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence": {
+      "get": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "List Domain Intelligence routes",
+        "operationId": "listDomainIntelligenceRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/all": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Run all domain intelligence collectors",
+        "operationId": "runDomainAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/dns": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Get domain DNS intelligence",
+        "operationId": "runDomainDns",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/http": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Get domain HTTP intelligence",
+        "operationId": "runDomainHttp",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/ssl": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Get domain SSL intelligence",
+        "operationId": "runDomainSsl",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/technologies": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Detect domain technology hints",
+        "operationId": "runDomainTechnologies",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/whois": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Get domain registration intelligence",
+        "operationId": "runDomainWhois",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/security": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Get domain security signals",
+        "operationId": "runDomainSecurity",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/risk": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Calculate domain risk signals",
+        "operationId": "runDomainRisk",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/subdomains": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Discover domain subdomains",
+        "operationId": "runDomainSubdomains",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/emails": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Extract domain email signals",
+        "operationId": "runDomainEmails",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/ports": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Scan domain ports",
+        "operationId": "runDomainPorts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/reputation": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Get domain reputation signals",
+        "operationId": "runDomainReputation",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DomainRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/DomainToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence": {
+      "get": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "List IP Intelligence routes",
+        "operationId": "listIpIntelligenceRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/all": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Run all IP intelligence collectors",
+        "operationId": "runIpAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/geo": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get IP geolocation intelligence",
+        "operationId": "runIpGeo",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/network": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get IP network intelligence",
+        "operationId": "runIpNetwork",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/bgp": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get IP BGP intelligence",
+        "operationId": "runIpBgp",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/whois": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get IP registration intelligence",
+        "operationId": "runIpWhois",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/rdns": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get IP reverse DNS intelligence",
+        "operationId": "runIpRdns",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/risk": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Calculate IP risk signals",
+        "operationId": "runIpRisk",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/ports": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get IP exposed ports and vulnerability hints",
+        "operationId": "runIpPorts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/reputation": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get IP reputation signals",
+        "operationId": "runIpReputation",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/hosted-domains": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "Get hosted domains for an IP",
+        "operationId": "runIpHostedDomains",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/IpRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/IpToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API key"
+      }
+    },
+    "parameters": {
+      "ToolPath": {
+        "name": "tool",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "domain-intelligence",
+            "ip-intelligence"
+          ]
+        }
+      }
+    },
+    "requestBodies": {
+      "DomainRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DomainRequest"
+            },
+            "example": {
+              "domain": "example.com"
+            }
+          }
+        }
+      },
+      "IpRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IpRequest"
+            },
+            "example": {
+              "ip": "8.8.8.8"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "ToolRouteIndex": {
+        "description": "Tool route index",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "example": {
+              "tool": "domain-intelligence",
+              "operation": "index",
+              "query": {
+                "domain": "domain-intelligence"
+              },
+              "data": {
+                "routes": [
+                  {
+                    "method": "GET",
+                    "path": "/tools/domain-intelligence/costs"
+                  },
+                  {
+                    "method": "GET",
+                    "path": "/tools/domain-intelligence/infos"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/domain-intelligence/dns"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/domain-intelligence/reputation"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/domain-intelligence/all"
+                  }
+                ]
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "DomainToolResponse": {
+        "description": "Domain tool response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DomainToolResponse"
+            },
+            "example": {
+              "tool": "domain-intelligence",
+              "operation": "dns",
+              "query": {
+                "domain": "example.com"
+              },
+              "data": {
+                "primaryIp": "93.184.216.34",
+                "records": {
+                  "A": [
+                    "93.184.216.34"
+                  ],
+                  "AAAA": [],
+                  "MX": [],
+                  "TXT": [
+                    "v=spf1 -all"
+                  ]
+                },
+                "dnssec": {
+                  "authenticated": false,
+                  "dsPresent": false
+                },
+                "emailAuth": {
+                  "spf": "v=spf1 -all",
+                  "dmarc": null,
+                  "dkim": []
+                }
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "IpToolResponse": {
+        "description": "IP tool response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IpToolResponse"
+            },
+            "example": {
+              "tool": "ip-intelligence",
+              "operation": "ports",
+              "query": {
+                "ip": "8.8.8.8"
+              },
+              "data": {
+                "ports": [
+                  53,
+                  443
+                ],
+                "tags": [
+                  "dns"
+                ],
+                "hostnames": [
+                  "dns.google"
+                ],
+                "cpes": [],
+                "vulns": []
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Invalid request body or parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "VALIDATION_ERROR",
+                "message": "Invalid request body",
+                "details": [
+                  {
+                    "path": "domain",
+                    "message": "Invalid domain"
+                  }
+                ]
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Missing or invalid API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "UNAUTHORIZED",
+                "message": "Unauthorized",
+                "details": "A valid API key is required"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "PlanFeatureRequired": {
+        "description": "The authenticated account does not have a paid API subscription with tools access",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PLAN_FEATURE_REQUIRED",
+                "message": "Plan feature required",
+                "details": "Tools require a paid API subscription with the tools feature enabled"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ProviderUnavailable": {
+        "description": "Required enrichment source configuration is missing",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PROVIDER_UNAVAILABLE",
+                "message": "Provider unavailable",
+                "details": "A required enrichment source is unavailable for this operation"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Tool not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "NOT_FOUND",
+                "message": "Tool not found"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "DomainRequest": {
+        "type": "object",
+        "required": [
+          "domain"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Domain to enrich. Schemes and paths are normalized away before validation.",
+            "example": "example.com"
+          }
+        },
+        "additionalProperties": false
+      },
+      "IpRequest": {
+        "type": "object",
+        "required": [
+          "ip"
+        ],
+        "properties": {
+          "ip": {
+            "type": "string",
+            "description": "IPv4 or IPv6 address to enrich.",
+            "example": "8.8.8.8"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToolInfo": {
+        "type": "object",
+        "required": [
+          "description",
+          "image",
+          "name",
+          "routePath"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "routePath": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true,
+        "example": {
+          "name": "Domain Intelligence",
+          "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
+          "image": "/tools/domain-intelligence.png",
+          "routePath": "/domain-intelligence"
+        }
+      },
+      "DomainToolResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "domain"
+            ],
+            "properties": {
+              "domain": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "tool": {
+            "type": "string",
+            "const": "domain-intelligence"
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "tool": "domain-intelligence",
+          "operation": "dns",
+          "query": {
+            "domain": "example.com"
+          },
+          "data": {
+            "primaryIp": "93.184.216.34",
+            "records": {
+              "A": [
+                "93.184.216.34"
+              ],
+              "AAAA": [],
+              "MX": [],
+              "TXT": [
+                "v=spf1 -all"
+              ]
+            },
+            "dnssec": {
+              "authenticated": false,
+              "dsPresent": false
+            },
+            "emailAuth": {
+              "spf": "v=spf1 -all",
+              "dmarc": null,
+              "dkim": []
+            }
+          },
+          "meta": {
+            "timestamp": "2026-06-28T12:00:00.000Z"
+          }
+        }
+      },
+      "IpToolResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "ip"
+            ],
+            "properties": {
+              "ip": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "tool": {
+            "type": "string",
+            "const": "ip-intelligence"
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "tool": "ip-intelligence",
+          "operation": "ports",
+          "query": {
+            "ip": "8.8.8.8"
+          },
+          "data": {
+            "ports": [
+              53,
+              443
+            ],
+            "tags": [
+              "dns"
+            ],
+            "hostnames": [
+              "dns.google"
+            ],
+            "cpes": [],
+            "vulns": []
+          },
+          "meta": {
+            "timestamp": "2026-06-28T12:00:00.000Z"
+          }
+        }
+      },
+      "ResponseMeta": {
+        "type": "object",
+        "required": [
+          "timestamp"
+        ],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error",
+          "meta"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {}
+            },
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "error": {
+            "code": "UNAUTHORIZED",
+            "message": "Unauthorized",
+            "details": "A valid API key is required"
+          },
+          "meta": {
+            "timestamp": "2026-06-28T12:00:00.000Z"
+          }
+        }
+      }
+    }
+  }
+}

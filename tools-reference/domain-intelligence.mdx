@@ -1,0 +1,70 @@
+---
+title: Domain Intelligence
+description: Direct domain enrichment endpoints for DNS, SSL, HTTP, WHOIS, exposure, and reputation signals.
+icon: globe
+---
+
+Domain Intelligence endpoints accept one domain and return focused enrichment data. Inputs may include a scheme or path, but the API normalizes the value to a hostname before validation.
+
+```json
+{
+  "domain": "example.com"
+}
+```
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Notes |
+|---|---|---|
+| All | `POST /tools/domain-intelligence/all` | Runs the main domain intelligence collectors in parallel. |
+| DNS | `POST /tools/domain-intelligence/dns` | DNS records, primary IP, DNSSEC, and email-auth records. |
+| HTTP | `POST /tools/domain-intelligence/http` | Reachability, status, final URL, protocol, and security headers. |
+| SSL | `POST /tools/domain-intelligence/ssl` | Certificate details and certificate history. |
+| Technologies | `POST /tools/domain-intelligence/technologies` | Lightweight technology hints from HTTP headers. |
+| WHOIS | `POST /tools/domain-intelligence/whois` | Registration, ownership, and contact metadata when available. |
+| Security | `POST /tools/domain-intelligence/security` | Security posture signals from DNS, HTTP, and SSL. |
+| Risk | `POST /tools/domain-intelligence/risk` | Lightweight risk score and labels. |
+| Subdomains | `POST /tools/domain-intelligence/subdomains` | Subdomain discovery and basic distribution stats. |
+| Emails | `POST /tools/domain-intelligence/emails` | Email extraction from registration data, DNS TXT, and website pages. |
+| Ports | `POST /tools/domain-intelligence/ports` | Open port summary when available. |
+| Reputation | `POST /tools/domain-intelligence/reputation` | Blocklist and malicious URL reputation signals. |
+
+---
+
+## Fast path
+
+Use `/all` when you need a single payload for an investigation view.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/domain-intelligence/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "domain": "example.com" }'
+```
+
+Use a focused endpoint when the UI only needs one card or when you want lower latency.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/domain-intelligence/dns" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "domain": "example.com" }'
+```
+
+---
+
+## Availability
+
+Some deep-enrichment operations depend on server-side data sources and may return partial results when a source is unavailable or not configured.
+
+If a required enrichment source is unavailable for an operation, the API may return `503 PROVIDER_UNAVAILABLE`.
+
+---
+
+## Caching
+
+Tool results are cached by signal group and observable for short windows. This keeps repeated investigations responsive and reduces latency.
+
+Use focused endpoints when freshness of one signal matters more than the complete `/all` payload.

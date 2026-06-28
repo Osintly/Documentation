@@ -90,7 +90,7 @@
         ]
       },
       {
-        "tab": "Developers (API)",
+        "tab": "Search API",
         "icon": "code",
         "groups": [
           {
@@ -110,6 +110,24 @@
           {
             "group": "Endpoints",
             "openapi": "api-reference/openapi.json"
+          }
+        ]
+      },
+      {
+        "tab": "Tools API",
+        "icon": "wrench",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "tools-reference/introduction",
+              "tools-reference/domain-intelligence",
+              "tools-reference/ip-intelligence"
+            ]
+          },
+          {
+            "group": "Tools Endpoints",
+            "openapi": "tools-reference/openapi.json"
           }
         ]
       }
