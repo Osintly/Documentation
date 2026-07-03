@@ -90,7 +90,7 @@
         ]
       },
       {
-        "tab": "Developers (API)",
+        "tab": "Search API",
         "icon": "code",
         "groups": [
           {
@@ -110,6 +110,23 @@
           {
             "group": "Endpoints",
             "openapi": "api-reference/openapi.json"
+          }
+        ]
+      },
+      {
+        "tab": "Tools API",
+        "icon": "wrench",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "tools-reference/introduction",
+              "tools-reference/epic-games"
+            ]
+          },
+          {
+            "group": "Tools Endpoints",
+            "openapi": "tools-reference/openapi.json"
           }
         ]
       }
@@ -141,7 +158,7 @@
   "background": {
     "color": {
       "light": "#ffffff",
-      "dark": "#0a0a0a"
+      "dark": "#0f0f0f"
     }
   },
   "contextual": {

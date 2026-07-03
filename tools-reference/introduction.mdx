@@ -1,0 +1,134 @@
+---
+title: Tools Reference
+description: Direct enrichment endpoints for domains, IP addresses, and other focused OSINT lookups.
+icon: wrench
+---
+
+The Tools API exposes focused enrichment endpoints that run immediately and return a normalized JSON response. Use tools when you need a direct lookup for one observable, without creating a full Osintly search.
+
+<CardGroup cols={2}> 
+  <Card title="Epic Games" icon="/images/tools/epic-games.svg" href="/tools-reference/epic-games">
+    Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.
+  </Card> 
+</CardGroup>
+
+---
+
+## Base URL
+
+- Production: `https://api.osint.ly`
+
+All tool endpoints are under:
+
+```text
+/tools
+```
+
+---
+
+## Authentication and access
+
+Tools use the same bearer token model as the rest of the Osintly API.
+
+```bash
+curl -X GET "https://api.osint.ly/tools" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+Tool execution requires a paid API subscription with the `tools` feature enabled. This applies to every tool route, including routes marked as free. Currently, all Osintly API subscriptions available on [osint.ly/api/pricing](https://osint.ly/api/pricing) include access to tools. If the plan does not include tools, the API returns `403 PLAN_FEATURE_REQUIRED`.
+
+---
+
+## When to use tools
+
+| Use tools when | Use Search API when |
+|---|---|
+| You already know the observable type | You need full search orchestration |
+| You want one direct enrichment response | You want module execution, streaming, and result persistence |
+| You need low-overhead API calls | You need account discovery, leaks, BYOK, or webhooks |
+| You want to call a specific signal group | You want Osintly to decide the relevant module set |
+
+---
+
+## Response pattern
+
+Most tool responses follow the same envelope:
+
+```json
+{
+  "tool": "epic-games",
+  "operation": "resolve",
+  "query": {
+    "value": "some-player",
+    "type": "epic_display_name",
+    "normalizedType": "epic_display_name"
+  },
+  "data": {},
+  "meta": {
+    "timestamp": "2026-06-28T12:00:00.000Z"
+  }
+}
+```
+
+The `data` object changes by operation. Endpoint schemas are documented in the generated **Tools Endpoints** section.
+
+---
+
+## Saving `/all` results
+
+`POST /tools/<tool>/all` can synchronously save the returned payload when you add `save: true` to the request body. This does not change the route cost.
+
+Saved responses include `meta.savedResult.id` and can be fetched later with:
+
+```bash
+curl -X GET "https://api.osint.ly/tools/results/<result_id>" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+Only the API key and creator that saved the result can retrieve it.
+
+---
+
+## Cost discovery
+
+The complete tools catalog is also available in the Osintly dashboard at [osint.ly/tools](https://osint.ly/tools).
+
+Every tool exposes a `costs` endpoint.
+
+```bash
+curl -X GET "https://api.osint.ly/tools/epic-games/costs" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY"
+```
+
+Free operations return no core-search credit charge, but still require paid Tools API access. Paid operations are priced by the route and are visible in the cost payload.
+
+The costs response contains `defaultPrice` and a `routes` array. Each route entry includes `kind`, `method`, `quantity`, and `routePattern`.
+
+```json
+{
+  "defaultPrice": null,
+  "routes": [
+    {
+      "kind": "free",
+      "method": "POST",
+      "quantity": 0,
+      "routePattern": "/search"
+    },
+    {
+      "kind": "core_search",
+      "method": "POST",
+      "quantity": 3,
+      "routePattern": "/all"
+    }
+  ]
+}
+```
+
+For gaming tools, `POST /search` is validation-only. It validates and normalizes the submitted identifier without calling the provider or consuming credits. Use `/all` or the focused enrichment routes when you want provider-backed data.
+
+---
+
+## Next steps
+
+1. Review [Epic Games](/tools-reference/epic-games)
+2. Explore endpoint schemas in **Tools Endpoints**

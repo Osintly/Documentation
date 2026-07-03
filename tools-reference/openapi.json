@@ -1,0 +1,1943 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Osintly Tools API",
+    "version": "1.0.0",
+    "description": "OpenAPI specification for Osintly Epic Games tools and catalog endpoints.",
+    "contact": {
+      "name": "Osintly",
+      "url": "https://docs.osint.ly/tools-reference/introduction"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.osint.ly",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Tools Catalog",
+      "description": "Discover available tools, metadata, and route costs."
+    },
+    {
+      "name": "Epic Games",
+      "description": "Direct Epic Games account validation and enrichment endpoints."
+    }
+  ],
+  "paths": {
+    "/tools": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "List tools",
+        "description": "List tools available to the authenticated account.",
+        "operationId": "listTools",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "All",
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "featuredOnly",
+            "in": "query",
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "true",
+                    "false",
+                    "1",
+                    "0"
+                  ]
+                }
+              ],
+              "default": false
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 250
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 1
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 120,
+              "default": ""
+            }
+          },
+          {
+            "name": "searchType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 80,
+              "default": "All"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "popular",
+                "usage-desc",
+                "usage-asc",
+                "recent",
+                "name-asc",
+                "name-desc",
+                "rating"
+              ],
+              "default": "popular"
+            }
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "preview",
+                "full"
+              ],
+              "default": "full"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tools catalog response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolsCatalogResponse"
+                },
+                "example": {
+                  "aggregations": {
+                    "categories": {
+                      "Gaming": 1,
+                      "Accounts": 1,
+                      "Social": 1
+                    },
+                    "featuredCount": 0,
+                    "searchTypes": {
+                      "Gaming": 1
+                    },
+                    "totalCount": 1
+                  },
+                  "featuredTools": [],
+                  "items": [
+                    {
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "countryCode": null,
+                      "description": "Validate Epic Games account search inputs, retrieve player autocomplete suggestions, and enrich Epic/Fortnite account intelligence.",
+                      "featured": false,
+                      "id": "00000000-0000-0000-0000-000000000000",
+                      "logo": "/tools/epic-games.png",
+                      "name": "Epic Games",
+                      "routePath": "/epic-games",
+                      "slug": "epic-games",
+                      "type": "Gaming",
+                      "uiKey": "epic-games",
+                      "updatedAt": "2026-06-28T12:00:00.000Z"
+                    }
+                  ],
+                  "pagination": {
+                    "hasNext": false,
+                    "hasPrevious": false,
+                    "limit": 250,
+                    "page": 1,
+                    "total": 1,
+                    "totalPages": 1
+                  },
+                  "tools": [
+                    {
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "countryCode": null,
+                      "description": "Validate Epic Games account search inputs, retrieve player autocomplete suggestions, and enrich Epic/Fortnite account intelligence.",
+                      "featured": false,
+                      "id": "00000000-0000-0000-0000-000000000000",
+                      "logo": "/tools/epic-games.png",
+                      "name": "Epic Games",
+                      "routePath": "/epic-games",
+                      "slug": "epic-games",
+                      "type": "Gaming",
+                      "uiKey": "epic-games",
+                      "updatedAt": "2026-06-28T12:00:00.000Z"
+                    }
+                  ],
+                  "total": 1
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          }
+        }
+      }
+    },
+    "/tools/{tool}/infos": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "Get tool info",
+        "description": "Read public metadata for one tool.",
+        "operationId": "getToolInfo",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ToolPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolInfo"
+                },
+                "example": {
+                  "name": "Epic Games",
+                  "description": "Validate Epic Games account search inputs and retrieve player autocomplete suggestions.",
+                  "image": "/tools/epic-games.png",
+                  "routePath": "/epic-games"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/tools/{tool}/costs": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "Get tool route costs",
+        "description": "Read per-route pricing for one tool.",
+        "operationId": "getToolCosts",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ToolPath"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool route cost payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolCostsResponse"
+                },
+                "example": {
+                  "defaultPrice": null,
+                  "routes": [
+                    {
+                      "kind": "free",
+                      "method": "GET",
+                      "quantity": 0,
+                      "routePattern": "/"
+                    },
+                    {
+                      "kind": "free",
+                      "method": "GET",
+                      "quantity": 0,
+                      "routePattern": "/infos"
+                    },
+                    {
+                      "kind": "free",
+                      "method": "POST",
+                      "quantity": 0,
+                      "routePattern": "/search"
+                    },
+                    {
+                      "kind": "free",
+                      "method": "POST",
+                      "quantity": 0,
+                      "routePattern": "/suggestions"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 1,
+                      "routePattern": "/resolve"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 1,
+                      "routePattern": "/linked-accounts"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 1,
+                      "routePattern": "/tags"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 1,
+                      "routePattern": "/regions"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 2,
+                      "routePattern": "/friends-achievements"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 1,
+                      "routePattern": "/creator"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 1,
+                      "routePattern": "/profile-db"
+                    },
+                    {
+                      "kind": "core_search",
+                      "method": "POST",
+                      "quantity": 3,
+                      "routePattern": "/all"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          }
+        }
+      }
+    },
+    "/tools/results/{id}": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "Get a saved tool result",
+        "description": "Retrieve a payload saved from a synchronous `/tools/<tool>/all` request with `save: true`.",
+        "operationId": "getSavedToolResult",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SavedToolResultId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SavedToolResultResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/tools/epic-games": {
+      "get": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "List Epic Games routes",
+        "operationId": "listEpicGamesRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/search": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Validate Epic Games search input",
+        "operationId": "runEpicGamesSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/suggestions": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games suggestions",
+        "operationId": "runEpicGamesSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/resolve": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Resolve Epic Games account",
+        "operationId": "runEpicGamesResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/linked-accounts": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games linked accounts",
+        "operationId": "runEpicGamesLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/tags": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games account tags",
+        "operationId": "runEpicGamesTags",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/regions": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games region signals",
+        "operationId": "runEpicGamesRegions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/friends-achievements": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games friends and achievements",
+        "operationId": "runEpicGamesFriendsAchievements",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/creator": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games creator data",
+        "operationId": "runEpicGamesCreator",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/profile-db": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games profile database data",
+        "operationId": "runEpicGamesProfileDb",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/all": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Run all Epic Games collectors",
+        "operationId": "runEpicGamesAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundResult"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimitExceeded"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "API key"
+      }
+    },
+    "parameters": {
+      "ToolPath": {
+        "name": "tool",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "domain-intelligence",
+            "ip-intelligence",
+            "epic-games",
+            "socialclub",
+            "xbox",
+            "playstation"
+          ]
+        }
+      },
+      "SavedToolResultId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "requestBodies": {
+      "DomainRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DomainRequest"
+            },
+            "example": {
+              "domain": "example.com"
+            }
+          }
+        }
+      },
+      "IpRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IpRequest"
+            },
+            "example": {
+              "ip": "8.8.8.8"
+            }
+          }
+        }
+      },
+      "GamingToolRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GamingToolRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "username"
+            }
+          }
+        }
+      },
+      "XboxTitleDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/XboxTitleDetailRequest"
+            },
+            "example": {
+              "value": "SomeGamertag",
+              "type": "gamertag",
+              "titleId": "12345"
+            }
+          }
+        }
+      },
+      "CriminalIntelligenceRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CriminalIntelligenceRequest"
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "ToolRouteIndex": {
+        "description": "Tool route index",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "example": {
+              "tool": "epic-games",
+              "operation": "index",
+              "query": {
+                "tool": "epic-games"
+              },
+              "data": {
+                "routes": [
+                  {
+                    "method": "GET",
+                    "path": "/tools/epic-games/costs"
+                  },
+                  {
+                    "method": "GET",
+                    "path": "/tools/epic-games/infos"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/search"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/suggestions"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/resolve"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/linked-accounts"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/tags"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/regions"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/friends-achievements"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/creator"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/profile-db"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/all"
+                  }
+                ]
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "DomainToolResponse": {
+        "description": "Domain tool response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/DomainToolResponse"
+            },
+            "example": {
+              "tool": "xbox",
+              "operation": "resolve",
+              "query": {
+                "value": "SomeGamertag",
+                "type": "gamertag",
+                "normalizedType": "gamertag"
+              },
+              "data": {},
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "IpToolResponse": {
+        "description": "IP tool response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/IpToolResponse"
+            },
+            "example": {
+              "tool": "ip-intelligence",
+              "operation": "ports",
+              "query": {
+                "ip": "8.8.8.8"
+              },
+              "data": {
+                "ports": [
+                  53,
+                  443
+                ],
+                "tags": [
+                  "dns"
+                ],
+                "hostnames": [
+                  "dns.google"
+                ],
+                "cpes": [],
+                "vulns": []
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Invalid request body or parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "VALIDATION_ERROR",
+                "message": "Invalid request body",
+                "details": [
+                  {
+                    "path": "domain",
+                    "message": "Invalid domain"
+                  }
+                ]
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Missing or invalid API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "UNAUTHORIZED",
+                "message": "Unauthorized",
+                "details": "A valid API key is required"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "PlanFeatureRequired": {
+        "description": "The authenticated account does not have a paid API subscription with tools access",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PLAN_FEATURE_REQUIRED",
+                "message": "Plan feature required",
+                "details": "Tools require a paid API subscription with the tools feature enabled"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ProviderUnavailable": {
+        "description": "Required enrichment source configuration is missing",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PROVIDER_UNAVAILABLE",
+                "message": "Provider unavailable",
+                "details": "A required enrichment source is unavailable for this operation"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Tool not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "NOT_FOUND",
+                "message": "Tool not found"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "GamingToolResponse": {
+        "description": "Gaming tool response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GamingToolResponse"
+            },
+            "example": {
+              "tool": "xbox",
+              "operation": "resolve",
+              "query": {
+                "value": "SomeGamertag",
+                "type": "gamertag",
+                "normalizedType": "gamertag"
+              },
+              "data": {},
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "SavedToolResultResponse": {
+        "description": "Saved tool result response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "data",
+                "meta",
+                "operation",
+                "query",
+                "tool"
+              ],
+              "properties": {
+                "data": {
+                  "additionalProperties": true
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/ResponseMeta"
+                },
+                "operation": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "tool": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        }
+      },
+      "NotFoundResult": {
+        "description": "The provider could not find a matching account or resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "NOT_FOUND",
+                "message": "Not found",
+                "details": "No results found"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "RateLimitExceeded": {
+        "description": "API usage limits have been reached.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "RATE_LIMIT_EXCEEDED",
+                "message": "Rate limit exceeded",
+                "details": "API usage limits have been reached"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ProviderError": {
+        "description": "The upstream provider returned an error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PROVIDER_ERROR",
+                "message": "Provider error",
+                "details": "Provider request failed"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ProviderTimeout": {
+        "description": "The upstream provider request timed out.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PROVIDER_TIMEOUT",
+                "message": "Provider timeout",
+                "details": "Provider request timed out"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "DomainRequest": {
+        "type": "object",
+        "required": [
+          "domain"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "description": "Domain to enrich. Schemes and paths are normalized away before validation.",
+            "example": "example.com"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "IpRequest": {
+        "type": "object",
+        "required": [
+          "ip"
+        ],
+        "properties": {
+          "ip": {
+            "type": "string",
+            "description": "IPv4 or IPv6 address to enrich.",
+            "example": "8.8.8.8"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToolInfo": {
+        "type": "object",
+        "required": [
+          "description",
+          "image",
+          "name",
+          "routePath"
+        ],
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "routePath": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true,
+        "example": {
+          "name": "Epic Games",
+          "description": "Validate Epic Games account search inputs and retrieve player autocomplete suggestions.",
+          "image": "/tools/epic-games.png",
+          "routePath": "/epic-games"
+        }
+      },
+      "DomainToolResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "domain"
+            ],
+            "properties": {
+              "domain": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "tool": {
+            "type": "string",
+            "const": "domain-intelligence"
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "tool": "epic-games",
+          "operation": "resolve",
+          "query": {
+            "value": "some-player",
+            "type": "epic_display_name",
+            "normalizedType": "epic_display_name"
+          },
+          "data": {},
+          "meta": {
+            "timestamp": "2026-06-28T12:00:00.000Z"
+          }
+        }
+      },
+      "IpToolResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "ip"
+            ],
+            "properties": {
+              "ip": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          },
+          "tool": {
+            "type": "string",
+            "const": "ip-intelligence"
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "tool": "ip-intelligence",
+          "operation": "ports",
+          "query": {
+            "ip": "8.8.8.8"
+          },
+          "data": {
+            "ports": [
+              53,
+              443
+            ],
+            "tags": [
+              "dns"
+            ],
+            "hostnames": [
+              "dns.google"
+            ],
+            "cpes": [],
+            "vulns": []
+          },
+          "meta": {
+            "timestamp": "2026-06-28T12:00:00.000Z"
+          }
+        }
+      },
+      "ResponseMeta": {
+        "type": "object",
+        "required": [
+          "timestamp"
+        ],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "savedResult": {
+            "$ref": "#/components/schemas/SavedToolResult"
+          }
+        },
+        "additionalProperties": true
+      },
+      "SavedToolResult": {
+        "type": "object",
+        "required": [
+          "id",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "error",
+          "meta"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {}
+            },
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false,
+        "example": {
+          "error": {
+            "code": "UNAUTHORIZED",
+            "message": "Unauthorized",
+            "details": "A valid API key is required"
+          },
+          "meta": {
+            "timestamp": "2026-06-28T12:00:00.000Z"
+          }
+        }
+      },
+      "GamingToolRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Account identifier to validate or enrich.",
+            "example": "some-player"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical search type or accepted alias for the selected gaming tool.",
+            "example": "username"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "XboxTitleDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "titleId"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Xbox gamertag or XUID to enrich.",
+            "example": "SomeGamertag"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Xbox search type or accepted alias.",
+            "example": "gamertag"
+          },
+          "titleId": {
+            "type": "string",
+            "description": "Numeric Xbox title ID to enrich.",
+            "example": "12345"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "GamingToolResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "normalizedType": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "epic-games",
+              "socialclub",
+              "xbox",
+              "playstation",
+              "roblox",
+              "chess-com",
+              "osu",
+              "criminal-intelligence"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "CriminalIntelligenceRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Person name, organization, or keyword to enrich.",
+            "example": "Tayler Anthony Smith"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical type or accepted alias.",
+            "example": "name"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 20
+          },
+          "interpolNoticeTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "red",
+                "yellow",
+                "un"
+              ]
+            },
+            "example": [
+              "red"
+            ]
+          },
+          "fdaCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "drug",
+                "food",
+                "device"
+              ]
+            },
+            "example": [
+              "drug",
+              "food",
+              "device"
+            ]
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToolCatalogItem": {
+        "type": "object",
+        "properties": {
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "countryCode": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "featured": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          },
+          "logo": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "routePath": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "uiKey": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ToolsCatalogResponse": {
+        "type": "object",
+        "required": [
+          "aggregations",
+          "featuredTools",
+          "items",
+          "pagination",
+          "tools",
+          "total"
+        ],
+        "properties": {
+          "aggregations": {
+            "type": "object",
+            "required": [
+              "categories",
+              "featuredCount",
+              "searchTypes",
+              "totalCount"
+            ],
+            "properties": {
+              "categories": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              },
+              "featuredCount": {
+                "type": "integer"
+              },
+              "searchTypes": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              },
+              "totalCount": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": true
+          },
+          "featuredTools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolCatalogItem"
+            }
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolCatalogItem"
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "required": [
+              "hasNext",
+              "hasPrevious",
+              "limit",
+              "page",
+              "total",
+              "totalPages"
+            ],
+            "properties": {
+              "hasNext": {
+                "type": "boolean"
+              },
+              "hasPrevious": {
+                "type": "boolean"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              },
+              "total": {
+                "type": "integer"
+              },
+              "totalPages": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolCatalogItem"
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToolRouteCost": {
+        "type": "object",
+        "required": [
+          "kind",
+          "method",
+          "quantity",
+          "routePattern"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "free",
+              "core_search",
+              "disabled"
+            ]
+          },
+          "method": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "quantity": {
+            "type": "integer"
+          },
+          "routePattern": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ToolCostsResponse": {
+        "type": "object",
+        "required": [
+          "defaultPrice",
+          "routes"
+        ],
+        "properties": {
+          "defaultPrice": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "quantity"
+                ],
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "free",
+                      "core_search",
+                      "disabled"
+                    ]
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  }
+                },
+                "additionalProperties": false
+              }
+            ]
+          },
+          "routes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolRouteCost"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
