@@ -1,0 +1,82 @@
+---
+title: Roblox
+description: Direct Roblox account validation and enrichment endpoints for profile, social, friends, groups, games, badges, and collectibles.
+icon: gamepad
+---
+
+Roblox endpoints accept a username or numeric user ID. `POST /search` is validation-only: it normalizes the identifier type and does not call Roblox or consume credits.
+
+```json
+{
+  "value": "some-player",
+  "type": "username"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `username`
+- `user_id`
+
+Aliases:
+
+- `roblox` and `user` -> `username`
+- `id`, `roblox_id`, and `userid` -> `user_id`
+
+Roblox profile URLs such as `https://www.roblox.com/users/123/profile` are normalized to `user_id`.
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Cost | Notes |
+|---|---|---:|---|
+| Search | `POST /tools/roblox/search` | Free | Validates and normalizes only. |
+| Suggestions | `POST /tools/roblox/suggestions` | Free | Cached username suggestions. |
+| Resolve | `POST /tools/roblox/resolve` | 1 | Resolves username or user ID. |
+| Profile | `POST /tools/roblox/profile` | 1 | Profile fields, avatar URLs, status, creation date, and visibility. |
+| Social | `POST /tools/roblox/social` | 1 | Friends, followers, following, and friendship counts. |
+| Friends | `POST /tools/roblox/friends` | 1 | Public friends sample. |
+| Groups | `POST /tools/roblox/groups` | 1 | Group memberships and roles. |
+| Games | `POST /tools/roblox/games` | 1 | Public user games and thumbnails. |
+| Badges | `POST /tools/roblox/badges` | 1 | Public badges and metadata. |
+| Collectibles | `POST /tools/roblox/collectibles` | 1 | Public limited collectibles. |
+| All | `POST /tools/roblox/all` | 2 | Runs the main collectors and charges once. |
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/roblox/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "roblox" }'
+```
+
+Use `/all` when you need the complete Roblox account snapshot.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/roblox/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "username" }'
+```
+
+---
+
+## Availability
+
+Roblox routes use public provider APIs and do not require a provider secret in V1. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized identifier or user ID. Cache entries reduce repeated provider calls and do not change route pricing.

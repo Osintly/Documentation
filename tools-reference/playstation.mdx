@@ -1,0 +1,79 @@
+---
+title: PlayStation Network
+description: Direct PlayStation Network account validation and enrichment endpoints for profile, presence, trophy summary, and games.
+icon: trophy
+---
+
+PlayStation Network endpoints accept a PSN online ID or account ID. `POST /search` is validation-only: it normalizes the identifier type and does not call Sony or consume credits.
+
+```json
+{
+  "value": "some-player",
+  "type": "online_id"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `online_id`
+- `account_id`
+
+Aliases:
+
+- `psn`, `playstation`, `username`, and `onlineid` -> `online_id`
+- `id`, `account`, `account_id`, and `psn_account_id` -> `account_id`
+
+The API also normalizes `my.playstation.com` and `psnprofiles.com` profile URLs to an online ID when possible.
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Cost | Notes |
+|---|---|---:|---|
+| Search | `POST /tools/playstation/search` | Free | Validates and normalizes only. |
+| Suggestions | `POST /tools/playstation/suggestions` | Free | Cached universal search suggestions. |
+| Resolve | `POST /tools/playstation/resolve` | 1 | Resolves online ID or account ID. |
+| Profile | `POST /tools/playstation/profile` | 1 | Avatar, PS Plus, verified flag, about me, languages, and privacy. |
+| Presence | `POST /tools/playstation/presence` | 1 | Online state, current game, platform, and last online date. |
+| Trophy Summary | `POST /tools/playstation/trophy-summary` | 1 | Trophy level, progress, tier, and earned trophy totals. |
+| Games | `POST /tools/playstation/games` | 1 | Trophy title list, progress, icons, and last played date. |
+| All | `POST /tools/playstation/all` | 2 | Runs the main collectors and charges once. |
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/playstation/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "psn" }'
+```
+
+Use `/all` when you need a complete PlayStation Network profile.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/playstation/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "online_id" }'
+```
+
+---
+
+## Availability
+
+Provider-backed routes require PlayStation provider authentication configured server-side. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized identifier or account ID. Cache entries reduce repeated provider calls and do not change route pricing.

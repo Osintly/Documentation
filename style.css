@@ -1,3 +1,17 @@
 #content-area {
   max-width: 48rem;
 }
+
+/* Tools cards: black in light mode, white in dark mode. */
+#content-area img[src^="/images/tools/"],
+#content-area svg[src^="/images/tools/"] {
+  filter: brightness(0) saturate(100%) !important;
+  opacity: 1 !important;
+}
+
+html.dark #content-area img[src^="/images/tools/"],
+[data-theme="dark"] #content-area img[src^="/images/tools/"],
+html.dark #content-area svg[src^="/images/tools/"],
+[data-theme="dark"] #content-area svg[src^="/images/tools/"] {
+  filter: brightness(0) invert(1) !important;
+}

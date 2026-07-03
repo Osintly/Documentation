@@ -1,0 +1,84 @@
+---
+title: osu!
+description: Direct osu! account validation and enrichment endpoints for profile, statistics, scores, and most played beatmaps.
+icon: music
+---
+
+osu! endpoints accept a username or numeric user ID. `POST /search` is validation-only: it normalizes the identifier type and does not call osu! or consume credits.
+
+```json
+{
+  "value": "some-player",
+  "type": "username"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `username`
+- `user_id`
+
+Aliases:
+
+- `osu` and `user` -> `username`
+- `id`, `osu_id`, and `userid` -> `user_id`
+
+osu! profile URLs such as `https://osu.ppy.sh/users/123456` are normalized automatically.
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Cost | Notes |
+|---|---|---:|---|
+| Search | `POST /tools/osu/search` | Free | Validates and normalizes only. |
+| Suggestions | `POST /tools/osu/suggestions` | Free | Cached provider search when available, otherwise `[]`. |
+| Resolve | `POST /tools/osu/resolve` | 1 | Resolves username or user ID. |
+| Profile | `POST /tools/osu/profile` | 1 | Profile, avatar, country, rank, support status, and playstyle. |
+| Statistics | `POST /tools/osu/statistics` | 1 | Mode statistics, ranks, accuracy, counts, grades, and level. |
+| Scores | `POST /tools/osu/scores` | 1 | Best and recent scores. |
+| Most Played | `POST /tools/osu/most-played` | 1 | Most played beatmaps. |
+| All | `POST /tools/osu/all` | 2 | Runs the main collectors and charges once. |
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/osu/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "osu" }'
+```
+
+Use `/all` when you need the complete osu! account snapshot.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/osu/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "username" }'
+```
+
+---
+
+## Availability
+
+Provider-backed routes require osu! OAuth client credentials configured server-side:
+
+- `OSU_CLIENT_ID`
+- `OSU_CLIENT_SECRET`
+
+The API stores the current provider token in `OsuAuthDO`, refreshes it before expiration, and never writes tokens to the Cache API. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized identifier or user ID. Cache entries reduce repeated provider calls and do not change route pricing.

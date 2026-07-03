@@ -1,0 +1,78 @@
+---
+title: Chess.com
+description: Direct Chess.com account validation and enrichment endpoints for profile, ratings, games, clubs, and tournaments.
+icon: chess
+---
+
+Chess.com endpoints accept a username. `POST /search` is validation-only: it normalizes the identifier type and does not call Chess.com or consume credits.
+
+```json
+{
+  "value": "some-player",
+  "type": "username"
+}
+```
+
+---
+
+## Search types
+
+Canonical type:
+
+- `username`
+
+Aliases:
+
+- `user`, `chess`, `chess_com`, and `chesscom` -> `username`
+
+Chess.com member URLs such as `https://www.chess.com/member/some-player` are normalized to `username`.
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Cost | Notes |
+|---|---|---:|---|
+| Search | `POST /tools/chess-com/search` | Free | Validates and normalizes only. |
+| Suggestions | `POST /tools/chess-com/suggestions` | Free | Returns `[]` in V1. |
+| Resolve | `POST /tools/chess-com/resolve` | 1 | Resolves the Chess.com username and existence. |
+| Profile | `POST /tools/chess-com/profile` | 1 | Profile, title, avatar, country, timestamps, and online state. |
+| Ratings | `POST /tools/chess-com/ratings` | 1 | Chess ratings, tactics, puzzle rush, and best games when available. |
+| Games | `POST /tools/chess-com/games` | 1 | Recent public games from recent archives. |
+| Clubs | `POST /tools/chess-com/clubs` | 1 | Public club memberships. |
+| Tournaments | `POST /tools/chess-com/tournaments` | 1 | Public tournament participation. |
+| All | `POST /tools/chess-com/all` | 2 | Runs the main collectors and charges once. |
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/chess-com/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "chess" }'
+```
+
+Use `/all` when you need the complete Chess.com account snapshot.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/chess-com/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "username" }'
+```
+
+---
+
+## Availability
+
+Chess.com routes use public provider APIs and do not require a provider secret in V1. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized username. Cache entries reduce repeated provider calls and do not change route pricing.

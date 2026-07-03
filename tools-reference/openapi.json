@@ -32,6 +32,38 @@
     {
       "name": "IP Intelligence",
       "description": "Direct IP address enrichment endpoints."
+    },
+    {
+      "name": "Epic Games",
+      "description": "Direct Epic Games account validation and enrichment endpoints."
+    },
+    {
+      "name": "Social Club",
+      "description": "Direct Rockstar Social Club account validation and enrichment endpoints."
+    },
+    {
+      "name": "Xbox",
+      "description": "Direct Xbox Live account validation and enrichment endpoints."
+    },
+    {
+      "name": "PlayStation Network",
+      "description": "Direct PlayStation Network account validation and enrichment endpoints."
+    },
+    {
+      "name": "Roblox",
+      "description": "Roblox account validation and enrichment endpoints."
+    },
+    {
+      "name": "Chess.com",
+      "description": "Chess.com account validation and enrichment endpoints."
+    },
+    {
+      "name": "osu!",
+      "description": "osu! account validation and enrichment endpoints."
+    },
+    {
+      "name": "Criminal Intelligence",
+      "description": "Criminal, law-enforcement, and regulatory enforcement intelligence endpoints."
     }
   ],
   "paths": {
@@ -156,7 +188,7 @@
                     {
                       "name": "Domain Intelligence",
                       "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
-                      "image": "/tools/domain-intelligence.png",
+                      "image": "/images/tools/domain-intelligence.svg",
                       "routePath": "/domain-intelligence",
                       "categories": [
                         "Infrastructure",
@@ -167,19 +199,116 @@
                     {
                       "name": "IP Intelligence",
                       "description": "Investigate IP geolocation, network ownership, routing, registration, reverse DNS, exposed services, hosted domains, and reputation signals.",
-                      "image": "/tools/ip-intelligence.png",
+                      "image": "/images/tools/ip-intelligence.svg",
                       "routePath": "/ip-intelligence",
                       "categories": [
                         "Infrastructure",
                         "Reputation"
                       ],
                       "featured": true
+                    },
+                    {
+                      "name": "Epic Games",
+                      "description": "Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.",
+                      "image": "/images/tools/epic-games.svg",
+                      "routePath": "/epic-games",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "Social Club",
+                      "description": "Validate and enrich Rockstar Social Club account intelligence, including profiles, linked accounts, crews, games, and friends.",
+                      "image": "/images/tools/socialclub.svg",
+                      "routePath": "/socialclub",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "Xbox",
+                      "description": "Validate and enrich Xbox Live account intelligence, including profiles, presence, social metadata, games, media, clubs, and title achievements.",
+                      "image": "/images/tools/xbox.svg",
+                      "routePath": "/xbox",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "PlayStation Network",
+                      "description": "Validate and enrich PlayStation Network account intelligence, including profiles, presence, trophies, and games.",
+                      "image": "/images/tools/playstation.svg",
+                      "routePath": "/playstation",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "Roblox",
+                      "description": "Validate and enrich Roblox account intelligence, including profiles, social counts, friends, groups, games, badges, and collectibles.",
+                      "image": "/images/tools/roblox.svg",
+                      "routePath": "/roblox",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "Chess.com",
+                      "description": "Validate and enrich Chess.com account intelligence, including profiles, ratings, games, clubs, and tournaments.",
+                      "image": "/images/tools/chess-com.svg",
+                      "routePath": "/chess-com",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "osu!",
+                      "description": "Validate and enrich osu! account intelligence, including profiles, statistics, scores, and most played beatmaps.",
+                      "image": "/images/tools/osu.svg",
+                      "routePath": "/osu",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "Criminal Intelligence",
+                      "description": "Search public criminal, law-enforcement, and regulatory enforcement sources, including Interpol, FBI Most Wanted, DOJ, SEC, and FDA records.",
+                      "image": "/images/tools/criminal-intelligence.svg",
+                      "routePath": "/criminal-intelligence",
+                      "categories": [
+                        "OSINT",
+                        "Legal",
+                        "Enforcement",
+                        "Compliance"
+                      ],
+                      "featured": false
                     }
                   ],
                   "meta": {
                     "page": 1,
                     "limit": 250,
-                    "total": 2,
+                    "total": 6,
                     "timestamp": "2026-06-28T12:00:00.000Z"
                   }
                 }
@@ -219,7 +348,7 @@
                 "example": {
                   "name": "Domain Intelligence",
                   "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
-                  "image": "/tools/domain-intelligence.png",
+                  "image": "/images/tools/domain-intelligence.svg",
                   "routePath": "/domain-intelligence"
                 }
               }
@@ -295,6 +424,35 @@
           },
           "403": {
             "$ref": "#/components/responses/PlanFeatureRequired"
+          }
+        }
+      }
+    },
+    "/tools/results/{id}": {
+      "get": {
+        "tags": [
+          "Tools Catalog"
+        ],
+        "summary": "Get a saved tool result",
+        "description": "Retrieve a payload saved from a synchronous `/tools/<tool>/all` request with `save: true`.",
+        "operationId": "getSavedToolResult",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SavedToolResultId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/SavedToolResultResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
           }
         }
       }
@@ -778,6 +936,1775 @@
           }
         }
       }
+    },
+    "/tools/epic-games": {
+      "get": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "List Epic Games routes",
+        "operationId": "listEpicGamesRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/search": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Validate Epic Games search input",
+        "operationId": "runEpicGamesSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/suggestions": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games suggestions",
+        "operationId": "runEpicGamesSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/resolve": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Resolve Epic Games account",
+        "operationId": "runEpicGamesResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/linked-accounts": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games linked accounts",
+        "operationId": "runEpicGamesLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/tags": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games account tags",
+        "operationId": "runEpicGamesTags",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/regions": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games region signals",
+        "operationId": "runEpicGamesRegions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/friends-achievements": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games friends and achievements",
+        "operationId": "runEpicGamesFriendsAchievements",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/creator": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games creator data",
+        "operationId": "runEpicGamesCreator",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/profile-db": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games profile database data",
+        "operationId": "runEpicGamesProfileDb",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/all": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Run all Epic Games collectors",
+        "operationId": "runEpicGamesAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub": {
+      "get": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "List Social Club routes",
+        "operationId": "listSocialClubRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/search": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Validate Social Club search input",
+        "operationId": "runSocialClubSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/suggestions": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club suggestions",
+        "operationId": "runSocialClubSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/resolve": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Resolve Social Club account",
+        "operationId": "runSocialClubResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/profile": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club profile",
+        "operationId": "runSocialClubProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/linked-accounts": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club linked accounts",
+        "operationId": "runSocialClubLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/crews": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club crews",
+        "operationId": "runSocialClubCrews",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/games": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club games",
+        "operationId": "runSocialClubGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/friends": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club friends",
+        "operationId": "runSocialClubFriends",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/all": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Run all Social Club collectors",
+        "operationId": "runSocialClubAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox": {
+      "get": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "List Xbox routes",
+        "operationId": "listXboxRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/xbox/search": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Validate Xbox search input",
+        "operationId": "runXboxSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/xbox/suggestions": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox suggestions",
+        "operationId": "runXboxSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/xbox/resolve": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Resolve Xbox account",
+        "operationId": "runXboxResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/profile": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox profile",
+        "operationId": "runXboxProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/presence": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox presence",
+        "operationId": "runXboxPresence",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/social": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox social data",
+        "operationId": "runXboxSocial",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/linked-accounts": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox linked accounts",
+        "operationId": "runXboxLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/games": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox games",
+        "operationId": "runXboxGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/media": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox media",
+        "operationId": "runXboxMedia",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/clubs": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox clubs",
+        "operationId": "runXboxClubs",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/all": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Run all Xbox collectors",
+        "operationId": "runXboxAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation": {
+      "get": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "List PlayStation Network routes",
+        "operationId": "listPlayStationRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/playstation/search": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Validate PlayStation Network search input",
+        "operationId": "runPlayStationSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/playstation/suggestions": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network suggestions",
+        "operationId": "runPlayStationSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/playstation/resolve": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Resolve PlayStation Network account",
+        "operationId": "runPlayStationResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/profile": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network profile",
+        "operationId": "runPlayStationProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/presence": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network presence",
+        "operationId": "runPlayStationPresence",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/trophy-summary": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network trophy summary",
+        "operationId": "runPlayStationTrophySummary",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/games": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network games",
+        "operationId": "runPlayStationGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/all": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Run all PlayStation Network collectors",
+        "operationId": "runPlayStationAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/title-detail": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Get Xbox title detail and achievements",
+        "operationId": "runXboxTitleDetail",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxTitleDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox": {
+      "get": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "List Roblox routes",
+        "operationId": "listRobloxRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/roblox/search": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Validate Roblox search input",
+        "operationId": "runRobloxSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/roblox/suggestions": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox username suggestions",
+        "operationId": "runRobloxSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/roblox/resolve": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Resolve Roblox account",
+        "operationId": "runRobloxResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/profile": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox profile",
+        "operationId": "runRobloxProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/social": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox social counts",
+        "operationId": "runRobloxSocial",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/friends": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox friends sample",
+        "operationId": "runRobloxFriends",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/groups": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox groups",
+        "operationId": "runRobloxGroups",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/games": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox games",
+        "operationId": "runRobloxGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/badges": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox badges",
+        "operationId": "runRobloxBadges",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/collectibles": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox collectibles",
+        "operationId": "runRobloxCollectibles",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/all": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Run all Roblox collectors",
+        "operationId": "runRobloxAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/chess-com": {
+      "get": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "List ChessCom routes",
+        "operationId": "listChessComRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/search": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Validate Chess.com search input",
+        "operationId": "runChesscomSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/suggestions": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Get Chess.com suggestions",
+        "operationId": "runChesscomSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/resolve": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Resolve Chess.com account",
+        "operationId": "runChesscomResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/profile": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Get Chess.com profile",
+        "operationId": "runChesscomProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/ratings": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Get Chess.com ratings",
+        "operationId": "runChesscomRatings",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/games": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Get Chess.com recent games",
+        "operationId": "runChesscomGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/clubs": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Get Chess.com clubs",
+        "operationId": "runChesscomClubs",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/tournaments": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Get Chess.com tournaments",
+        "operationId": "runChesscomTournaments",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/chess-com/all": {
+      "post": {
+        "tags": [
+          "Chess.com"
+        ],
+        "summary": "Run all Chess.com collectors",
+        "operationId": "runChesscomAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/osu": {
+      "get": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "List Osu routes",
+        "operationId": "listOsuRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/osu/search": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Validate osu! search input",
+        "operationId": "runosuSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/osu/suggestions": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Get osu! user suggestions",
+        "operationId": "runosuSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/osu/resolve": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Resolve osu! account",
+        "operationId": "runosuResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/osu/profile": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Get osu! profile",
+        "operationId": "runosuProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/osu/statistics": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Get osu! statistics",
+        "operationId": "runosuStatistics",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/osu/scores": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Get osu! scores",
+        "operationId": "runosuScores",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/osu/most-played": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Get osu! most played beatmaps",
+        "operationId": "runosuMostPlayed",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/osu/all": {
+      "post": {
+        "tags": [
+          "osu!"
+        ],
+        "summary": "Run all osu! collectors",
+        "operationId": "runosuAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence": {
+      "get": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "List Criminal Intelligence routes",
+        "operationId": "listCriminalIntelligenceRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence/search": {
+      "post": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "Validate Criminal Intelligence search input",
+        "operationId": "runCriminalIntelligenceSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence/interpol": {
+      "post": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "Search Interpol notices",
+        "operationId": "runCriminalIntelligenceInterpol",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence/fbi-wanted": {
+      "post": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "Search FBI Most Wanted records",
+        "operationId": "runCriminalIntelligenceFbiWanted",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence/doj": {
+      "post": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "Search DOJ enforcement releases",
+        "operationId": "runCriminalIntelligenceDoj",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence/sec": {
+      "post": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "Search SEC EDGAR records",
+        "operationId": "runCriminalIntelligenceSec",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence/fda": {
+      "post": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "Search FDA enforcement and recall records",
+        "operationId": "runCriminalIntelligenceFda",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/criminal-intelligence/all": {
+      "post": {
+        "tags": [
+          "Criminal Intelligence"
+        ],
+        "summary": "Run all Criminal Intelligence collectors",
+        "operationId": "runCriminalIntelligenceAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -797,8 +2724,21 @@
           "type": "string",
           "enum": [
             "domain-intelligence",
-            "ip-intelligence"
+            "ip-intelligence",
+            "epic-games",
+            "socialclub",
+            "xbox",
+            "playstation"
           ]
+        }
+      },
+      "SavedToolResultId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -825,6 +2765,45 @@
             },
             "example": {
               "ip": "8.8.8.8"
+            }
+          }
+        }
+      },
+      "GamingToolRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GamingToolRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "username"
+            }
+          }
+        }
+      },
+      "XboxTitleDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/XboxTitleDetailRequest"
+            },
+            "example": {
+              "value": "SomeGamertag",
+              "type": "gamertag",
+              "titleId": "12345"
+            }
+          }
+        }
+      },
+      "CriminalIntelligenceRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CriminalIntelligenceRequest"
             }
           }
         }
@@ -1055,6 +3034,65 @@
             }
           }
         }
+      },
+      "GamingToolResponse": {
+        "description": "Gaming tool response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GamingToolResponse"
+            },
+            "example": {
+              "tool": "xbox",
+              "operation": "resolve",
+              "query": {
+                "value": "SomeGamertag",
+                "type": "gamertag",
+                "normalizedType": "gamertag"
+              },
+              "data": {},
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "SavedToolResultResponse": {
+        "description": "Saved tool result response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "data",
+                "meta",
+                "operation",
+                "query",
+                "tool"
+              ],
+              "properties": {
+                "data": {
+                  "additionalProperties": true
+                },
+                "meta": {
+                  "$ref": "#/components/schemas/ResponseMeta"
+                },
+                "operation": {
+                  "type": "string"
+                },
+                "query": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "tool": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        }
       }
     },
     "schemas": {
@@ -1068,6 +3106,11 @@
             "type": "string",
             "description": "Domain to enrich. Schemes and paths are normalized away before validation.",
             "example": "example.com"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
           }
         },
         "additionalProperties": false
@@ -1082,6 +3125,11 @@
             "type": "string",
             "description": "IPv4 or IPv6 address to enrich.",
             "example": "8.8.8.8"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
           }
         },
         "additionalProperties": false
@@ -1112,7 +3160,7 @@
         "example": {
           "name": "Domain Intelligence",
           "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
-          "image": "/tools/domain-intelligence.png",
+          "image": "/images/tools/domain-intelligence.svg",
           "routePath": "/domain-intelligence"
         }
       },
@@ -1259,9 +3307,30 @@
           "timestamp": {
             "type": "string",
             "format": "date-time"
+          },
+          "savedResult": {
+            "$ref": "#/components/schemas/SavedToolResult"
           }
         },
         "additionalProperties": true
+      },
+      "SavedToolResult": {
+        "type": "object",
+        "required": [
+          "id",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false
       },
       "ErrorResponse": {
         "type": "object",
@@ -1302,6 +3371,178 @@
             "timestamp": "2026-06-28T12:00:00.000Z"
           }
         }
+      },
+      "GamingToolRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Account identifier to validate or enrich.",
+            "example": "some-player"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical search type or accepted alias for the selected gaming tool.",
+            "example": "username"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "XboxTitleDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "titleId"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Xbox gamertag or XUID to enrich.",
+            "example": "SomeGamertag"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Xbox search type or accepted alias.",
+            "example": "gamertag"
+          },
+          "titleId": {
+            "type": "string",
+            "description": "Numeric Xbox title ID to enrich.",
+            "example": "12345"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "GamingToolResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "normalizedType": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "epic-games",
+              "socialclub",
+              "xbox",
+              "playstation",
+              "roblox",
+              "chess-com",
+              "osu",
+              "criminal-intelligence"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "CriminalIntelligenceRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Person name, organization, or keyword to enrich.",
+            "example": "Tayler Anthony Smith"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical type or accepted alias.",
+            "example": "name"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 20
+          },
+          "interpolNoticeTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "red",
+                "yellow",
+                "un"
+              ]
+            },
+            "example": [
+              "red"
+            ]
+          },
+          "fdaCategories": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "drug",
+                "food",
+                "device"
+              ]
+            },
+            "example": [
+              "drug",
+              "food",
+              "device"
+            ]
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
       }
     }
   }

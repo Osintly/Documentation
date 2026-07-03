@@ -1,0 +1,83 @@
+---
+title: Epic Games
+description: Direct Epic Games account validation and enrichment endpoints for identifiers, linked accounts, tags, regions, creator data, friends, and achievements.
+icon: gamepad
+---
+
+Epic Games endpoints accept one account identifier and return focused account intelligence. `POST /search` is validation-only: it normalizes the identifier type and does not call Epic or consume credits.
+
+```json
+{
+  "value": "some-player",
+  "type": "epic_display_name"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `epic_display_name`
+- `epic_account_id`
+- `creator_code`
+- `psn_username`
+- `steam_username`
+- `xbox_username`
+- `psn_account_id`
+- `steam_id`
+- `nintendo_account_id`
+
+Accepted aliases include `epic`, `epic_id`, `creator`, `psn`, `playstation`, `steam`, `steamid`, `xbox`, `xbl`, `xlb`, and `nintendo`.
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Cost | Notes |
+|---|---|---:|---|
+| Search | `POST /tools/epic-games/search` | Free | Validates and normalizes only. |
+| Suggestions | `POST /tools/epic-games/suggestions` | Free | Cached autocomplete for supported username types. |
+| Resolve | `POST /tools/epic-games/resolve` | 1 | Resolves the identifier to Epic account data. |
+| Linked Accounts | `POST /tools/epic-games/linked-accounts` | 1 | Linked platform auths. |
+| Tags | `POST /tools/epic-games/tags` | 1 | Account tag metadata. |
+| Regions | `POST /tools/epic-games/regions` | 1 | Region and language signals. |
+| Friends Achievements | `POST /tools/epic-games/friends-achievements` | 2 | Friends, achievements, and social counters. |
+| Creator | `POST /tools/epic-games/creator` | 1 | Affiliate and creator islands. |
+| Profile DB | `POST /tools/epic-games/profile-db` | 1 | PennyDB profile metadata. |
+| All | `POST /tools/epic-games/all` | 3 | Runs the main collectors and charges once. |
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/epic-games/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "xbox" }'
+```
+
+Use `/all` when you need a complete account profile.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/epic-games/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "epic_display_name" }'
+```
+
+---
+
+## Availability
+
+Provider-backed routes require Epic provider authentication configured server-side. If the resolver cannot identify an account, the API returns a non-2xx error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized identifier. The cache reduces repeated provider calls but does not change user-facing route pricing.
