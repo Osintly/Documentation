@@ -7,7 +7,7 @@ icon: wrench
 The Tools API exposes focused enrichment endpoints that run immediately and return a normalized JSON response. Use tools when you need a direct lookup for one observable, without creating a full Osintly search.
 
 <CardGroup cols={2}> 
-  <Card title="Epic Games" icon="/images/tools/epic-games.svg" href="/tools-reference/epic-games">
+  <Card title="Epic Games" icon="/tools/epic-games.png" href="/tools-reference/epic-games">
     Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.
   </Card> 
 </CardGroup>
@@ -56,10 +56,12 @@ Most tool responses follow the same envelope:
 
 ```json
 {
-  "tool": "domain-intelligence",
-  "operation": "dns",
+  "tool": "epic-games",
+  "operation": "resolve",
   "query": {
-    "domain": "example.com"
+    "value": "some-player",
+    "type": "epic_display_name",
+    "normalizedType": "epic_display_name"
   },
   "data": {},
   "meta": {
@@ -94,11 +96,33 @@ The complete tools catalog is also available in the Osintly dashboard at [osint.
 Every tool exposes a `costs` endpoint.
 
 ```bash
-curl -X GET "https://api.osint.ly/tools/domain-intelligence/costs" \
+curl -X GET "https://api.osint.ly/tools/epic-games/costs" \
   -H "Authorization: Bearer $OSINTLY_API_KEY"
 ```
 
 Free operations return no core-search credit charge, but still require paid Tools API access. Paid operations are priced by the route and are visible in the cost payload.
+
+The costs response contains `defaultPrice` and a `routes` array. Each route entry includes `kind`, `method`, `quantity`, and `routePattern`.
+
+```json
+{
+  "defaultPrice": null,
+  "routes": [
+    {
+      "kind": "free",
+      "method": "POST",
+      "quantity": 0,
+      "routePattern": "/search"
+    },
+    {
+      "kind": "core_search",
+      "method": "POST",
+      "quantity": 3,
+      "routePattern": "/all"
+    }
+  ]
+}
+```
 
 For gaming tools, `POST /search` is validation-only. It validates and normalizes the submitted identifier without calling the provider or consuming credits. Use `/all` or the focused enrichment routes when you want provider-backed data.
 
@@ -106,14 +130,5 @@ For gaming tools, `POST /search` is validation-only. It validates and normalizes
 
 ## Next steps
 
-1. Review [Domain Intelligence](/tools-reference/domain-intelligence)
-2. Review [IP Intelligence](/tools-reference/ip-intelligence)
-3. Review [Epic Games](/tools-reference/epic-games)
-4. Review [Social Club](/tools-reference/socialclub)
-5. Review [Xbox](/tools-reference/xbox)
-6. Review [PlayStation Network](/tools-reference/playstation)
-7. Review [Roblox](/tools-reference/roblox)
-8. Review [Chess.com](/tools-reference/chess-com)
-9. Review [osu!](/tools-reference/osu)
-10. Review [Criminal Intelligence](/tools-reference/criminal-intelligence)
-11. Explore endpoint schemas in **Tools Endpoints**
+1. Review [Epic Games](/tools-reference/epic-games)
+2. Explore endpoint schemas in **Tools Endpoints**
