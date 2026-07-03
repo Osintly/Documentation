@@ -74,7 +74,9 @@ curl -X POST "https://api.osint.ly/tools/epic-games/all" \
 
 ## Availability
 
-Provider-backed routes require Epic provider authentication configured server-side. If the resolver cannot identify an account, the API returns a non-2xx error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+Provider-backed routes require Epic provider authentication configured server-side. If the resolver cannot identify an account, the API returns `404 NOT_FOUND`. Upstream provider failures can return `502 PROVIDER_ERROR` or `504 PROVIDER_TIMEOUT`; missing provider configuration returns `503 PROVIDER_UNAVAILABLE`. Paid routes can also return `429 RATE_LIMIT_EXCEEDED` when the account has insufficient core-search quota.
+
+In `/all`, secondary collector failures are returned in `data.partialErrors`.
 
 ---
 
