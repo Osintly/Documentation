@@ -1,0 +1,125 @@
+---
+title: Vehicle History Finder
+description: Direct vehicle enrichment endpoints for US VIN records and French license plate intelligence.
+icon: car
+---
+
+Vehicle History Finder endpoints accept either a US VIN or a French license plate. `POST /search` is validation-only: it normalizes the input and does not call providers or consume credits.
+
+```json
+{
+  "value": "AB-123-CD",
+  "type": "plate_fr"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `vin`
+- `plate_fr`
+
+Aliases:
+
+- `plate`, `plaque`, `plaque_fr`, `license_plate_fr`, `french_plate`, and `immatriculation` -> `plate_fr`
+
+VIN inputs must be valid 17-character VINs. French plates support modern SIV formats such as `AB-123-CD`, temporary `WW` plates, diplomatic/consular formats, and older departmental formats such as `123 AB 75`.
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Cost | Notes |
+|---|---|---:|---|
+| Search | `POST /tools/vehicle-history-finder/search` | Free | Validates and normalizes only. |
+| VIN | `POST /tools/vehicle-history-finder/vin` | 1 | NHTSA vPIC decode, recalls, complaints, safety ratings, and deterministic attention score. |
+| Plate FR | `POST /tools/vehicle-history-finder/plate-fr` | 1 | French plate parsing, vehicle candidates, Castrol details, fluids, capacities, and official links. |
+| All | `POST /tools/vehicle-history-finder/all` | 2 | Dispatches by `type` and charges once. |
+
+`save: true` is only supported on `/all`.
+
+---
+
+## Fast path
+
+Validate a French plate before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/vehicle-history-finder/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "AB-123-CD", "type": "plaque" }'
+```
+
+Run the French plate collector.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/vehicle-history-finder/plate-fr" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "AB-123-CD", "type": "plate_fr" }'
+```
+
+Run the VIN collector.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/vehicle-history-finder/vin" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "1HGCM82633A004352", "type": "vin" }'
+```
+
+Use `/all` when you want a saved result or a single generic entry point.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/vehicle-history-finder/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "AB-123-CD", "type": "plate_fr", "save": true }'
+```
+
+---
+
+## Response data
+
+For `plate_fr`, the response includes:
+
+- parsed format, normalized plate, and format label
+- SIV sequence metadata or old departmental metadata when available
+- official links for HistoVec, ANTS, SIV, and technical inspection
+- provider vehicle candidates
+- a mapped `vehicle.presentation` object in English for vehicle identity, engine, transmission, steering, model year, fluids, and capacities
+- Castrol details and imagin.studio metadata when available
+
+A valid plate can still return `vehicle.found: false` if no vehicle candidate is returned by the provider.
+
+For `vin`, the response includes:
+
+- identity fields such as make, model, year, body class, trim, vehicle type, and manufacturer
+- engine, drivetrain, electric, plant, and safety equipment details
+- NHTSA recalls, complaints, NCAP safety ratings, and attention scoring
+
+---
+
+## Availability
+
+No provider secret is required in V1. French plate data uses public parsing plus provider lookups; personal owner data and full official vehicle history remain available only through official French services such as HistoVec or ANTS.
+
+Provider failures are normalized as API errors on focused routes when the main provider fails. Secondary metadata such as imagin.studio can be omitted without failing the whole plate response.
+
+---
+
+## Caching
+
+Provider responses are cached by normalized input and provider:
+
+- Castrol vehicle/details: 12 hours
+- imagin.studio metadata: 24 hours
+- NHTSA VIN decode: 24 hours
+- NHTSA recalls and complaints: 6 hours
+- NHTSA safety ratings: 24 hours
+
+Cache entries reduce repeated provider calls and do not change route pricing.
