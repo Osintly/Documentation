@@ -380,7 +380,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -420,7 +420,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -443,7 +443,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -466,7 +466,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -965,6 +965,48 @@
           }
         }
       },
+      "VehicleHistoryFinderResponse": {
+        "description": "Vehicle history finder response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/VehicleHistoryFinderResponse"
+            },
+            "example": {
+              "tool": "vehicle-history-finder",
+              "operation": "vin",
+              "query": {
+                "value": "1HGCM82633A004352",
+                "type": "vin"
+              },
+              "data": {
+                "vehicle": {
+                  "found": true,
+                  "presentation": {
+                    "title": "Honda Accord 2003",
+                    "make": "Honda",
+                    "model": "Accord",
+                    "year": 2003,
+                    "bodyClass": "Sedan",
+                    "engine": "2.4L L4"
+                  }
+                },
+                "castrol": {
+                  "metadata": null
+                },
+                "nhtsa": {
+                  "recalls": [],
+                  "complaints": [],
+                  "safetyRatings": []
+                }
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
       "SavedToolResultResponse": {
         "description": "Saved tool result response",
         "content": {
@@ -1118,6 +1160,112 @@
             "type": "string",
             "enum": [
               "epic-games",
+              "vehicle-history-finder"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "VehicleHistoryFinderResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": [
+              "vehicle"
+            ],
+            "properties": {
+              "vehicle": {
+                "type": "object",
+                "required": [
+                  "found",
+                  "presentation"
+                ],
+                "properties": {
+                  "found": {
+                    "type": "boolean"
+                  },
+                  "presentation": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": true
+              },
+              "castrol": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "nhtsa": {
+                "type": "object",
+                "required": [
+                  "recalls",
+                  "complaints",
+                  "safetyRatings"
+                ],
+                "properties": {
+                  "recalls": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "complaints": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "safetyRatings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "save": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
               "vehicle-history-finder"
             ]
           }
