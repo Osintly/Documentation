@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly Epic Games and Vehicle History Finder tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -26,10 +26,12 @@
       "description": "Discover available tools, metadata, and route costs."
     },
     {
-      "name": "Vehicle History Finder",
-      "description": "Vehicle history enrichment endpoints for US VINs and French license plates."
       "name": "Epic Games",
       "description": "Direct Epic Games account validation and enrichment endpoints."
+    },
+    {
+      "name": "Vehicle History Finder",
+      "description": "Vehicle history enrichment endpoints for US VINs and French license plates."
     }
   ],
   "paths": {
@@ -146,71 +148,42 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ToolsCatalogResponse"
+                  "type": "object",
+                  "additionalProperties": true
                 },
                 "example": {
-                  "aggregations": {
-                    "categories": {
-                      "Gaming": 1,
-                      "Accounts": 1,
-                      "Social": 1
-                    },
-                    "featuredCount": 0,
-                    "searchTypes": {
-                      "Gaming": 1
-                    },
-                    "totalCount": 1
-                  },
-                  "featuredTools": [],
-                  "items": [
+                  "data": [
                     {
+                      "name": "Epic Games",
+                      "description": "Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.",
+                      "image": "/images/tools/epic-games.svg",
+                      "routePath": "/epic-games",
                       "categories": [
                         "Gaming",
                         "Accounts",
                         "Social"
                       ],
-                      "countryCode": null,
-                      "description": "Validate Epic Games account search inputs, retrieve player autocomplete suggestions, and enrich Epic/Fortnite account intelligence.",
-                      "featured": false,
-                      "id": "00000000-0000-0000-0000-000000000000",
-                      "logo": "/tools/epic-games.png",
-                      "name": "Epic Games",
-                      "routePath": "/epic-games",
-                      "slug": "epic-games",
-                      "type": "Gaming",
-                      "uiKey": "epic-games",
-                      "updatedAt": "2026-06-28T12:00:00.000Z"
+                      "featured": false
+                    },
+                    {
+                      "name": "Vehicle History Finder",
+                      "description": "Vehicle history enrichment endpoints for US VINs and French license plates.",
+                      "image": "/images/tools/vehicle-history-finder.svg",
+                      "routePath": "/vehicle-history-finder",
+                      "categories": [
+                        "Automotive",
+                        "History",
+                        "VIN"
+                      ],
+                      "featured": false
                     }
                   ],
-                  "pagination": {
-                    "hasNext": false,
-                    "hasPrevious": false,
-                    "limit": 250,
+                  "meta": {
                     "page": 1,
-                    "total": 1,
-                    "totalPages": 1
-                  },
-                  "tools": [
-                    {
-                      "categories": [
-                        "Gaming",
-                        "Accounts",
-                        "Social"
-                      ],
-                      "countryCode": null,
-                      "description": "Validate Epic Games account search inputs, retrieve player autocomplete suggestions, and enrich Epic/Fortnite account intelligence.",
-                      "featured": false,
-                      "id": "00000000-0000-0000-0000-000000000000",
-                      "logo": "/tools/epic-games.png",
-                      "name": "Epic Games",
-                      "routePath": "/epic-games",
-                      "slug": "epic-games",
-                      "type": "Gaming",
-                      "uiKey": "epic-games",
-                      "updatedAt": "2026-06-28T12:00:00.000Z"
-                    }
-                  ],
-                  "total": 1
+                    "limit": 250,
+                    "total": 2,
+                    "timestamp": "2026-06-28T12:00:00.000Z"
+                  }
                 }
               }
             }
@@ -247,8 +220,8 @@
                 },
                 "example": {
                   "name": "Epic Games",
-                  "description": "Validate Epic Games account search inputs and retrieve player autocomplete suggestions.",
-                  "image": "/tools/epic-games.png",
+                  "description": "Direct Epic Games account validation and enrichment endpoints.",
+                  "image": "/images/tools/epic-games.svg",
                   "routePath": "/epic-games"
                 }
               }
@@ -285,84 +258,60 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ToolCostsResponse"
+                  "type": "object",
+                  "additionalProperties": true
                 },
                 "example": {
-                  "defaultPrice": null,
-                  "routes": [
-                    {
-                      "kind": "free",
-                      "method": "GET",
-                      "quantity": 0,
-                      "routePattern": "/"
+                  "routes": {
+                    "GET /": {
+                      "type": "free",
+                      "credits": 0
                     },
-                    {
-                      "kind": "free",
-                      "method": "GET",
-                      "quantity": 0,
-                      "routePattern": "/infos"
+                    "GET /infos": {
+                      "type": "free",
+                      "credits": 0
                     },
-                    {
-                      "kind": "free",
-                      "method": "POST",
-                      "quantity": 0,
-                      "routePattern": "/search"
+                    "POST /search": {
+                      "type": "free",
+                      "credits": 0
                     },
-                    {
-                      "kind": "free",
-                      "method": "POST",
-                      "quantity": 0,
-                      "routePattern": "/suggestions"
+                    "POST /suggestions": {
+                      "type": "free",
+                      "credits": 0
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 1,
-                      "routePattern": "/resolve"
+                    "POST /resolve": {
+                      "type": "core-search",
+                      "credits": 1
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 1,
-                      "routePattern": "/linked-accounts"
+                    "POST /linked-accounts": {
+                      "type": "core-search",
+                      "credits": 1
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 1,
-                      "routePattern": "/tags"
+                    "POST /tags": {
+                      "type": "core-search",
+                      "credits": 1
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 1,
-                      "routePattern": "/regions"
+                    "POST /regions": {
+                      "type": "core-search",
+                      "credits": 1
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 2,
-                      "routePattern": "/friends-achievements"
+                    "POST /friends-achievements": {
+                      "type": "core-search",
+                      "credits": 2
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 1,
-                      "routePattern": "/creator"
+                    "POST /creator": {
+                      "type": "core-search",
+                      "credits": 1
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 1,
-                      "routePattern": "/profile-db"
+                    "POST /profile-db": {
+                      "type": "core-search",
+                      "credits": 1
                     },
-                    {
-                      "kind": "core_search",
-                      "method": "POST",
-                      "quantity": 3,
-                      "routePattern": "/all"
+                    "POST /all": {
+                      "type": "core-search",
+                      "credits": 3
                     }
-                  ]
+                  }
                 }
               }
             }
@@ -405,13 +354,6 @@
         }
       }
     },
-    "/tools/vehicle-history-finder": {
-      "get": {
-        "tags": [
-          "Vehicle History Finder"
-        ],
-        "summary": "List Vehicle History Finder routes",
-        "operationId": "listVehicleHistoryFinderRoutes",
     "/tools/epic-games": {
       "get": {
         "tags": [
@@ -419,6 +361,244 @@
         ],
         "summary": "List Epic Games routes",
         "operationId": "listEpicGamesRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/search": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Validate Epic Games search input",
+        "operationId": "runEpicGamesSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/suggestions": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games suggestions",
+        "operationId": "runEpicGamesSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/resolve": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Resolve Epic Games account",
+        "operationId": "runEpicGamesResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/linked-accounts": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games linked accounts",
+        "operationId": "runEpicGamesLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/tags": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games account tags",
+        "operationId": "runEpicGamesTags",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/regions": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games region signals",
+        "operationId": "runEpicGamesRegions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/friends-achievements": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games friends and achievements",
+        "operationId": "runEpicGamesFriendsAchievements",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/creator": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games creator data",
+        "operationId": "runEpicGamesCreator",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/profile-db": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games profile database data",
+        "operationId": "runEpicGamesProfileDb",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/epic-games/all": {
+      "post": {
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Run all Epic Games collectors",
+        "operationId": "runEpicGamesAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/vehicle-history-finder": {
+      "get": {
+        "tags": [
+          "Vehicle History Finder"
+        ],
+        "summary": "List Vehicle History Finder routes",
+        "operationId": "listVehicleHistoryFinderRoutes",
         "responses": {
           "200": {
             "$ref": "#/components/responses/ToolRouteIndex"
@@ -435,15 +615,6 @@
         "operationId": "runVehicleHistoryFinderSearch",
         "requestBody": {
           "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
-    "/tools/epic-games/search": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Validate Epic Games search input",
-        "operationId": "runEpicGamesSearch",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
         },
         "responses": {
           "200": {
@@ -451,255 +622,6 @@
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/suggestions": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Get Epic Games suggestions",
-        "operationId": "runEpicGamesSuggestions",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/resolve": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Resolve Epic Games account",
-        "operationId": "runEpicGamesResolve",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/linked-accounts": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Get Epic Games linked accounts",
-        "operationId": "runEpicGamesLinkedAccounts",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/tags": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Get Epic Games account tags",
-        "operationId": "runEpicGamesTags",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/regions": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Get Epic Games region signals",
-        "operationId": "runEpicGamesRegions",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/friends-achievements": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Get Epic Games friends and achievements",
-        "operationId": "runEpicGamesFriendsAchievements",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
           }
         }
       }
@@ -713,15 +635,6 @@
         "operationId": "runVehicleHistoryFinderVin",
         "requestBody": {
           "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
-    "/tools/epic-games/creator": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Get Epic Games creator data",
-        "operationId": "runEpicGamesCreator",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
         },
         "responses": {
           "200": {
@@ -745,39 +658,6 @@
         "operationId": "runVehicleHistoryFinderPlateFr",
         "requestBody": {
           "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/profile-db": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Get Epic Games profile database data",
-        "operationId": "runEpicGamesProfileDb",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
         },
         "responses": {
           "200": {
@@ -801,39 +681,6 @@
         "operationId": "runVehicleHistoryFinderAll",
         "requestBody": {
           "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
-          }
-        }
-      }
-    },
-    "/tools/epic-games/all": {
-      "post": {
-        "tags": [
-          "Epic Games"
-        ],
-        "summary": "Run all Epic Games collectors",
-        "operationId": "runEpicGamesAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
         },
         "responses": {
           "200": {
@@ -844,26 +691,6 @@
           },
           "503": {
             "$ref": "#/components/responses/ProviderUnavailable"
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/PlanFeatureRequired"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundResult"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimitExceeded"
-          },
-          "502": {
-            "$ref": "#/components/responses/ProviderError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          },
-          "504": {
-            "$ref": "#/components/responses/ProviderTimeout"
           }
         }
       }
@@ -885,57 +712,7 @@
         "schema": {
           "type": "string",
           "enum": [
-            "domain-intelligence",
-            "ip-intelligence",
             "epic-games",
-            "socialclub",
-            "xbox",
-            "playstation"
-          ]
-        }
-      },
-      "SavedToolResultId": {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "format": "uuid"
-        }
-      }
-    },
-    "requestBodies": {
-      "DomainRequest": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/DomainRequest"
-            },
-            "example": {
-              "domain": "example.com"
-            }
-          }
-        }
-      },
-      "IpRequest": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/IpRequest"
-            },
-            "example": {
-              "ip": "8.8.8.8"
-            }
-          }
-        }
-      },
-      "GamingToolRequest": {
-        "required": true,
-        "schema": {
-          "type": "string",
-          "enum": [
             "vehicle-history-finder"
           ]
         }
@@ -951,6 +728,20 @@
       }
     },
     "requestBodies": {
+      "EpicGamesRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EpicGamesRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "epic_display_name"
+            }
+          }
+        }
+      },
       "VehicleHistoryFinderRequest": {
         "required": true,
         "content": {
@@ -988,10 +779,6 @@
               "additionalProperties": true
             },
             "example": {
-              "tool": "vehicle-history-finder",
-              "operation": "index",
-              "query": {
-                "tool": "vehicle-history-finder"
               "tool": "epic-games",
               "operation": "index",
               "query": {
@@ -1001,36 +788,7 @@
                 "routes": [
                   {
                     "method": "GET",
-                    "path": "/tools/vehicle-history-finder"
-                  },
-                  {
-                    "method": "GET",
-                    "path": "/tools/vehicle-history-finder/costs"
-                  },
-                  {
-                    "method": "GET",
-                    "path": "/tools/vehicle-history-finder/infos"
-                  },
-                  {
-                    "method": "POST",
-                    "path": "/tools/vehicle-history-finder/search"
-                  },
-                  {
-                    "method": "POST",
-                    "path": "/tools/vehicle-history-finder/vin"
-                  },
-                  {
-                    "method": "POST",
-                    "path": "/tools/vehicle-history-finder/plate-fr"
-                  },
-                  {
-                    "method": "POST",
-                    "path": "/tools/vehicle-history-finder/all"
-                    "path": "/tools/epic-games/costs"
-                  },
-                  {
-                    "method": "GET",
-                    "path": "/tools/epic-games/infos"
+                    "path": "/tools/epic-games"
                   },
                   {
                     "method": "POST",
@@ -1081,63 +839,6 @@
           }
         }
       },
-      "DomainToolResponse": {
-        "description": "Domain tool response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/DomainToolResponse"
-            },
-            "example": {
-              "tool": "xbox",
-              "operation": "resolve",
-              "query": {
-                "value": "SomeGamertag",
-                "type": "gamertag",
-                "normalizedType": "gamertag"
-              },
-              "data": {},
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "IpToolResponse": {
-        "description": "IP tool response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/IpToolResponse"
-            },
-            "example": {
-              "tool": "ip-intelligence",
-              "operation": "ports",
-              "query": {
-                "ip": "8.8.8.8"
-              },
-              "data": {
-                "ports": [
-                  53,
-                  443
-                ],
-                "tags": [
-                  "dns"
-                ],
-                "hostnames": [
-                  "dns.google"
-                ],
-                "cpes": [],
-                "vulns": []
-              },
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
-            }
-          }
-        }
-      },
       "ValidationError": {
         "description": "Invalid request body or parameters",
         "content": {
@@ -1151,8 +852,8 @@
                 "message": "Invalid request body",
                 "details": [
                   {
-                    "path": "domain",
-                    "message": "Invalid domain"
+                    "path": "value",
+                    "message": "Invalid value"
                   }
                 ]
               },
@@ -1224,7 +925,7 @@
         }
       },
       "NotFound": {
-        "description": "Tool not found",
+        "description": "Resource not found",
         "content": {
           "application/json": {
             "schema": {
@@ -1233,7 +934,7 @@
             "example": {
               "error": {
                 "code": "NOT_FOUND",
-                "message": "Tool not found"
+                "message": "Not found"
               },
               "meta": {
                 "timestamp": "2026-06-28T12:00:00.000Z"
@@ -1243,18 +944,18 @@
         }
       },
       "GamingToolResponse": {
-        "description": "Gaming tool response",
+        "description": "Tool response",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/GamingToolResponse"
             },
             "example": {
-              "tool": "vehicle-history-finder",
+              "tool": "epic-games",
               "operation": "search",
               "query": {
-                "value": "AB-123-CD",
-                "type": "plate_fr"
+                "value": "some-player",
+                "type": "epic_display_name"
               },
               "data": {},
               "meta": {
@@ -1269,113 +970,11 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "required": [
-                "data",
-                "meta",
-                "operation",
-                "query",
-                "tool"
-              ],
-              "properties": {
-                "data": {
-                  "additionalProperties": true
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/ResponseMeta"
-                },
-                "operation": {
-                  "type": "string"
-                },
-                "query": {
-                  "type": "object",
-                  "additionalProperties": true
-                },
-                "tool": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": true
-            }
-          }
-        }
-      },
-      "NotFoundResult": {
-        "description": "The provider could not find a matching account or resource.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
+              "$ref": "#/components/schemas/SavedToolResult"
             },
             "example": {
-              "error": {
-                "code": "NOT_FOUND",
-                "message": "Not found",
-                "details": "No results found"
-              },
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "RateLimitExceeded": {
-        "description": "API usage limits have been reached.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            },
-            "example": {
-              "error": {
-                "code": "RATE_LIMIT_EXCEEDED",
-                "message": "Rate limit exceeded",
-                "details": "API usage limits have been reached"
-              },
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "ProviderError": {
-        "description": "The upstream provider returned an error.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            },
-            "example": {
-              "error": {
-                "code": "PROVIDER_ERROR",
-                "message": "Provider error",
-                "details": "Provider request failed"
-              },
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "ProviderTimeout": {
-        "description": "The upstream provider request timed out.",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            },
-            "example": {
-              "error": {
-                "code": "PROVIDER_TIMEOUT",
-                "message": "Provider timeout",
-                "details": "Provider request timed out"
-              },
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
+              "id": "00000000-0000-0000-0000-000000000000",
+              "url": "https://api.osint.ly/tools/results/00000000-0000-0000-0000-000000000000"
             }
           }
         }
@@ -1406,129 +1005,10 @@
         },
         "additionalProperties": true,
         "example": {
-          "name": "Vehicle History Finder",
-          "description": "Vehicle history enrichment endpoints for US VINs and French license plates.",
-          "image": "/images/tools/vehicle-history-finder.svg",
-          "routePath": "/vehicle-history-finder"
           "name": "Epic Games",
-          "description": "Validate Epic Games account search inputs and retrieve player autocomplete suggestions.",
-          "image": "/tools/epic-games.png",
+          "description": "Direct Epic Games account validation and enrichment endpoints.",
+          "image": "/images/tools/epic-games.svg",
           "routePath": "/epic-games"
-        }
-      },
-      "DomainToolResponse": {
-        "type": "object",
-        "required": [
-          "data",
-          "meta",
-          "operation",
-          "query",
-          "tool"
-        ],
-        "properties": {
-          "data": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
-          },
-          "operation": {
-            "type": "string"
-          },
-          "query": {
-            "type": "object",
-            "required": [
-              "domain"
-            ],
-            "properties": {
-              "domain": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          },
-          "tool": {
-            "type": "string",
-            "const": "domain-intelligence"
-          }
-        },
-        "additionalProperties": false,
-        "example": {
-          "tool": "epic-games",
-          "operation": "resolve",
-          "query": {
-            "value": "some-player",
-            "type": "epic_display_name",
-            "normalizedType": "epic_display_name"
-          },
-          "data": {},
-          "meta": {
-            "timestamp": "2026-06-28T12:00:00.000Z"
-          }
-        }
-      },
-      "IpToolResponse": {
-        "type": "object",
-        "required": [
-          "data",
-          "meta",
-          "operation",
-          "query",
-          "tool"
-        ],
-        "properties": {
-          "data": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
-          },
-          "operation": {
-            "type": "string"
-          },
-          "query": {
-            "type": "object",
-            "required": [
-              "ip"
-            ],
-            "properties": {
-              "ip": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          },
-          "tool": {
-            "type": "string",
-            "const": "ip-intelligence"
-          }
-        },
-        "additionalProperties": false,
-        "example": {
-          "tool": "ip-intelligence",
-          "operation": "ports",
-          "query": {
-            "ip": "8.8.8.8"
-          },
-          "data": {
-            "ports": [
-              53,
-              443
-            ],
-            "tags": [
-              "dns"
-            ],
-            "hostnames": [
-              "dns.google"
-            ],
-            "cpes": [],
-            "vulns": []
-          },
-          "meta": {
-            "timestamp": "2026-06-28T12:00:00.000Z"
-          }
         }
       },
       "ResponseMeta": {
@@ -1593,17 +1073,7 @@
             "$ref": "#/components/schemas/ResponseMeta"
           }
         },
-        "additionalProperties": false,
-        "example": {
-          "error": {
-            "code": "UNAUTHORIZED",
-            "message": "Unauthorized",
-            "details": "A valid API key is required"
-          },
-          "meta": {
-            "timestamp": "2026-06-28T12:00:00.000Z"
-          }
-        }
+        "additionalProperties": false
       },
       "GamingToolResponse": {
         "type": "object",
@@ -1647,8 +1117,59 @@
           "tool": {
             "type": "string",
             "enum": [
+              "epic-games",
               "vehicle-history-finder"
             ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "EpicGamesRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Epic identifier to enrich.",
+            "examples": [
+              "some-player",
+              "some-player#1234"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical type or accepted alias.",
+            "enum": [
+              "epic_display_name",
+              "epic_account_id",
+              "creator_code",
+              "psn_username",
+              "steam_username",
+              "xbox_username",
+              "psn_account_id",
+              "steam_id",
+              "nintendo_account_id",
+              "epic",
+              "epic_id",
+              "creator",
+              "psn",
+              "playstation",
+              "steam",
+              "steamid",
+              "xbox",
+              "xbl",
+              "xlb",
+              "nintendo"
+            ],
+            "example": "epic_display_name"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
           }
         },
         "additionalProperties": false
@@ -1687,227 +1208,6 @@
             "type": "boolean",
             "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
             "default": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "ToolCatalogItem": {
-        "type": "object",
-        "properties": {
-          "categories": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "countryCode": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "description": {
-            "type": "string"
-          },
-          "featured": {
-            "type": "boolean"
-          },
-          "id": {
-            "type": "string"
-          },
-          "logo": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "routePath": {
-            "type": "string"
-          },
-          "slug": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          },
-          "uiKey": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": true
-      },
-      "ToolsCatalogResponse": {
-        "type": "object",
-        "required": [
-          "aggregations",
-          "featuredTools",
-          "items",
-          "pagination",
-          "tools",
-          "total"
-        ],
-        "properties": {
-          "aggregations": {
-            "type": "object",
-            "required": [
-              "categories",
-              "featuredCount",
-              "searchTypes",
-              "totalCount"
-            ],
-            "properties": {
-              "categories": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "integer"
-                }
-              },
-              "featuredCount": {
-                "type": "integer"
-              },
-              "searchTypes": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "integer"
-                }
-              },
-              "totalCount": {
-                "type": "integer"
-              }
-            },
-            "additionalProperties": true
-          },
-          "featuredTools": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ToolCatalogItem"
-            }
-          },
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ToolCatalogItem"
-            }
-          },
-          "pagination": {
-            "type": "object",
-            "required": [
-              "hasNext",
-              "hasPrevious",
-              "limit",
-              "page",
-              "total",
-              "totalPages"
-            ],
-            "properties": {
-              "hasNext": {
-                "type": "boolean"
-              },
-              "hasPrevious": {
-                "type": "boolean"
-              },
-              "limit": {
-                "type": "integer"
-              },
-              "page": {
-                "type": "integer"
-              },
-              "total": {
-                "type": "integer"
-              },
-              "totalPages": {
-                "type": "integer"
-              }
-            },
-            "additionalProperties": false
-          },
-          "tools": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ToolCatalogItem"
-            }
-          },
-          "total": {
-            "type": "integer"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ToolRouteCost": {
-        "type": "object",
-        "required": [
-          "kind",
-          "method",
-          "quantity",
-          "routePattern"
-        ],
-        "properties": {
-          "kind": {
-            "type": "string",
-            "enum": [
-              "free",
-              "core_search",
-              "disabled"
-            ]
-          },
-          "method": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "quantity": {
-            "type": "integer"
-          },
-          "routePattern": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ToolCostsResponse": {
-        "type": "object",
-        "required": [
-          "defaultPrice",
-          "routes"
-        ],
-        "properties": {
-          "defaultPrice": {
-            "oneOf": [
-              {
-                "type": "null"
-              },
-              {
-                "type": "object",
-                "required": [
-                  "kind",
-                  "quantity"
-                ],
-                "properties": {
-                  "kind": {
-                    "type": "string",
-                    "enum": [
-                      "free",
-                      "core_search",
-                      "disabled"
-                    ]
-                  },
-                  "quantity": {
-                    "type": "integer"
-                  }
-                },
-                "additionalProperties": false
-              }
-            ]
-          },
-          "routes": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ToolRouteCost"
-            }
           }
         },
         "additionalProperties": false
