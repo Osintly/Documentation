@@ -1,14 +1,17 @@
 ---
 title: Logo Service
-description: Embed domain logos anywhere using a single URL - no API key required.
+description: Embed domain logos and country flags anywhere using a single URL - no API key required.
 icon: image
 ---
 
-Osintly provides a public logo service at `https://logos.osint.ly` that returns the logo image for any domain. It works directly in browsers, apps, and any HTTP client - no authentication required.
+Osintly provides a public logo service at `https://logos.osint.ly` that returns logo images for domains and country flags by alias. It works directly in browsers, apps, and any HTTP client - no authentication required.
 
 <CardGroup cols={2}>
   <Card title="One URL per domain" icon="link">
     `https://logos.osint.ly/github.com` - just swap the domain.
+  </Card>
+  <Card title="Country flags" icon="flag">
+    `https://logos.osint.ly/flags/france.svg` - use country names, ISO codes, or common aliases.
   </Card>
   <Card title="Use it anywhere" icon="globe">
     HTML, CSS, JavaScript, React - CORS enabled for direct browser access.
@@ -39,11 +42,46 @@ The `www.` prefix is stripped automatically, so `www.github.com` resolves the sa
 
 ---
 
+## Country flags
+
+Send a `GET` request to `/flags/{alias}` or `/flags/{alias}.{format}`:
+
+```http
+GET https://logos.osint.ly/flags/{alias}
+GET https://logos.osint.ly/flags/{alias}.{format}
+```
+
+The alias is normalized to a canonical country code. The service accepts ISO codes, common country names in English and French, and frequent shortcuts like `uk`.
+
+**Examples:**
+
+```
+https://logos.osint.ly/flags/france.svg
+https://logos.osint.ly/flags/fr
+https://logos.osint.ly/flags/français.webp
+https://logos.osint.ly/flags/uk.png
+```
+
+If no extension is provided, `svg` is used by default:
+
+```
+https://logos.osint.ly/flags/france  →  same as /flags/france.svg
+```
+
+Supported formats are `svg`, `png`, `webp`, `jpg`, and `jpeg`. The `jpeg` extension is normalized to `jpg`.
+
+---
+
 ## Quick examples
 
 ```html
 <!-- Drop it directly into an <img> tag -->
 <img src="https://logos.osint.ly/github.com" alt="GitHub logo" />
+```
+
+```html
+<!-- Country flags work the same way -->
+<img src="https://logos.osint.ly/flags/france.svg" alt="France flag" />
 ```
 
 ```jsx

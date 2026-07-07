@@ -121,17 +121,8 @@
             "group": "Overview",
             "pages": [
               "tools-reference/introduction",
-              "tools-reference/domain-intelligence",
-              "tools-reference/ip-intelligence",
-              "tools-reference/epic-games",
-              "tools-reference/socialclub",
-              "tools-reference/xbox",
-              "tools-reference/playstation",
-              "tools-reference/roblox",
-              "tools-reference/chess-com",
-              "tools-reference/osu",
-              "tools-reference/criminal-intelligence",
               "tools-reference/vehicle-history-finder"
+              "tools-reference/epic-games"
             ]
           },
           {
