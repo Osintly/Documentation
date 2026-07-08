@@ -380,7 +380,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
+            "$ref": "#/components/responses/GamingToolResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -420,7 +420,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
+            "$ref": "#/components/responses/GamingToolResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -443,7 +443,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
+            "$ref": "#/components/responses/GamingToolResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -466,7 +466,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
+            "$ref": "#/components/responses/GamingToolResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -618,7 +618,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -638,7 +638,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -661,7 +661,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -684,7 +684,7 @@
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
