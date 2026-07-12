@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Epic Games and Vehicle History Finder tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, and Xbox tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -32,6 +32,10 @@
     {
       "name": "Vehicle History Finder",
       "description": "Vehicle history enrichment endpoints for US VINs and French license plates."
+    },
+    {
+      "name": "Xbox",
+      "description": "Direct Xbox Live account validation and enrichment endpoints."
     }
   ],
   "paths": {
@@ -158,12 +162,20 @@
                       "routePath": "/vehicle-history-finder",
                       "categories": ["Automotive", "History", "VIN"],
                       "featured": false
+                    },
+                    {
+                      "name": "Xbox",
+                      "description": "Validate and enrich Xbox Live account intelligence, including profiles, presence, social metadata, games, media, clubs, and title achievements.",
+                      "image": "/images/tools/xbox.svg",
+                      "routePath": "/xbox",
+                      "categories": ["Gaming", "Accounts", "Social"],
+                      "featured": false
                     }
                   ],
                   "meta": {
                     "page": 1,
                     "limit": 250,
-                    "total": 2,
+                    "total": 3,
                     "timestamp": "2026-06-28T12:00:00.000Z"
                   }
                 }
@@ -546,6 +558,264 @@
         }
       }
     },
+    "/tools/xbox": {
+      "get": {
+        "tags": ["Xbox"],
+        "summary": "List Xbox routes",
+        "operationId": "listXboxRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/xbox/search": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Validate Xbox search input",
+        "operationId": "runXboxSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/xbox/suggestions": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox suggestions",
+        "operationId": "runXboxSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/xbox/resolve": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Resolve Xbox account",
+        "operationId": "runXboxResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/profile": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox profile",
+        "operationId": "runXboxProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/presence": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox presence",
+        "operationId": "runXboxPresence",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/social": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox social data",
+        "operationId": "runXboxSocial",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/linked-accounts": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox linked accounts",
+        "operationId": "runXboxLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/games": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox games",
+        "operationId": "runXboxGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/media": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox media",
+        "operationId": "runXboxMedia",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/clubs": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox clubs",
+        "operationId": "runXboxClubs",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/title-detail": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Get Xbox title detail and achievements",
+        "operationId": "runXboxTitleDetail",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxTitleDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/xbox/all": {
+      "post": {
+        "tags": ["Xbox"],
+        "summary": "Run all Xbox collectors",
+        "operationId": "runXboxAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
     "/tools/vehicle-history-finder": {
       "get": {
         "tags": ["Vehicle History Finder"],
@@ -655,7 +925,7 @@
         "required": true,
         "schema": {
           "type": "string",
-          "enum": ["epic-games", "vehicle-history-finder"]
+          "enum": ["epic-games", "vehicle-history-finder", "xbox"]
         }
       },
       "SavedToolResultId": {
@@ -679,6 +949,35 @@
             "example": {
               "value": "some-player",
               "type": "epic_display_name"
+            }
+          }
+        }
+      },
+      "XboxRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/XboxRequest"
+            },
+            "example": {
+              "value": "SomeGamertag",
+              "type": "gamertag"
+            }
+          }
+        }
+      },
+      "XboxTitleDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/XboxTitleDetailRequest"
+            },
+            "example": {
+              "value": "SomeGamertag",
+              "type": "gamertag",
+              "titleId": "12345"
             }
           }
         }
@@ -1084,7 +1383,7 @@
           },
           "tool": {
             "type": "string",
-            "enum": ["epic-games", "vehicle-history-finder"]
+            "enum": ["epic-games", "vehicle-history-finder", "xbox"]
           }
         },
         "additionalProperties": false
@@ -1397,6 +1696,69 @@
           "save": {
             "type": "boolean",
             "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "XboxRequest": {
+        "type": "object",
+        "required": ["value", "type"],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Xbox gamertag or XUID to enrich.",
+            "examples": ["SomeGamertag", "2533274792004364"]
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Xbox search type or accepted alias.",
+            "enum": [
+              "gamertag",
+              "xuid",
+              "xbox",
+              "xbl",
+              "username",
+              "id",
+              "xbox_id"
+            ],
+            "example": "gamertag"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "XboxTitleDetailRequest": {
+        "type": "object",
+        "required": ["value", "type", "titleId"],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Xbox gamertag or XUID to enrich."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "gamertag",
+              "xuid",
+              "xbox",
+              "xbl",
+              "username",
+              "id",
+              "xbox_id"
+            ]
+          },
+          "titleId": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Numeric Xbox title ID."
+          },
+          "save": {
+            "type": "boolean",
             "default": false
           }
         },
