@@ -1,0 +1,80 @@
+---
+title: Xbox
+description: Direct Xbox Live account validation and enrichment endpoints for profile, presence, social data, games, media, clubs, and title details.
+icon: user
+---
+
+Xbox endpoints accept a gamertag or XUID. `POST /search` is validation-only: it normalizes the identifier type and does not call Xbox or consume credits.
+
+```json
+{
+  "value": "SomeGamertag",
+  "type": "gamertag"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `gamertag`
+- `xuid`
+
+Aliases:
+
+- `xbox`, `xbl`, and `username` -> `gamertag`
+- `id`, `xbox_id`, and `xuid` -> `xuid`
+
+---
+
+## Endpoint groups
+
+| Operation       | Endpoint                           | Cost | Notes                                                               |
+| --------------- | ---------------------------------- | ---: | ------------------------------------------------------------------- |
+| Search          | `POST /tools/xbox/search`          | Free | Validates and normalizes only.                                      |
+| Suggestions     | `POST /tools/xbox/suggestions`     | Free | PeopleHub search suggestions.                                       |
+| Resolve         | `POST /tools/xbox/resolve`         |    1 | Resolves gamertag or XUID.                                          |
+| Profile         | `POST /tools/xbox/profile`         |    1 | Identity, avatar, gamerscore, reputation, and profile fields.       |
+| Presence        | `POST /tools/xbox/presence`        |    1 | Online state, current device, current game, and last seen.          |
+| Social          | `POST /tools/xbox/social`          |    1 | Friend, follower, following, verification, and multiplayer summary. |
+| Linked Accounts | `POST /tools/xbox/linked-accounts` |    1 | Linked external account metadata.                                   |
+| Games           | `POST /tools/xbox/games`           |    1 | Title history and achievement summaries.                            |
+| Media           | `POST /tools/xbox/media`           |    1 | Game clips and screenshots.                                         |
+| Clubs           | `POST /tools/xbox/clubs`           |    1 | Club memberships and metadata.                                      |
+| Title Detail    | `POST /tools/xbox/title-detail`    | Free | Title details and achievements for one `titleId`.                   |
+| All             | `POST /tools/xbox/all`             |    3 | Runs the main collectors and charges once.                          |
+
+`POST /tools/xbox/title-detail` also requires a numeric `titleId` in the body.
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/xbox/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "SomeGamertag", "type": "xbox" }'
+```
+
+Use `/all` when you need a complete Xbox profile without full per-title achievements.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/xbox/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "SomeGamertag", "type": "gamertag" }'
+```
+
+Fetch title-specific details separately.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/xbox/title-detail" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "SomeGamertag", "type": "gamertag", "titleId": "12345" }'
+```

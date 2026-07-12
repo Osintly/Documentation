@@ -6,12 +6,26 @@ icon: wrench
 
 The Tools API exposes focused enrichment endpoints that run immediately and return a normalized JSON response. Use tools when you need a direct lookup for one observable, without creating a full Osintly search.
 
-<CardGroup cols={2}> 
-  <Card title="Epic Games" icon="/images/tools/epic-games.svg" href="/tools-reference/epic-games">
-    Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.
-  </Card> 
-  <Card title="Vehicle History Finder" icon="/images/tools/vehicle-history-finder.svg" href="/tools-reference/vehicle-history-finder">
-    Enrich US VINs and French license plates with vehicle identity, history signals, recalls, fluids, and capacity data.
+<CardGroup cols={2}>
+  <Card
+    title="Epic Games"
+    icon="/images/tools/epic-games.svg"
+    href="/tools-reference/epic-games"
+  >
+    Validate and enrich Epic account identifiers, linked accounts, tags,
+    regions, creator data, friends, and achievements.
+  </Card>
+  <Card
+    title="Vehicle History Finder"
+    icon="/images/tools/vehicle-history-finder.svg"
+    href="/tools-reference/vehicle-history-finder"
+  >
+    Enrich US VINs and French license plates with vehicle identity, history
+    signals, recalls, fluids, and capacity data.
+  </Card>
+  <Card title="Xbox" icon="/images/tools/xbox.svg" href="/tools-reference/xbox">
+    Enrich Xbox Live gamertags and XUIDs with profile, presence, social, games,
+    media, clubs, and title details.
   </Card>
 </CardGroup>
 
@@ -44,12 +58,12 @@ Tool execution requires a paid API subscription with the `tools` feature enabled
 
 ## When to use tools
 
-| Use tools when | Use Search API when |
-|---|---|
-| You already know the observable type | You need full search orchestration |
-| You want one direct enrichment response | You want module execution, streaming, and result persistence |
-| You need low-overhead API calls | You need account discovery, leaks, BYOK, or webhooks |
-| You want to call a specific signal group | You want Osintly to decide the relevant module set |
+| Use tools when                           | Use Search API when                                          |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| You already know the observable type     | You need full search orchestration                           |
+| You want one direct enrichment response  | You want module execution, streaming, and result persistence |
+| You need low-overhead API calls          | You need account discovery, leaks, BYOK, or webhooks         |
+| You want to call a specific signal group | You want Osintly to decide the relevant module set           |
 
 ---
 
@@ -135,4 +149,5 @@ For gaming tools, `POST /search` is validation-only. It validates and normalizes
 
 1. Review [Epic Games](/tools-reference/epic-games)
 2. Review [Vehicle History Finder](/tools-reference/vehicle-history-finder)
-3. Explore endpoint schemas in **Tools Endpoints**
+3. Review [Xbox](/tools-reference/xbox)
+4. Explore endpoint schemas in **Tools Endpoints**
