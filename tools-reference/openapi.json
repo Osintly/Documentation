@@ -36,12 +36,18 @@
     {
       "name": "Xbox",
       "description": "Direct Xbox Live account validation and enrichment endpoints."
+    },
+    {
+      "name": "PlayStation Network",
+      "description": "Direct PlayStation Network account validation and enrichment endpoints."
     }
   ],
   "paths": {
     "/tools": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "List tools",
         "description": "List tools available to the authenticated account.",
         "operationId": "listTools",
@@ -65,7 +71,12 @@
                 },
                 {
                   "type": "string",
-                  "enum": ["true", "false", "1", "0"]
+                  "enum": [
+                    "true",
+                    "false",
+                    "1",
+                    "0"
+                  ]
                 }
               ],
               "default": false
@@ -131,7 +142,10 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": ["preview", "full"],
+              "enum": [
+                "preview",
+                "full"
+              ],
               "default": "full"
             }
           }
@@ -152,7 +166,11 @@
                       "description": "Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.",
                       "image": "/images/tools/epic-games.svg",
                       "routePath": "/epic-games",
-                      "categories": ["Gaming", "Accounts", "Social"],
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
                       "featured": false
                     },
                     {
@@ -160,7 +178,11 @@
                       "description": "Vehicle history enrichment endpoints for US VINs and French license plates.",
                       "image": "/images/tools/vehicle-history-finder.svg",
                       "routePath": "/vehicle-history-finder",
-                      "categories": ["Automotive", "History", "VIN"],
+                      "categories": [
+                        "Automotive",
+                        "History",
+                        "VIN"
+                      ],
                       "featured": false
                     },
                     {
@@ -168,14 +190,30 @@
                       "description": "Validate and enrich Xbox Live account intelligence, including profiles, presence, social metadata, games, media, clubs, and title achievements.",
                       "image": "/images/tools/xbox.svg",
                       "routePath": "/xbox",
-                      "categories": ["Gaming", "Accounts", "Social"],
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
+                    },
+                    {
+                      "name": "PlayStation Network",
+                      "description": "Validate and enrich PlayStation Network account intelligence, including profiles, presence, trophies, and games.",
+                      "image": "/images/tools/playstation.svg",
+                      "routePath": "/playstation",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
                       "featured": false
                     }
                   ],
                   "meta": {
                     "page": 1,
                     "limit": 250,
-                    "total": 3,
+                    "total": 4,
                     "timestamp": "2026-06-28T12:00:00.000Z"
                   }
                 }
@@ -193,7 +231,9 @@
     },
     "/tools/{tool}/infos": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "Get tool info",
         "description": "Read public metadata for one tool.",
         "operationId": "getToolInfo",
@@ -233,7 +273,9 @@
     },
     "/tools/{tool}/costs": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "Get tool route costs",
         "description": "Read per-route pricing for one tool.",
         "operationId": "getToolCosts",
@@ -317,7 +359,9 @@
     },
     "/tools/results/{id}": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "Get a saved tool result",
         "description": "Retrieve a payload saved from a synchronous `/tools/<tool>/all` request with `save: true`.",
         "operationId": "getSavedToolResult",
@@ -344,7 +388,9 @@
     },
     "/tools/epic-games": {
       "get": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "List Epic Games routes",
         "operationId": "listEpicGamesRoutes",
         "responses": {
@@ -356,7 +402,9 @@
     },
     "/tools/epic-games/search": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Validate Epic Games search input",
         "operationId": "runEpicGamesSearch",
         "requestBody": {
@@ -374,7 +422,9 @@
     },
     "/tools/epic-games/suggestions": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games suggestions",
         "operationId": "runEpicGamesSuggestions",
         "requestBody": {
@@ -392,7 +442,9 @@
     },
     "/tools/epic-games/resolve": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Resolve Epic Games account",
         "operationId": "runEpicGamesResolve",
         "requestBody": {
@@ -413,7 +465,9 @@
     },
     "/tools/epic-games/linked-accounts": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games linked accounts",
         "operationId": "runEpicGamesLinkedAccounts",
         "requestBody": {
@@ -434,7 +488,9 @@
     },
     "/tools/epic-games/tags": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games account tags",
         "operationId": "runEpicGamesTags",
         "requestBody": {
@@ -455,7 +511,9 @@
     },
     "/tools/epic-games/regions": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games region signals",
         "operationId": "runEpicGamesRegions",
         "requestBody": {
@@ -476,7 +534,9 @@
     },
     "/tools/epic-games/friends-achievements": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games friends and achievements",
         "operationId": "runEpicGamesFriendsAchievements",
         "requestBody": {
@@ -497,7 +557,9 @@
     },
     "/tools/epic-games/creator": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games creator and public profile data",
         "operationId": "runEpicGamesCreator",
         "requestBody": {
@@ -518,7 +580,9 @@
     },
     "/tools/epic-games/profile-db": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games profile database data",
         "operationId": "runEpicGamesProfileDb",
         "requestBody": {
@@ -539,7 +603,9 @@
     },
     "/tools/epic-games/all": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Run all Epic Games collectors",
         "operationId": "runEpicGamesAll",
         "requestBody": {
@@ -560,7 +626,9 @@
     },
     "/tools/xbox": {
       "get": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "List Xbox routes",
         "operationId": "listXboxRoutes",
         "responses": {
@@ -572,7 +640,9 @@
     },
     "/tools/xbox/search": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Validate Xbox search input",
         "operationId": "runXboxSearch",
         "requestBody": {
@@ -590,7 +660,9 @@
     },
     "/tools/xbox/suggestions": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox suggestions",
         "operationId": "runXboxSuggestions",
         "requestBody": {
@@ -608,7 +680,9 @@
     },
     "/tools/xbox/resolve": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Resolve Xbox account",
         "operationId": "runXboxResolve",
         "requestBody": {
@@ -629,7 +703,9 @@
     },
     "/tools/xbox/profile": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox profile",
         "operationId": "runXboxProfile",
         "requestBody": {
@@ -650,7 +726,9 @@
     },
     "/tools/xbox/presence": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox presence",
         "operationId": "runXboxPresence",
         "requestBody": {
@@ -671,7 +749,9 @@
     },
     "/tools/xbox/social": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox social data",
         "operationId": "runXboxSocial",
         "requestBody": {
@@ -692,7 +772,9 @@
     },
     "/tools/xbox/linked-accounts": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox linked accounts",
         "operationId": "runXboxLinkedAccounts",
         "requestBody": {
@@ -713,7 +795,9 @@
     },
     "/tools/xbox/games": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox games",
         "operationId": "runXboxGames",
         "requestBody": {
@@ -734,7 +818,9 @@
     },
     "/tools/xbox/media": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox media",
         "operationId": "runXboxMedia",
         "requestBody": {
@@ -755,7 +841,9 @@
     },
     "/tools/xbox/clubs": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox clubs",
         "operationId": "runXboxClubs",
         "requestBody": {
@@ -776,7 +864,9 @@
     },
     "/tools/xbox/title-detail": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox title detail and achievements",
         "operationId": "runXboxTitleDetail",
         "requestBody": {
@@ -797,7 +887,9 @@
     },
     "/tools/xbox/all": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Run all Xbox collectors",
         "operationId": "runXboxAll",
         "requestBody": {
@@ -816,9 +908,203 @@
         }
       }
     },
+    "/tools/playstation": {
+      "get": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "List PlayStation Network routes",
+        "operationId": "listPlayStationRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/playstation/search": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Validate PlayStation Network search input",
+        "operationId": "runPlayStationSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/playstation/suggestions": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network suggestions",
+        "operationId": "runPlayStationSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/playstation/resolve": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Resolve PlayStation Network account",
+        "operationId": "runPlayStationResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/profile": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network profile",
+        "operationId": "runPlayStationProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/presence": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network presence",
+        "operationId": "runPlayStationPresence",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/trophy-summary": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network trophy summary",
+        "operationId": "runPlayStationTrophySummary",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/games": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network games",
+        "operationId": "runPlayStationGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/all": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Run all PlayStation Network collectors",
+        "operationId": "runPlayStationAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
     "/tools/vehicle-history-finder": {
       "get": {
-        "tags": ["Vehicle History Finder"],
+        "tags": [
+          "Vehicle History Finder"
+        ],
         "summary": "List Vehicle History Finder routes",
         "operationId": "listVehicleHistoryFinderRoutes",
         "responses": {
@@ -830,7 +1116,9 @@
     },
     "/tools/vehicle-history-finder/search": {
       "post": {
-        "tags": ["Vehicle History Finder"],
+        "tags": [
+          "Vehicle History Finder"
+        ],
         "summary": "Validate Vehicle History Finder input",
         "operationId": "runVehicleHistoryFinderSearch",
         "requestBody": {
@@ -848,7 +1136,9 @@
     },
     "/tools/vehicle-history-finder/vin": {
       "post": {
-        "tags": ["Vehicle History Finder"],
+        "tags": [
+          "Vehicle History Finder"
+        ],
         "summary": "Run Vehicle History Finder VIN collector",
         "operationId": "runVehicleHistoryFinderVin",
         "requestBody": {
@@ -869,7 +1159,9 @@
     },
     "/tools/vehicle-history-finder/plate-fr": {
       "post": {
-        "tags": ["Vehicle History Finder"],
+        "tags": [
+          "Vehicle History Finder"
+        ],
         "summary": "Run Vehicle History Finder French plate collector",
         "operationId": "runVehicleHistoryFinderPlateFr",
         "requestBody": {
@@ -890,7 +1182,9 @@
     },
     "/tools/vehicle-history-finder/all": {
       "post": {
-        "tags": ["Vehicle History Finder"],
+        "tags": [
+          "Vehicle History Finder"
+        ],
         "summary": "Run Vehicle History Finder collector by input type",
         "operationId": "runVehicleHistoryFinderAll",
         "requestBody": {
@@ -925,7 +1219,12 @@
         "required": true,
         "schema": {
           "type": "string",
-          "enum": ["epic-games", "vehicle-history-finder", "xbox"]
+          "enum": [
+            "epic-games",
+            "vehicle-history-finder",
+            "xbox",
+            "playstation"
+          ]
         }
       },
       "SavedToolResultId": {
@@ -1004,6 +1303,20 @@
                   "type": "vin"
                 }
               }
+            }
+          }
+        }
+      },
+      "PlayStationRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PlayStationRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "online_id"
             }
           }
         }
@@ -1275,7 +1588,12 @@
     "schemas": {
       "ToolInfo": {
         "type": "object",
-        "required": ["description", "image", "name", "routePath"],
+        "required": [
+          "description",
+          "image",
+          "name",
+          "routePath"
+        ],
         "properties": {
           "description": {
             "type": "string"
@@ -1300,7 +1618,9 @@
       },
       "ResponseMeta": {
         "type": "object",
-        "required": ["timestamp"],
+        "required": [
+          "timestamp"
+        ],
         "properties": {
           "timestamp": {
             "type": "string",
@@ -1314,7 +1634,10 @@
       },
       "SavedToolResult": {
         "type": "object",
-        "required": ["id", "url"],
+        "required": [
+          "id",
+          "url"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -1329,11 +1652,17 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": ["error", "meta"],
+        "required": [
+          "error",
+          "meta"
+        ],
         "properties": {
           "error": {
             "type": "object",
-            "required": ["code", "message"],
+            "required": [
+              "code",
+              "message"
+            ],
             "properties": {
               "code": {
                 "type": "string"
@@ -1353,7 +1682,13 @@
       },
       "GamingToolResponse": {
         "type": "object",
-        "required": ["data", "meta", "operation", "query", "tool"],
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
         "properties": {
           "data": {
             "type": "object",
@@ -1367,7 +1702,10 @@
           },
           "query": {
             "type": "object",
-            "required": ["value", "type"],
+            "required": [
+              "value",
+              "type"
+            ],
             "properties": {
               "value": {
                 "type": "string"
@@ -1383,7 +1721,12 @@
           },
           "tool": {
             "type": "string",
-            "enum": ["epic-games", "vehicle-history-finder", "xbox"]
+            "enum": [
+              "epic-games",
+              "vehicle-history-finder",
+              "xbox",
+              "playstation"
+            ]
           }
         },
         "additionalProperties": false
@@ -1411,14 +1754,21 @@
       },
       "EpicGamesCreatorData": {
         "type": "object",
-        "required": ["accountId", "affiliate", "islands", "profile"],
+        "required": [
+          "accountId",
+          "affiliate",
+          "islands",
+          "profile"
+        ],
         "properties": {
           "accountId": {
             "type": "string"
           },
           "affiliate": {
             "type": "object",
-            "required": ["found"],
+            "required": [
+              "found"
+            ],
             "properties": {
               "found": {
                 "type": "boolean"
@@ -1492,37 +1842,58 @@
         ],
         "properties": {
           "bio": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "creatorPageUrl": {
             "type": "string",
             "format": "uri"
           },
           "displayName": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "followerCount": {
-            "type": ["integer", "null"]
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "images": {
             "$ref": "#/components/schemas/EpicGamesCreatorImages"
           },
           "title": {
-            "type": ["string", "null"]
+            "type": [
+              "string",
+              "null"
+            ]
           }
         },
         "additionalProperties": false
       },
       "EpicGamesCreatorImages": {
         "type": "object",
-        "required": ["avatar", "banner"],
+        "required": [
+          "avatar",
+          "banner"
+        ],
         "properties": {
           "avatar": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "banner": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           }
         },
@@ -1541,31 +1912,52 @@
         ],
         "properties": {
           "discord": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "instagram": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "tiktok": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "twitch": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "twitter": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "website": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           },
           "youtube": {
-            "type": ["string", "null"],
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "uri"
           }
         },
@@ -1573,15 +1965,26 @@
       },
       "VehicleHistoryFinderResponse": {
         "type": "object",
-        "required": ["data", "meta", "operation", "query", "tool"],
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
         "properties": {
           "data": {
             "type": "object",
-            "required": ["vehicle"],
+            "required": [
+              "vehicle"
+            ],
             "properties": {
               "vehicle": {
                 "type": "object",
-                "required": ["found", "presentation"],
+                "required": [
+                  "found",
+                  "presentation"
+                ],
                 "properties": {
                   "found": {
                     "type": "boolean"
@@ -1599,7 +2002,11 @@
               },
               "nhtsa": {
                 "type": "object",
-                "required": ["recalls", "complaints", "safetyRatings"],
+                "required": [
+                  "recalls",
+                  "complaints",
+                  "safetyRatings"
+                ],
                 "properties": {
                   "recalls": {
                     "type": "array",
@@ -1636,7 +2043,10 @@
           },
           "query": {
             "type": "object",
-            "required": ["value", "type"],
+            "required": [
+              "value",
+              "type"
+            ],
             "properties": {
               "value": {
                 "type": "string"
@@ -1652,19 +2062,27 @@
           },
           "tool": {
             "type": "string",
-            "enum": ["vehicle-history-finder"]
+            "enum": [
+              "vehicle-history-finder"
+            ]
           }
         },
         "additionalProperties": false
       },
       "EpicGamesRequest": {
         "type": "object",
-        "required": ["value", "type"],
+        "required": [
+          "value",
+          "type"
+        ],
         "properties": {
           "value": {
             "type": "string",
             "description": "Epic identifier to enrich.",
-            "examples": ["some-player", "some-player#1234"]
+            "examples": [
+              "some-player",
+              "some-player#1234"
+            ]
           },
           "type": {
             "type": "string",
@@ -1703,12 +2121,18 @@
       },
       "XboxRequest": {
         "type": "object",
-        "required": ["value", "type"],
+        "required": [
+          "value",
+          "type"
+        ],
         "properties": {
           "value": {
             "type": "string",
             "description": "Xbox gamertag or XUID to enrich.",
-            "examples": ["SomeGamertag", "2533274792004364"]
+            "examples": [
+              "SomeGamertag",
+              "2533274792004364"
+            ]
           },
           "type": {
             "type": "string",
@@ -1734,7 +2158,11 @@
       },
       "XboxTitleDetailRequest": {
         "type": "object",
-        "required": ["value", "type", "titleId"],
+        "required": [
+          "value",
+          "type",
+          "titleId"
+        ],
         "properties": {
           "value": {
             "type": "string",
@@ -1762,12 +2190,18 @@
       },
       "VehicleHistoryFinderRequest": {
         "type": "object",
-        "required": ["value", "type"],
+        "required": [
+          "value",
+          "type"
+        ],
         "properties": {
           "value": {
             "type": "string",
             "description": "VIN or French license plate to validate or enrich.",
-            "examples": ["AB-123-CD", "1HGCM82633A004352"]
+            "examples": [
+              "AB-123-CD",
+              "1HGCM82633A004352"
+            ]
           },
           "type": {
             "type": "string",
@@ -1783,6 +2217,45 @@
               "immatriculation"
             ],
             "example": "plate_fr"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlayStationRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "PSN online ID or account ID to enrich.",
+            "examples": [
+              "some-player",
+              "1234567890"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical type or accepted alias.",
+            "enum": [
+              "online_id",
+              "account_id",
+              "psn",
+              "playstation",
+              "username",
+              "onlineid",
+              "id",
+              "account",
+              "psn_account_id"
+            ],
+            "example": "online_id"
           },
           "save": {
             "type": "boolean",
