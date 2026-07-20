@@ -1900,26 +1900,6 @@
         }
       }
     },
-    "/tools/roblox/suggestions": {
-      "post": {
-        "tags": [
-          "Roblox"
-        ],
-        "summary": "Get Roblox username suggestions",
-        "operationId": "runRobloxSuggestions",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
     "/tools/roblox/resolve": {
       "post": {
         "tags": [
