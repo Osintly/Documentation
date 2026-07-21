@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, and Xbox tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, and Roblox tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -40,6 +40,10 @@
     {
       "name": "PlayStation Network",
       "description": "Direct PlayStation Network account validation and enrichment endpoints."
+    },
+    {
+      "name": "Roblox",
+      "description": "Direct Roblox account validation and enrichment endpoints."
     }
   ],
   "paths": {
@@ -208,12 +212,24 @@
                         "Social"
                       ],
                       "featured": false
+                    },
+                    {
+                      "name": "Roblox",
+                      "description": "Validate and enrich Roblox account intelligence, including profiles, social counts, friends, groups, games, badges, and collectibles.",
+                      "image": "/images/tools/roblox.svg",
+                      "routePath": "/roblox",
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
+                      "featured": false
                     }
                   ],
                   "meta": {
                     "page": 1,
                     "limit": 250,
-                    "total": 4,
+                    "total": 5,
                     "timestamp": "2026-06-28T12:00:00.000Z"
                   }
                 }
@@ -1100,6 +1116,247 @@
         }
       }
     },
+    "/tools/roblox": {
+      "get": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "List Roblox routes",
+        "operationId": "listRobloxRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/roblox/search": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Validate Roblox search input",
+        "operationId": "runRobloxSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/roblox/resolve": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Resolve Roblox account",
+        "operationId": "runRobloxResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/profile": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox profile",
+        "operationId": "runRobloxProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/social": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox social counts",
+        "operationId": "runRobloxSocial",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/friends": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox friends sample",
+        "operationId": "runRobloxFriends",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/groups": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox groups",
+        "operationId": "runRobloxGroups",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/games": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox games",
+        "operationId": "runRobloxGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/badges": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox badges",
+        "operationId": "runRobloxBadges",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/collectibles": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Get Roblox collectibles",
+        "operationId": "runRobloxCollectibles",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/roblox/all": {
+      "post": {
+        "tags": [
+          "Roblox"
+        ],
+        "summary": "Run all Roblox collectors",
+        "operationId": "runRobloxAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/GamingToolRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
     "/tools/vehicle-history-finder": {
       "get": {
         "tags": [
@@ -1223,7 +1480,8 @@
             "epic-games",
             "vehicle-history-finder",
             "xbox",
-            "playstation"
+            "playstation",
+            "roblox"
           ]
         }
       },
@@ -1725,7 +1983,8 @@
               "epic-games",
               "vehicle-history-finder",
               "xbox",
-              "playstation"
+              "playstation",
+              "roblox"
             ]
           }
         },
