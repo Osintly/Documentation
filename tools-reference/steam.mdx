@@ -1,0 +1,193 @@
+---
+title: Steam
+description: Direct Steam account validation and enrichment endpoints for profiles, aliases, bans, games, friends, badges, groups, public content, statistics, and inventory.
+icon: gamepad-2
+---
+
+Steam endpoints accept a vanity name, SteamID2, Steam AccountID/SteamID32, SteamID64, Steam Community profile URL, or a supported player URL containing a numeric AccountID. `POST /search` is validation-only: it normalizes the identifier and does not call Steam or consume credits.
+
+```json
+{
+  "value": "gaben",
+  "type": "vanity"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `vanity`
+- `steam_id`
+
+Aliases:
+
+- `steam`, `username`, and `profile` -> `vanity`
+- `id`, `steamid`, and `steamid64` -> `steam_id`
+
+Steam Community URLs are normalized automatically:
+
+- `https://steamcommunity.com/id/gaben` -> `vanity`
+- `https://steamcommunity.com/profiles/76561197960287930` -> `steam_id`
+
+Numeric identifiers are converted to a canonical SteamID64 before provider calls:
+
+- `STEAM_0:1:55975235`
+- `111950471` (AccountID/SteamID32)
+- `https://dotabuff.com/players/111950471`
+- `https://dotamax.com/player/detail/111950471/`
+- any path ending in a valid numeric AccountID, such as `anything/111950471`
+
+---
+
+## Endpoint groups
+
+| Operation        | Endpoint                             | Cost | Notes                                                                                           |
+| ---------------- | ------------------------------------ | ---: | ----------------------------------------------------------------------------------------------- |
+| Search           | `POST /tools/steam/search`           | Free | Validates and normalizes only.                                                                  |
+| Suggestions      | `POST /tools/steam/suggestions`      | Free | Returns `[]`; Steam does not expose a public autocomplete endpoint.                             |
+| Resolve          | `POST /tools/steam/resolve`          |    1 | Resolves a vanity name to SteamID64 and basic identity.                                         |
+| Profile          | `POST /tools/steam/profile`          |    1 | Profile, aliases, Steam IDs, level, status, location, and current game.                         |
+| Bans             | `POST /tools/steam/bans`             |    1 | VAC, community, game, and economy ban signals.                                                  |
+| Games            | `POST /tools/steam/games`            |    1 | Owned games, recent games, and public playtime.                                                 |
+| Game detail      | `POST /tools/steam/game-detail`      | Free | Store metadata, media, playtime, achievements, global completion rates, and exposed game stats. |
+| Friends          | `POST /tools/steam/friends`          |    1 | Complete public friend list with profile summaries.                                             |
+| Badges           | `POST /tools/steam/badges`           |    1 | Badges, XP, level, and progression.                                                             |
+| Groups           | `POST /tools/steam/groups`           |    1 | Public group memberships and group metadata.                                                    |
+| Group detail     | `POST /tools/steam/group-detail`     | Free | Full group metadata and a paginated page of enriched members.                                   |
+| Content          | `POST /tools/steam/content`          |    1 | Public content counts, profile background, social links, and wishlist.                          |
+| Stats            | `POST /tools/steam/stats`            |    1 | Public CS2, TF2, Dota 2, and Rust statistics when exposed.                                      |
+| Inventory        | `POST /tools/steam/inventory`        |    1 | Public Steam Community inventory metadata.                                                      |
+| Inventory detail | `POST /tools/steam/inventory-detail` | Free | Complete asset metadata and cached Steam Market pricing.                                        |
+| All              | `POST /tools/steam/all`              |    3 | Runs all collectors and charges once.                                                           |
+
+---
+
+## Fast path
+
+Validate an identifier before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/steam/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "gaben", "type": "steam" }'
+```
+
+Use `/all` for a complete synchronous Steam result.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/steam/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "gaben", "type": "vanity" }'
+```
+
+Save the result for later retrieval:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/steam/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "76561197960287930", "type": "steam_id", "save": true }'
+```
+
+---
+
+## Detail routes
+
+Load the details for a game returned by `/games` or `/all`:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/steam/game-detail" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "gaben", "type": "vanity", "appId": 730 }'
+```
+
+The response combines Steam Store metadata, screenshots and movies, the
+player's public playtime, achievements, global completion percentages, and
+per-game statistics when the game exposes them. Private player data is listed
+in `partialErrors` while public game metadata remains available.
+
+Load one page of members for a group returned by `/groups` or `/all`:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/steam/group-detail" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "gaben", "type": "vanity", "groupId": "103582791429521412", "memberPage": 1 }'
+```
+
+The response includes group identity, avatar, description, online/in-game/chat
+counts, enriched Steam member profiles, and `pagination` with previous and
+next page numbers.
+
+Paginate a public inventory:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/steam/inventory" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "gaben", "type": "vanity", "appId": 753, "contextId": "6", "count": 100, "cursor": "123456" }'
+```
+
+Use the returned item's `assetId` and pass its `pageCursor` value as the
+request's `cursor` field for the free detail route:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/steam/inventory-detail" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "gaben", "type": "vanity", "appId": 753, "contextId": "6", "assetId": "987654", "cursor": "123456" }'
+```
+
+Inventory items include class/instance IDs, quantities, descriptions, tags,
+actions, market names, colors, warnings, and images. Marketable item details
+also expose the cached lowest price, median price, and market volume.
+
+---
+
+## Response data
+
+The `/all` response contains:
+
+- `resolve`: SteamID64, persona name, avatar, profile URL, vanity, and source type.
+- `profile`: aliases, all Steam ID formats, profile metadata, level, visibility, location, status, and current game.
+- `bans`: VAC, community, game, and economy ban signals.
+- `games`: complete public owned-game list, recent games, and total playtime.
+- `friends`: complete public friend list with profile summaries.
+- `badges`: badges, XP, level, and XP required for the next level.
+- `groups`: group names, avatars, member counts, descriptions, and URLs.
+- `content`: public profile counts, badge showcase images, background, social links, and wishlist.
+- `stats`: normalized public statistics for CS2, TF2, Dota 2, and Rust.
+- `inventory`: public item metadata, capped to 100 displayed items while preserving the provider total.
+- `partialErrors`: secondary collectors that could not return data.
+
+If the account resolver fails, `/all` returns a non-2xx error. Private profile sections do not fail the complete request: the affected field is `null` and its collector is listed in `partialErrors`.
+
+---
+
+## Availability
+
+Provider-backed routes require a Steam Web API key configured server-side. Missing credentials return `503 PROVIDER_UNAVAILABLE` without consuming usage. Public-profile visibility controls whether games, friends, badges, wishlist, statistics, and inventory are exposed.
+
+---
+
+## Caching
+
+Provider responses are cached by collector and SteamID64:
+
+- resolve, profile, bans, and friends: 30 minutes
+- games, badges, and public content: 1 hour
+- groups: 6 hours
+- game statistics and inventory: 30 minutes
+- inventory market prices: 15 minutes
+- game Store/schema metadata: 12 hours
+- player game achievements and statistics: 30 minutes
+- global achievement percentages: 6 hours
+- group detail pages: 30 minutes
+
+Cache hits reduce repeated Steam provider calls and do not change route pricing.

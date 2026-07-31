@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, and Roblox tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, Roblox, and Steam tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -44,6 +44,10 @@
     {
       "name": "Roblox",
       "description": "Direct Roblox account validation and enrichment endpoints."
+    },
+    {
+      "name": "Steam",
+      "description": "Direct Steam account validation and enrichment endpoints."
     }
   ],
   "paths": {
@@ -1459,6 +1463,424 @@
           }
         }
       }
+    },
+    "/tools/steam": {
+      "get": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "List Steam routes",
+        "operationId": "listSteamRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/steam/search": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Validate Steam search input",
+        "operationId": "runSteamSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/steam/suggestions": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam suggestions",
+        "operationId": "runSteamSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/steam/resolve": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Resolve a Steam account",
+        "operationId": "runSteamResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/profile": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam profile and aliases",
+        "operationId": "runSteamProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/bans": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam ban signals",
+        "operationId": "runSteamBans",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/games": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam games and playtime",
+        "operationId": "runSteamGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/game-detail": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam game details, achievements, and player statistics",
+        "operationId": "runSteamGameDetail",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamGameDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/friends": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam friends",
+        "operationId": "runSteamFriends",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/badges": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam badges and XP",
+        "operationId": "runSteamBadges",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/groups": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam groups",
+        "operationId": "runSteamGroups",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/group-detail": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam group details and paginated members",
+        "operationId": "runSteamGroupDetail",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamGroupDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/content": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam public content and wishlist",
+        "operationId": "runSteamContent",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/stats": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam game statistics",
+        "operationId": "runSteamStats",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/inventory": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get Steam public inventory",
+        "operationId": "runSteamInventory",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamInventoryRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/inventory-detail": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Get complete Steam inventory item details and market price",
+        "operationId": "runSteamInventoryDetail",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamInventoryDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/steam/all": {
+      "post": {
+        "tags": [
+          "Steam"
+        ],
+        "summary": "Run all Steam collectors",
+        "operationId": "runSteamAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SteamRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1481,7 +1903,8 @@
             "vehicle-history-finder",
             "xbox",
             "playstation",
-            "roblox"
+            "roblox",
+            "steam"
           ]
         }
       },
@@ -1496,6 +1919,20 @@
       }
     },
     "requestBodies": {
+      "GamingToolRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GamingToolRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "username"
+            }
+          }
+        }
+      },
       "EpicGamesRequest": {
         "required": true,
         "content": {
@@ -1575,6 +2012,67 @@
             "example": {
               "value": "some-player",
               "type": "online_id"
+            }
+          }
+        }
+      },
+      "SteamRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SteamRequest"
+            }
+          }
+        }
+      },
+      "SteamGameDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SteamGameDetailRequest"
+            },
+            "example": {
+              "value": "gaben",
+              "type": "vanity",
+              "appId": 730
+            }
+          }
+        }
+      },
+      "SteamGroupDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SteamGroupDetailRequest"
+            },
+            "example": {
+              "value": "gaben",
+              "type": "vanity",
+              "groupId": "103582791429521412",
+              "memberPage": 1
+            }
+          }
+        }
+      },
+      "SteamInventoryRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SteamInventoryRequest"
+            }
+          }
+        }
+      },
+      "SteamInventoryDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SteamInventoryDetailRequest"
             }
           }
         }
@@ -1984,7 +2482,8 @@
               "vehicle-history-finder",
               "xbox",
               "playstation",
-              "roblox"
+              "roblox",
+              "steam"
             ]
           }
         },
@@ -2520,6 +3019,221 @@
             "type": "boolean",
             "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
             "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "GamingToolRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "Roblox username, numeric user ID, or Roblox profile URL.",
+            "example": "some-player"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Roblox search type or accepted alias.",
+            "enum": [
+              "username",
+              "user_id",
+              "roblox",
+              "user",
+              "id",
+              "roblox_id",
+              "userid"
+            ],
+            "example": "username"
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "groupId": {
+            "type": "string",
+            "pattern": "^\\d+$"
+          },
+          "universeId": {
+            "type": "string",
+            "pattern": "^\\d+$"
+          },
+          "save": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "SteamIdentifier": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512,
+        "description": "Steam vanity name, SteamID2, AccountID/SteamID32, SteamID64, Steam Community profile URL, or a player URL/path ending in a numeric AccountID. Numeric identifiers are normalized to SteamID64.",
+        "example": "gaben"
+      },
+      "SteamSearchType": {
+        "type": "string",
+        "description": "Canonical Steam search type or accepted alias.",
+        "enum": [
+          "vanity",
+          "steam_id",
+          "steam",
+          "username",
+          "profile",
+          "id",
+          "steamid",
+          "steamid64"
+        ],
+        "example": "vanity"
+      },
+      "SteamRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/SteamIdentifier"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SteamSearchType"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        }
+      },
+      "SteamGameDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "appId"
+        ],
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/SteamIdentifier"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SteamSearchType"
+          },
+          "appId": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "SteamGroupDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "groupId"
+        ],
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/SteamIdentifier"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SteamSearchType"
+          },
+          "groupId": {
+            "type": "string",
+            "pattern": "^\\d{1,20}$"
+          },
+          "memberPage": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "SteamInventoryRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/SteamIdentifier"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SteamSearchType"
+          },
+          "appId": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 753
+          },
+          "contextId": {
+            "type": "string",
+            "pattern": "^\\d{1,20}$",
+            "default": "6"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500,
+            "default": 100
+          },
+          "cursor": {
+            "type": "string",
+            "pattern": "^\\d{1,30}$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SteamInventoryDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "assetId"
+        ],
+        "properties": {
+          "value": {
+            "$ref": "#/components/schemas/SteamIdentifier"
+          },
+          "type": {
+            "$ref": "#/components/schemas/SteamSearchType"
+          },
+          "appId": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 753
+          },
+          "assetId": {
+            "type": "string",
+            "pattern": "^\\d{1,30}$"
+          },
+          "contextId": {
+            "type": "string",
+            "pattern": "^\\d{1,20}$",
+            "default": "6"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 500,
+            "default": 100
+          },
+          "cursor": {
+            "type": "string",
+            "pattern": "^\\d{1,30}$"
           }
         },
         "additionalProperties": false
