@@ -24,7 +24,7 @@ Canonical types:
 
 Aliases:
 
-- `steam`, `username`, `user`, and `profile` -> `vanity`
+- `steam`, `username`, and `profile` -> `vanity`
 - `id`, `steamid`, and `steamid64` -> `steam_id`
 
 Steam Community URLs are normalized automatically:
@@ -134,7 +134,8 @@ curl -X POST "https://api.osint.ly/tools/steam/inventory" \
   -d '{ "value": "gaben", "type": "vanity", "appId": 753, "contextId": "6", "count": 100, "cursor": "123456" }'
 ```
 
-Use the returned item's `assetId` and `pageCursor` for the free detail route:
+Use the returned item's `assetId` and pass its `pageCursor` value as the
+request's `cursor` field for the free detail route:
 
 ```bash
 curl -X POST "https://api.osint.ly/tools/steam/inventory-detail" \

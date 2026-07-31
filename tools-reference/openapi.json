@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, and Roblox tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, Roblox, and Steam tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -1903,7 +1903,8 @@
             "vehicle-history-finder",
             "xbox",
             "playstation",
-            "roblox"
+            "roblox",
+            "steam"
           ]
         }
       },
@@ -1918,6 +1919,20 @@
       }
     },
     "requestBodies": {
+      "GamingToolRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/GamingToolRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "username"
+            }
+          }
+        }
+      },
       "EpicGamesRequest": {
         "required": true,
         "content": {
@@ -2324,26 +2339,6 @@
             }
           }
         }
-      },
-      "SteamInventoryRequest": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/SteamInventoryRequest"
-            }
-          }
-        }
-      },
-      "SteamInventoryDetailRequest": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/SteamInventoryDetailRequest"
-            }
-          }
-        }
       }
     },
     "schemas": {
@@ -2487,7 +2482,8 @@
               "vehicle-history-finder",
               "xbox",
               "playstation",
-              "roblox"
+              "roblox",
+              "steam"
             ]
           }
         },
@@ -3027,6 +3023,75 @@
         },
         "additionalProperties": false
       },
+      "GamingToolRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512,
+            "description": "Roblox username, numeric user ID, or Roblox profile URL.",
+            "example": "some-player"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Roblox search type or accepted alias.",
+            "enum": [
+              "username",
+              "user_id",
+              "roblox",
+              "user",
+              "id",
+              "roblox_id",
+              "userid"
+            ],
+            "example": "username"
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "groupId": {
+            "type": "string",
+            "pattern": "^\\d+$"
+          },
+          "universeId": {
+            "type": "string",
+            "pattern": "^\\d+$"
+          },
+          "save": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "SteamIdentifier": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512,
+        "description": "Steam vanity name, SteamID2, AccountID/SteamID32, SteamID64, Steam Community profile URL, or a player URL/path ending in a numeric AccountID. Numeric identifiers are normalized to SteamID64.",
+        "example": "gaben"
+      },
+      "SteamSearchType": {
+        "type": "string",
+        "description": "Canonical Steam search type or accepted alias.",
+        "enum": [
+          "vanity",
+          "steam_id",
+          "steam",
+          "username",
+          "profile",
+          "id",
+          "steamid",
+          "steamid64"
+        ],
+        "example": "vanity"
+      },
       "SteamRequest": {
         "type": "object",
         "required": [
@@ -3036,25 +3101,10 @@
         "additionalProperties": false,
         "properties": {
           "value": {
-            "type": "string",
-            "description": "Steam vanity name, SteamID2, AccountID/SteamID32, SteamID64, Steam Community profile URL, or a player URL/path ending in a numeric AccountID. Numeric identifiers are normalized to SteamID64.",
-            "example": "gaben"
+            "$ref": "#/components/schemas/SteamIdentifier"
           },
           "type": {
-            "type": "string",
-            "description": "Canonical Steam search type or accepted alias.",
-            "enum": [
-              "vanity",
-              "steam_id",
-              "steam",
-              "username",
-              "user",
-              "profile",
-              "id",
-              "steamid",
-              "steamid64"
-            ],
-            "example": "vanity"
+            "$ref": "#/components/schemas/SteamSearchType"
           },
           "save": {
             "type": "boolean",
@@ -3072,10 +3122,10 @@
         ],
         "properties": {
           "value": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamIdentifier"
           },
           "type": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamSearchType"
           },
           "appId": {
             "type": "integer",
@@ -3093,10 +3143,10 @@
         ],
         "properties": {
           "value": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamIdentifier"
           },
           "type": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamSearchType"
           },
           "groupId": {
             "type": "string",
@@ -3119,10 +3169,10 @@
         ],
         "properties": {
           "value": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamIdentifier"
           },
           "type": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamSearchType"
           },
           "appId": {
             "type": "integer",
@@ -3156,10 +3206,10 @@
         ],
         "properties": {
           "value": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamIdentifier"
           },
           "type": {
-            "type": "string"
+            "$ref": "#/components/schemas/SteamSearchType"
           },
           "appId": {
             "type": "integer",
