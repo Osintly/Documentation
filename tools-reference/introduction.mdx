@@ -7,38 +7,45 @@ icon: wrench
 The Tools API exposes focused enrichment endpoints that run immediately and return a normalized JSON response. Use tools when you need a direct lookup for one observable, without creating a full Osintly search.
 
 <CardGroup cols={2}>
-  <Card title="Domain Intelligence" icon="/images/tools/domain-intelligence.svg" href="/tools-reference/domain-intelligence">
-    Enrich domains with DNS, SSL, HTTP, WHOIS, security, subdomain, email, port, and reputation signals.
+  <Card
+    title="Epic Games"
+    icon="/images/tools/epic-games.svg"
+    href="/tools-reference/epic-games"
+  >
+    Validate and enrich Epic account identifiers, linked accounts, tags,
+    regions, creator data, friends, and achievements.
   </Card>
-  <Card title="IP Intelligence" icon="/images/tools/ip-intelligence.svg" href="/tools-reference/ip-intelligence">
-    Enrich IP addresses with geolocation, network, routing, registration, reverse DNS, ports, hosted domains, and reputation signals.
-  </Card>
-  <Card title="Epic Games" icon="/images/tools/epic-games.svg" href="/tools-reference/epic-games">
-    Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.
-  </Card>
-  <Card title="Social Club" icon="/images/tools/socialclub.svg" href="/tools-reference/socialclub">
-    Enrich Rockstar Social Club accounts with profiles, linked accounts, crews, games, and friends.
+  <Card
+    title="Vehicle History Finder"
+    icon="/images/tools/vehicle-history-finder.svg"
+    href="/tools-reference/vehicle-history-finder"
+  >
+    Enrich US VINs and French license plates with vehicle identity, history
+    signals, recalls, fluids, and capacity data.
   </Card>
   <Card title="Xbox" icon="/images/tools/xbox.svg" href="/tools-reference/xbox">
-    Enrich Xbox Live gamertags and XUIDs with profile, presence, social, games, media, clubs, and title details.
+    Enrich Xbox Live gamertags and XUIDs with profile, presence, social, games,
+    media, clubs, and title details.
   </Card>
   <Card title="Steam" icon="/images/tools/steam.svg" href="/tools-reference/steam">
-    Enrich Steam vanity names and SteamID64 values with profiles, bans, games, friends, badges, groups, content, statistics, and inventory.
+    Enrich Steam vanity names and SteamID64 values with profiles, bans, games,
+    friends, badges, groups, content, statistics, and inventory.
   </Card>
-  <Card title="PlayStation Network" icon="/images/tools/playstation.svg" href="/tools-reference/playstation">
-    Enrich PSN online IDs and account IDs with profile, presence, trophy summary, and games.
+  <Card
+    title="PlayStation Network"
+    icon="/images/tools/playstation.svg"
+    href="/tools-reference/playstation"
+  >
+    Enrich PSN online IDs and account IDs with profile, presence, trophy summary,
+    and games.
   </Card>
-  <Card title="Roblox" icon="/images/tools/roblox.svg" href="/tools-reference/roblox">
-    Enrich Roblox usernames and user IDs with profile, social, friends, groups, games, badges, and collectibles.
-  </Card>
-  <Card title="Chess.com" icon="/images/tools/chess-com.svg" href="/tools-reference/chess-com">
-    Enrich Chess.com usernames with profile, ratings, recent games, clubs, and tournaments.
-  </Card>
-  <Card title="osu!" icon="/images/tools/osu.svg" href="/tools-reference/osu">
-    Enrich osu! usernames and user IDs with profile, statistics, scores, and most played beatmaps.
-  </Card>
-  <Card title="Criminal Intelligence" icon="/images/tools/criminal-intelligence.svg" href="/tools-reference/criminal-intelligence">
-    Search Interpol, FBI Most Wanted, DOJ, SEC, and FDA enforcement records from one direct API tool.
+  <Card
+    title="Roblox"
+    icon="/images/tools/roblox.svg"
+    href="/tools-reference/roblox"
+  >
+    Enrich Roblox usernames and user IDs with profile, social, friends, groups,
+    games, badges, and collectibles.
   </Card>
 </CardGroup>
 
@@ -71,12 +78,12 @@ Tool execution requires a paid API subscription with the `tools` feature enabled
 
 ## When to use tools
 
-| Use tools when | Use Search API when |
-|---|---|
-| You already know the observable type | You need full search orchestration |
-| You want one direct enrichment response | You want module execution, streaming, and result persistence |
-| You need low-overhead API calls | You need account discovery, leaks, BYOK, or webhooks |
-| You want to call a specific signal group | You want Osintly to decide the relevant module set |
+| Use tools when                           | Use Search API when                                          |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| You already know the observable type     | You need full search orchestration                           |
+| You want one direct enrichment response  | You want module execution, streaming, and result persistence |
+| You need low-overhead API calls          | You need account discovery, leaks, BYOK, or webhooks         |
+| You want to call a specific signal group | You want Osintly to decide the relevant module set           |
 
 ---
 
@@ -86,10 +93,12 @@ Most tool responses follow the same envelope:
 
 ```json
 {
-  "tool": "domain-intelligence",
-  "operation": "dns",
+  "tool": "epic-games",
+  "operation": "resolve",
   "query": {
-    "domain": "example.com"
+    "value": "some-player",
+    "type": "epic_display_name",
+    "normalizedType": "epic_display_name"
   },
   "data": {},
   "meta": {
@@ -124,11 +133,33 @@ The complete tools catalog is also available in the Osintly dashboard at [osint.
 Every tool exposes a `costs` endpoint.
 
 ```bash
-curl -X GET "https://api.osint.ly/tools/domain-intelligence/costs" \
+curl -X GET "https://api.osint.ly/tools/epic-games/costs" \
   -H "Authorization: Bearer $OSINTLY_API_KEY"
 ```
 
 Free operations return no core-search credit charge, but still require paid Tools API access. Paid operations are priced by the route and are visible in the cost payload.
+
+The costs response contains `defaultPrice` and a `routes` array. Each route entry includes `kind`, `method`, `quantity`, and `routePattern`.
+
+```json
+{
+  "defaultPrice": null,
+  "routes": [
+    {
+      "kind": "free",
+      "method": "POST",
+      "quantity": 0,
+      "routePattern": "/search"
+    },
+    {
+      "kind": "core_search",
+      "method": "POST",
+      "quantity": 3,
+      "routePattern": "/all"
+    }
+  ]
+}
+```
 
 For gaming tools, `POST /search` is validation-only. It validates and normalizes the submitted identifier without calling the provider or consuming credits. Use `/all` or the focused enrichment routes when you want provider-backed data.
 
@@ -136,15 +167,10 @@ For gaming tools, `POST /search` is validation-only. It validates and normalizes
 
 ## Next steps
 
-1. Review [Domain Intelligence](/tools-reference/domain-intelligence)
-2. Review [IP Intelligence](/tools-reference/ip-intelligence)
-3. Review [Epic Games](/tools-reference/epic-games)
-4. Review [Social Club](/tools-reference/socialclub)
-5. Review [Xbox](/tools-reference/xbox)
-6. Review [Steam](/tools-reference/steam)
-7. Review [PlayStation Network](/tools-reference/playstation)
-8. Review [Roblox](/tools-reference/roblox)
-9. Review [Chess.com](/tools-reference/chess-com)
-10. Review [osu!](/tools-reference/osu)
-11. Review [Criminal Intelligence](/tools-reference/criminal-intelligence)
-12. Explore endpoint schemas in **Tools Endpoints**
+1. Review [Epic Games](/tools-reference/epic-games)
+2. Review [Vehicle History Finder](/tools-reference/vehicle-history-finder)
+3. Review [Xbox](/tools-reference/xbox)
+4. Review [Steam](/tools-reference/steam)
+5. Review [PlayStation Network](/tools-reference/playstation)
+6. Review [Roblox](/tools-reference/roblox)
+7. Explore endpoint schemas in **Tools Endpoints**

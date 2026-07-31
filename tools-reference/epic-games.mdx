@@ -35,18 +35,18 @@ Accepted aliases include `epic`, `epic_id`, `creator`, `psn`, `playstation`, `st
 
 ## Endpoint groups
 
-| Operation | Endpoint | Cost | Notes |
-|---|---|---:|---|
-| Search | `POST /tools/epic-games/search` | Free | Validates and normalizes only. |
-| Suggestions | `POST /tools/epic-games/suggestions` | Free | Cached autocomplete for supported username types. |
-| Resolve | `POST /tools/epic-games/resolve` | 1 | Resolves the identifier to Epic account data. |
-| Linked Accounts | `POST /tools/epic-games/linked-accounts` | 1 | Linked platform auths. |
-| Tags | `POST /tools/epic-games/tags` | 1 | Account tag metadata. |
-| Regions | `POST /tools/epic-games/regions` | 1 | Region and language signals. |
-| Friends Achievements | `POST /tools/epic-games/friends-achievements` | 2 | Friends, achievements, and social counters. |
-| Creator | `POST /tools/epic-games/creator` | 1 | Affiliate and creator islands. |
-| Profile DB | `POST /tools/epic-games/profile-db` | 1 | PennyDB profile metadata. |
-| All | `POST /tools/epic-games/all` | 3 | Runs the main collectors and charges once. |
+| Operation            | Endpoint                                      | Cost | Notes                                                          |
+| -------------------- | --------------------------------------------- | ---: | -------------------------------------------------------------- |
+| Search               | `POST /tools/epic-games/search`               | Free | Validates and normalizes only.                                 |
+| Suggestions          | `POST /tools/epic-games/suggestions`          | Free | Autocomplete for supported username types.                     |
+| Resolve              | `POST /tools/epic-games/resolve`              |    1 | Resolves the identifier to Epic account data.                  |
+| Linked Accounts      | `POST /tools/epic-games/linked-accounts`      |    1 | Linked platform auths.                                         |
+| Tags                 | `POST /tools/epic-games/tags`                 |    1 | Account tag metadata.                                          |
+| Regions              | `POST /tools/epic-games/regions`              |    1 | Region and language signals.                                   |
+| Friends Achievements | `POST /tools/epic-games/friends-achievements` |    2 | Friends, achievements, and social counters.                    |
+| Creator              | `POST /tools/epic-games/creator`              |    1 | Affiliate, creator profile, social links, and creator islands. |
+| Profile DB           | `POST /tools/epic-games/profile-db`           |    1 | profile metadata.                                              |
+| All                  | `POST /tools/epic-games/all`                  |    2 | Runs the main collectors and charges once.                     |
 
 ---
 
@@ -72,12 +72,13 @@ curl -X POST "https://api.osint.ly/tools/epic-games/all" \
 
 ---
 
-## Availability
+## Creator profile data
 
-Provider-backed routes require Epic provider authentication configured server-side. If the resolver cannot identify an account, the API returns a non-2xx error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+`POST /tools/epic-games/creator` and the `creator` section of `/all` can include a public Fortnite Creator profile in `data.profile`.
 
----
+- `profile.found` is `true` only when the provider returns a valid Fortnite Creator page.
+- When the profile is missing or invalid, `profile.found` is `false` and `profile.data` is `null`.
+- Optional public fields remain `null` when unavailable: `bio`, `followerCount`, `images.avatar`, and `images.banner`.
+- `profile.social` contains only recognized public social URLs.
 
-## Caching
-
-Provider responses are cached by collector and normalized identifier. The cache reduces repeated provider calls but does not change user-facing route pricing.
+The public profile fields are `bio`, `creatorPageUrl`, `displayName`, `followerCount`, `images`, and `title`.

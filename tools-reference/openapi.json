@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly direct enrichment tools.",
+    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, and Roblox tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -26,28 +26,16 @@
       "description": "Discover available tools, metadata, and route costs."
     },
     {
-      "name": "Domain Intelligence",
-      "description": "Direct domain enrichment endpoints."
-    },
-    {
-      "name": "IP Intelligence",
-      "description": "Direct IP address enrichment endpoints."
-    },
-    {
       "name": "Epic Games",
       "description": "Direct Epic Games account validation and enrichment endpoints."
     },
     {
-      "name": "Social Club",
-      "description": "Direct Rockstar Social Club account validation and enrichment endpoints."
+      "name": "Vehicle History Finder",
+      "description": "Vehicle history enrichment endpoints for US VINs and French license plates."
     },
     {
       "name": "Xbox",
       "description": "Direct Xbox Live account validation and enrichment endpoints."
-    },
-    {
-      "name": "Steam",
-      "description": "Direct Steam account validation and enrichment endpoints."
     },
     {
       "name": "PlayStation Network",
@@ -55,25 +43,19 @@
     },
     {
       "name": "Roblox",
-      "description": "Roblox account validation and enrichment endpoints."
+      "description": "Direct Roblox account validation and enrichment endpoints."
     },
     {
-      "name": "Chess.com",
-      "description": "Chess.com account validation and enrichment endpoints."
-    },
-    {
-      "name": "osu!",
-      "description": "osu! account validation and enrichment endpoints."
-    },
-    {
-      "name": "Criminal Intelligence",
-      "description": "Criminal, law-enforcement, and regulatory enforcement intelligence endpoints."
+      "name": "Steam",
+      "description": "Direct Steam account validation and enrichment endpoints."
     }
   ],
   "paths": {
     "/tools": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "List tools",
         "description": "List tools available to the authenticated account.",
         "operationId": "listTools",
@@ -97,7 +79,12 @@
                 },
                 {
                   "type": "string",
-                  "enum": ["true", "false", "1", "0"]
+                  "enum": [
+                    "true",
+                    "false",
+                    "1",
+                    "0"
+                  ]
                 }
               ],
               "default": false
@@ -163,7 +150,10 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": ["preview", "full"],
+              "enum": [
+                "preview",
+                "full"
+              ],
               "default": "full"
             }
           }
@@ -180,35 +170,27 @@
                 "example": {
                   "data": [
                     {
-                      "name": "Domain Intelligence",
-                      "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
-                      "image": "/images/tools/domain-intelligence.svg",
-                      "routePath": "/domain-intelligence",
-                      "categories": ["Infrastructure", "Reputation"],
-                      "featured": true
-                    },
-                    {
-                      "name": "IP Intelligence",
-                      "description": "Investigate IP geolocation, network ownership, routing, registration, reverse DNS, exposed services, hosted domains, and reputation signals.",
-                      "image": "/images/tools/ip-intelligence.svg",
-                      "routePath": "/ip-intelligence",
-                      "categories": ["Infrastructure", "Reputation"],
-                      "featured": true
-                    },
-                    {
                       "name": "Epic Games",
                       "description": "Validate and enrich Epic account identifiers, linked accounts, tags, regions, creator data, friends, and achievements.",
                       "image": "/images/tools/epic-games.svg",
                       "routePath": "/epic-games",
-                      "categories": ["Gaming", "Accounts", "Social"],
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
                       "featured": false
                     },
                     {
-                      "name": "Social Club",
-                      "description": "Validate and enrich Rockstar Social Club account intelligence, including profiles, linked accounts, crews, games, and friends.",
-                      "image": "/images/tools/socialclub.svg",
-                      "routePath": "/socialclub",
-                      "categories": ["Gaming", "Accounts", "Social"],
+                      "name": "Vehicle History Finder",
+                      "description": "Vehicle history enrichment endpoints for US VINs and French license plates.",
+                      "image": "/images/tools/vehicle-history-finder.svg",
+                      "routePath": "/vehicle-history-finder",
+                      "categories": [
+                        "Automotive",
+                        "History",
+                        "VIN"
+                      ],
                       "featured": false
                     },
                     {
@@ -216,7 +198,11 @@
                       "description": "Validate and enrich Xbox Live account intelligence, including profiles, presence, social metadata, games, media, clubs, and title achievements.",
                       "image": "/images/tools/xbox.svg",
                       "routePath": "/xbox",
-                      "categories": ["Gaming", "Accounts", "Social"],
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
                       "featured": false
                     },
                     {
@@ -224,7 +210,11 @@
                       "description": "Validate and enrich PlayStation Network account intelligence, including profiles, presence, trophies, and games.",
                       "image": "/images/tools/playstation.svg",
                       "routePath": "/playstation",
-                      "categories": ["Gaming", "Accounts", "Social"],
+                      "categories": [
+                        "Gaming",
+                        "Accounts",
+                        "Social"
+                      ],
                       "featured": false
                     },
                     {
@@ -232,35 +222,10 @@
                       "description": "Validate and enrich Roblox account intelligence, including profiles, social counts, friends, groups, games, badges, and collectibles.",
                       "image": "/images/tools/roblox.svg",
                       "routePath": "/roblox",
-                      "categories": ["Gaming", "Accounts", "Social"],
-                      "featured": false
-                    },
-                    {
-                      "name": "Chess.com",
-                      "description": "Validate and enrich Chess.com account intelligence, including profiles, ratings, games, clubs, and tournaments.",
-                      "image": "/images/tools/chess-com.svg",
-                      "routePath": "/chess-com",
-                      "categories": ["Gaming", "Accounts", "Social"],
-                      "featured": false
-                    },
-                    {
-                      "name": "osu!",
-                      "description": "Validate and enrich osu! account intelligence, including profiles, statistics, scores, and most played beatmaps.",
-                      "image": "/images/tools/osu.svg",
-                      "routePath": "/osu",
-                      "categories": ["Gaming", "Accounts", "Social"],
-                      "featured": false
-                    },
-                    {
-                      "name": "Criminal Intelligence",
-                      "description": "Search public criminal, law-enforcement, and regulatory enforcement sources, including Interpol, FBI Most Wanted, DOJ, SEC, and FDA records.",
-                      "image": "/images/tools/criminal-intelligence.svg",
-                      "routePath": "/criminal-intelligence",
                       "categories": [
-                        "OSINT",
-                        "Legal",
-                        "Enforcement",
-                        "Compliance"
+                        "Gaming",
+                        "Accounts",
+                        "Social"
                       ],
                       "featured": false
                     }
@@ -268,7 +233,7 @@
                   "meta": {
                     "page": 1,
                     "limit": 250,
-                    "total": 6,
+                    "total": 5,
                     "timestamp": "2026-06-28T12:00:00.000Z"
                   }
                 }
@@ -286,7 +251,9 @@
     },
     "/tools/{tool}/infos": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "Get tool info",
         "description": "Read public metadata for one tool.",
         "operationId": "getToolInfo",
@@ -304,10 +271,10 @@
                   "$ref": "#/components/schemas/ToolInfo"
                 },
                 "example": {
-                  "name": "Domain Intelligence",
-                  "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
-                  "image": "/images/tools/domain-intelligence.svg",
-                  "routePath": "/domain-intelligence"
+                  "name": "Epic Games",
+                  "description": "Direct Epic Games account validation and enrichment endpoints.",
+                  "image": "/images/tools/epic-games.svg",
+                  "routePath": "/epic-games"
                 }
               }
             }
@@ -326,7 +293,9 @@
     },
     "/tools/{tool}/costs": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "Get tool route costs",
         "description": "Read per-route pricing for one tool.",
         "operationId": "getToolCosts",
@@ -354,21 +323,45 @@
                       "type": "free",
                       "credits": 0
                     },
-                    "POST /dns": {
+                    "POST /search": {
                       "type": "free",
                       "credits": 0
                     },
-                    "POST /ssl": {
+                    "POST /suggestions": {
                       "type": "free",
                       "credits": 0
+                    },
+                    "POST /resolve": {
+                      "type": "core-search",
+                      "credits": 1
+                    },
+                    "POST /linked-accounts": {
+                      "type": "core-search",
+                      "credits": 1
+                    },
+                    "POST /tags": {
+                      "type": "core-search",
+                      "credits": 1
+                    },
+                    "POST /regions": {
+                      "type": "core-search",
+                      "credits": 1
+                    },
+                    "POST /friends-achievements": {
+                      "type": "core-search",
+                      "credits": 2
+                    },
+                    "POST /creator": {
+                      "type": "core-search",
+                      "credits": 1
+                    },
+                    "POST /profile-db": {
+                      "type": "core-search",
+                      "credits": 1
                     },
                     "POST /all": {
                       "type": "core-search",
-                      "credits": 1
-                    },
-                    "POST /reputation": {
-                      "type": "core-search",
-                      "credits": 1
+                      "credits": 3
                     }
                   }
                 }
@@ -386,7 +379,9 @@
     },
     "/tools/results/{id}": {
       "get": {
-        "tags": ["Tools Catalog"],
+        "tags": [
+          "Tools Catalog"
+        ],
         "summary": "Get a saved tool result",
         "description": "Retrieve a payload saved from a synchronous `/tools/<tool>/all` request with `save: true`.",
         "operationId": "getSavedToolResult",
@@ -411,441 +406,11 @@
         }
       }
     },
-    "/tools/domain-intelligence": {
-      "get": {
-        "tags": ["Domain Intelligence"],
-        "summary": "List Domain Intelligence routes",
-        "operationId": "listDomainIntelligenceRoutes",
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ToolRouteIndex"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/all": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Run all domain intelligence collectors",
-        "operationId": "runDomainAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/dns": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Get domain DNS intelligence",
-        "operationId": "runDomainDns",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/http": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Get domain HTTP intelligence",
-        "operationId": "runDomainHttp",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/ssl": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Get domain SSL intelligence",
-        "operationId": "runDomainSsl",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/technologies": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Detect domain technology hints",
-        "operationId": "runDomainTechnologies",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/whois": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Get domain registration intelligence",
-        "operationId": "runDomainWhois",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/security": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Get domain security signals",
-        "operationId": "runDomainSecurity",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/risk": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Calculate domain risk signals",
-        "operationId": "runDomainRisk",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/subdomains": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Discover domain subdomains",
-        "operationId": "runDomainSubdomains",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/emails": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Extract domain email signals",
-        "operationId": "runDomainEmails",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/ports": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Scan domain ports",
-        "operationId": "runDomainPorts",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/domain-intelligence/reputation": {
-      "post": {
-        "tags": ["Domain Intelligence"],
-        "summary": "Get domain reputation signals",
-        "operationId": "runDomainReputation",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DomainRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/DomainToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence": {
-      "get": {
-        "tags": ["IP Intelligence"],
-        "summary": "List IP Intelligence routes",
-        "operationId": "listIpIntelligenceRoutes",
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ToolRouteIndex"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/all": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Run all IP intelligence collectors",
-        "operationId": "runIpAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/geo": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get IP geolocation intelligence",
-        "operationId": "runIpGeo",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/network": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get IP network intelligence",
-        "operationId": "runIpNetwork",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/bgp": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get IP BGP intelligence",
-        "operationId": "runIpBgp",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/whois": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get IP registration intelligence",
-        "operationId": "runIpWhois",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/rdns": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get IP reverse DNS intelligence",
-        "operationId": "runIpRdns",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/risk": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Calculate IP risk signals",
-        "operationId": "runIpRisk",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/ports": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get IP exposed ports and vulnerability hints",
-        "operationId": "runIpPorts",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/reputation": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get IP reputation signals",
-        "operationId": "runIpReputation",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/ip-intelligence/hosted-domains": {
-      "post": {
-        "tags": ["IP Intelligence"],
-        "summary": "Get hosted domains for an IP",
-        "operationId": "runIpHostedDomains",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/IpRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/IpToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
     "/tools/epic-games": {
       "get": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "List Epic Games routes",
         "operationId": "listEpicGamesRoutes",
         "responses": {
@@ -857,11 +422,13 @@
     },
     "/tools/epic-games/search": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Validate Epic Games search input",
         "operationId": "runEpicGamesSearch",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -875,11 +442,13 @@
     },
     "/tools/epic-games/suggestions": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games suggestions",
         "operationId": "runEpicGamesSuggestions",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -893,11 +462,13 @@
     },
     "/tools/epic-games/resolve": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Resolve Epic Games account",
         "operationId": "runEpicGamesResolve",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -914,11 +485,13 @@
     },
     "/tools/epic-games/linked-accounts": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games linked accounts",
         "operationId": "runEpicGamesLinkedAccounts",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -935,11 +508,13 @@
     },
     "/tools/epic-games/tags": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games account tags",
         "operationId": "runEpicGamesTags",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -956,11 +531,13 @@
     },
     "/tools/epic-games/regions": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games region signals",
         "operationId": "runEpicGamesRegions",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -977,11 +554,13 @@
     },
     "/tools/epic-games/friends-achievements": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games friends and achievements",
         "operationId": "runEpicGamesFriendsAchievements",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -998,15 +577,17 @@
     },
     "/tools/epic-games/creator": {
       "post": {
-        "tags": ["Epic Games"],
-        "summary": "Get Epic Games creator data",
+        "tags": [
+          "Epic Games"
+        ],
+        "summary": "Get Epic Games creator and public profile data",
         "operationId": "runEpicGamesCreator",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/EpicGamesCreatorResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -1019,11 +600,13 @@
     },
     "/tools/epic-games/profile-db": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Get Epic Games profile database data",
         "operationId": "runEpicGamesProfileDb",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -1040,206 +623,13 @@
     },
     "/tools/epic-games/all": {
       "post": {
-        "tags": ["Epic Games"],
+        "tags": [
+          "Epic Games"
+        ],
         "summary": "Run all Epic Games collectors",
         "operationId": "runEpicGamesAll",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/socialclub": {
-      "get": {
-        "tags": ["Social Club"],
-        "summary": "List Social Club routes",
-        "operationId": "listSocialClubRoutes",
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ToolRouteIndex"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/search": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Validate Social Club search input",
-        "operationId": "runSocialClubSearch",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/suggestions": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Get Social Club suggestions",
-        "operationId": "runSocialClubSuggestions",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/resolve": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Resolve Social Club account",
-        "operationId": "runSocialClubResolve",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/profile": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Get Social Club profile",
-        "operationId": "runSocialClubProfile",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/linked-accounts": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Get Social Club linked accounts",
-        "operationId": "runSocialClubLinkedAccounts",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/crews": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Get Social Club crews",
-        "operationId": "runSocialClubCrews",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/games": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Get Social Club games",
-        "operationId": "runSocialClubGames",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/friends": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Get Social Club friends",
-        "operationId": "runSocialClubFriends",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/socialclub/all": {
-      "post": {
-        "tags": ["Social Club"],
-        "summary": "Run all Social Club collectors",
-        "operationId": "runSocialClubAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/EpicGamesRequest"
         },
         "responses": {
           "200": {
@@ -1256,7 +646,9 @@
     },
     "/tools/xbox": {
       "get": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "List Xbox routes",
         "operationId": "listXboxRoutes",
         "responses": {
@@ -1268,11 +660,13 @@
     },
     "/tools/xbox/search": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Validate Xbox search input",
         "operationId": "runXboxSearch",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1286,11 +680,13 @@
     },
     "/tools/xbox/suggestions": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox suggestions",
         "operationId": "runXboxSuggestions",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1304,11 +700,13 @@
     },
     "/tools/xbox/resolve": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Resolve Xbox account",
         "operationId": "runXboxResolve",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1325,11 +723,13 @@
     },
     "/tools/xbox/profile": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox profile",
         "operationId": "runXboxProfile",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1346,11 +746,13 @@
     },
     "/tools/xbox/presence": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox presence",
         "operationId": "runXboxPresence",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1367,11 +769,13 @@
     },
     "/tools/xbox/social": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox social data",
         "operationId": "runXboxSocial",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1388,11 +792,13 @@
     },
     "/tools/xbox/linked-accounts": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox linked accounts",
         "operationId": "runXboxLinkedAccounts",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1409,11 +815,13 @@
     },
     "/tools/xbox/games": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox games",
         "operationId": "runXboxGames",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1430,11 +838,13 @@
     },
     "/tools/xbox/media": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox media",
         "operationId": "runXboxMedia",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1451,206 +861,13 @@
     },
     "/tools/xbox/clubs": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox clubs",
         "operationId": "runXboxClubs",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/xbox/all": {
-      "post": {
-        "tags": ["Xbox"],
-        "summary": "Run all Xbox collectors",
-        "operationId": "runXboxAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/playstation": {
-      "get": {
-        "tags": ["PlayStation Network"],
-        "summary": "List PlayStation Network routes",
-        "operationId": "listPlayStationRoutes",
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ToolRouteIndex"
-          }
-        }
-      }
-    },
-    "/tools/playstation/search": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Validate PlayStation Network search input",
-        "operationId": "runPlayStationSearch",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/playstation/suggestions": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Get PlayStation Network suggestions",
-        "operationId": "runPlayStationSuggestions",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/playstation/resolve": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Resolve PlayStation Network account",
-        "operationId": "runPlayStationResolve",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/playstation/profile": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Get PlayStation Network profile",
-        "operationId": "runPlayStationProfile",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/playstation/presence": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Get PlayStation Network presence",
-        "operationId": "runPlayStationPresence",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/playstation/trophy-summary": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Get PlayStation Network trophy summary",
-        "operationId": "runPlayStationTrophySummary",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/playstation/games": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Get PlayStation Network games",
-        "operationId": "runPlayStationGames",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/playstation/all": {
-      "post": {
-        "tags": ["PlayStation Network"],
-        "summary": "Run all PlayStation Network collectors",
-        "operationId": "runPlayStationAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/XboxRequest"
         },
         "responses": {
           "200": {
@@ -1667,7 +884,9 @@
     },
     "/tools/xbox/title-detail": {
       "post": {
-        "tags": ["Xbox"],
+        "tags": [
+          "Xbox"
+        ],
         "summary": "Get Xbox title detail and achievements",
         "operationId": "runXboxTitleDetail",
         "requestBody": {
@@ -1686,9 +905,226 @@
         }
       }
     },
+    "/tools/xbox/all": {
+      "post": {
+        "tags": [
+          "Xbox"
+        ],
+        "summary": "Run all Xbox collectors",
+        "operationId": "runXboxAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation": {
+      "get": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "List PlayStation Network routes",
+        "operationId": "listPlayStationRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/playstation/search": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Validate PlayStation Network search input",
+        "operationId": "runPlayStationSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/playstation/suggestions": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network suggestions",
+        "operationId": "runPlayStationSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/playstation/resolve": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Resolve PlayStation Network account",
+        "operationId": "runPlayStationResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/profile": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network profile",
+        "operationId": "runPlayStationProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/presence": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network presence",
+        "operationId": "runPlayStationPresence",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/trophy-summary": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network trophy summary",
+        "operationId": "runPlayStationTrophySummary",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/games": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network games",
+        "operationId": "runPlayStationGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/playstation/all": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Run all PlayStation Network collectors",
+        "operationId": "runPlayStationAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
     "/tools/roblox": {
       "get": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "List Roblox routes",
         "operationId": "listRobloxRoutes",
         "responses": {
@@ -1700,7 +1136,9 @@
     },
     "/tools/roblox/search": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Validate Roblox search input",
         "operationId": "runRobloxSearch",
         "requestBody": {
@@ -1718,7 +1156,9 @@
     },
     "/tools/roblox/resolve": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Resolve Roblox account",
         "operationId": "runRobloxResolve",
         "requestBody": {
@@ -1739,7 +1179,9 @@
     },
     "/tools/roblox/profile": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Get Roblox profile",
         "operationId": "runRobloxProfile",
         "requestBody": {
@@ -1760,7 +1202,9 @@
     },
     "/tools/roblox/social": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Get Roblox social counts",
         "operationId": "runRobloxSocial",
         "requestBody": {
@@ -1781,7 +1225,9 @@
     },
     "/tools/roblox/friends": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Get Roblox friends sample",
         "operationId": "runRobloxFriends",
         "requestBody": {
@@ -1802,7 +1248,9 @@
     },
     "/tools/roblox/groups": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Get Roblox groups",
         "operationId": "runRobloxGroups",
         "requestBody": {
@@ -1823,7 +1271,9 @@
     },
     "/tools/roblox/games": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Get Roblox games",
         "operationId": "runRobloxGames",
         "requestBody": {
@@ -1844,7 +1294,9 @@
     },
     "/tools/roblox/badges": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Get Roblox badges",
         "operationId": "runRobloxBadges",
         "requestBody": {
@@ -1865,7 +1317,9 @@
     },
     "/tools/roblox/collectibles": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Get Roblox collectibles",
         "operationId": "runRobloxCollectibles",
         "requestBody": {
@@ -1886,7 +1340,9 @@
     },
     "/tools/roblox/all": {
       "post": {
-        "tags": ["Roblox"],
+        "tags": [
+          "Roblox"
+        ],
         "summary": "Run all Roblox collectors",
         "operationId": "runRobloxAll",
         "requestBody": {
@@ -1905,11 +1361,13 @@
         }
       }
     },
-    "/tools/chess-com": {
+    "/tools/vehicle-history-finder": {
       "get": {
-        "tags": ["Chess.com"],
-        "summary": "List ChessCom routes",
-        "operationId": "listChessComRoutes",
+        "tags": [
+          "Vehicle History Finder"
+        ],
+        "summary": "List Vehicle History Finder routes",
+        "operationId": "listVehicleHistoryFinderRoutes",
         "responses": {
           "200": {
             "$ref": "#/components/responses/ToolRouteIndex"
@@ -1917,17 +1375,19 @@
         }
       }
     },
-    "/tools/chess-com/search": {
+    "/tools/vehicle-history-finder/search": {
       "post": {
-        "tags": ["Chess.com"],
-        "summary": "Validate Chess.com search input",
-        "operationId": "runChesscomSearch",
+        "tags": [
+          "Vehicle History Finder"
+        ],
+        "summary": "Validate Vehicle History Finder input",
+        "operationId": "runVehicleHistoryFinderSearch",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -1935,35 +1395,19 @@
         }
       }
     },
-    "/tools/chess-com/suggestions": {
+    "/tools/vehicle-history-finder/vin": {
       "post": {
-        "tags": ["Chess.com"],
-        "summary": "Get Chess.com suggestions",
-        "operationId": "runChesscomSuggestions",
+        "tags": [
+          "Vehicle History Finder"
+        ],
+        "summary": "Run Vehicle History Finder VIN collector",
+        "operationId": "runVehicleHistoryFinderVin",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/chess-com/resolve": {
-      "post": {
-        "tags": ["Chess.com"],
-        "summary": "Resolve Chess.com account",
-        "operationId": "runChesscomResolve",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -1974,17 +1418,19 @@
         }
       }
     },
-    "/tools/chess-com/profile": {
+    "/tools/vehicle-history-finder/plate-fr": {
       "post": {
-        "tags": ["Chess.com"],
-        "summary": "Get Chess.com profile",
-        "operationId": "runChesscomProfile",
+        "tags": [
+          "Vehicle History Finder"
+        ],
+        "summary": "Run Vehicle History Finder French plate collector",
+        "operationId": "runVehicleHistoryFinderPlateFr",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -1995,431 +1441,19 @@
         }
       }
     },
-    "/tools/chess-com/ratings": {
+    "/tools/vehicle-history-finder/all": {
       "post": {
-        "tags": ["Chess.com"],
-        "summary": "Get Chess.com ratings",
-        "operationId": "runChesscomRatings",
+        "tags": [
+          "Vehicle History Finder"
+        ],
+        "summary": "Run Vehicle History Finder collector by input type",
+        "operationId": "runVehicleHistoryFinderAll",
         "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
+          "$ref": "#/components/requestBodies/VehicleHistoryFinderRequest"
         },
         "responses": {
           "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/chess-com/games": {
-      "post": {
-        "tags": ["Chess.com"],
-        "summary": "Get Chess.com recent games",
-        "operationId": "runChesscomGames",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/chess-com/clubs": {
-      "post": {
-        "tags": ["Chess.com"],
-        "summary": "Get Chess.com clubs",
-        "operationId": "runChesscomClubs",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/chess-com/tournaments": {
-      "post": {
-        "tags": ["Chess.com"],
-        "summary": "Get Chess.com tournaments",
-        "operationId": "runChesscomTournaments",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/chess-com/all": {
-      "post": {
-        "tags": ["Chess.com"],
-        "summary": "Run all Chess.com collectors",
-        "operationId": "runChesscomAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/osu": {
-      "get": {
-        "tags": ["osu!"],
-        "summary": "List Osu routes",
-        "operationId": "listOsuRoutes",
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ToolRouteIndex"
-          }
-        }
-      }
-    },
-    "/tools/osu/search": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Validate osu! search input",
-        "operationId": "runosuSearch",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/osu/suggestions": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Get osu! user suggestions",
-        "operationId": "runosuSuggestions",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/osu/resolve": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Resolve osu! account",
-        "operationId": "runosuResolve",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/osu/profile": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Get osu! profile",
-        "operationId": "runosuProfile",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/osu/statistics": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Get osu! statistics",
-        "operationId": "runosuStatistics",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/osu/scores": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Get osu! scores",
-        "operationId": "runosuScores",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/osu/most-played": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Get osu! most played beatmaps",
-        "operationId": "runosuMostPlayed",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/osu/all": {
-      "post": {
-        "tags": ["osu!"],
-        "summary": "Run all osu! collectors",
-        "operationId": "runosuAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/GamingToolRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence": {
-      "get": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "List Criminal Intelligence routes",
-        "operationId": "listCriminalIntelligenceRoutes",
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/ToolRouteIndex"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence/search": {
-      "post": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "Validate Criminal Intelligence search input",
-        "operationId": "runCriminalIntelligenceSearch",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence/interpol": {
-      "post": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "Search Interpol notices",
-        "operationId": "runCriminalIntelligenceInterpol",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence/fbi-wanted": {
-      "post": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "Search FBI Most Wanted records",
-        "operationId": "runCriminalIntelligenceFbiWanted",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence/doj": {
-      "post": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "Search DOJ enforcement releases",
-        "operationId": "runCriminalIntelligenceDoj",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence/sec": {
-      "post": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "Search SEC EDGAR records",
-        "operationId": "runCriminalIntelligenceSec",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence/fda": {
-      "post": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "Search FDA enforcement and recall records",
-        "operationId": "runCriminalIntelligenceFda",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
-          },
-          "400": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "503": {
-            "$ref": "#/components/responses/ProviderUnavailable"
-          }
-        }
-      }
-    },
-    "/tools/criminal-intelligence/all": {
-      "post": {
-        "tags": ["Criminal Intelligence"],
-        "summary": "Run all Criminal Intelligence collectors",
-        "operationId": "runCriminalIntelligenceAll",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/CriminalIntelligenceRequest"
-        },
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/GamingToolResponse"
+            "$ref": "#/components/responses/VehicleHistoryFinderResponse"
           },
           "400": {
             "$ref": "#/components/responses/ValidationError"
@@ -2432,7 +1466,9 @@
     },
     "/tools/steam": {
       "get": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "List Steam routes",
         "operationId": "listSteamRoutes",
         "responses": {
@@ -2444,7 +1480,9 @@
     },
     "/tools/steam/search": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Validate Steam search input",
         "operationId": "runSteamSearch",
         "requestBody": {
@@ -2462,7 +1500,9 @@
     },
     "/tools/steam/suggestions": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam suggestions",
         "operationId": "runSteamSuggestions",
         "requestBody": {
@@ -2480,7 +1520,9 @@
     },
     "/tools/steam/resolve": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Resolve a Steam account",
         "operationId": "runSteamResolve",
         "requestBody": {
@@ -2504,7 +1546,9 @@
     },
     "/tools/steam/profile": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam profile and aliases",
         "operationId": "runSteamProfile",
         "requestBody": {
@@ -2528,7 +1572,9 @@
     },
     "/tools/steam/bans": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam ban signals",
         "operationId": "runSteamBans",
         "requestBody": {
@@ -2552,7 +1598,9 @@
     },
     "/tools/steam/games": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam games and playtime",
         "operationId": "runSteamGames",
         "requestBody": {
@@ -2576,7 +1624,9 @@
     },
     "/tools/steam/game-detail": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam game details, achievements, and player statistics",
         "operationId": "runSteamGameDetail",
         "requestBody": {
@@ -2600,7 +1650,9 @@
     },
     "/tools/steam/friends": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam friends",
         "operationId": "runSteamFriends",
         "requestBody": {
@@ -2624,7 +1676,9 @@
     },
     "/tools/steam/badges": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam badges and XP",
         "operationId": "runSteamBadges",
         "requestBody": {
@@ -2648,7 +1702,9 @@
     },
     "/tools/steam/groups": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam groups",
         "operationId": "runSteamGroups",
         "requestBody": {
@@ -2672,7 +1728,9 @@
     },
     "/tools/steam/group-detail": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam group details and paginated members",
         "operationId": "runSteamGroupDetail",
         "requestBody": {
@@ -2696,7 +1754,9 @@
     },
     "/tools/steam/content": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam public content and wishlist",
         "operationId": "runSteamContent",
         "requestBody": {
@@ -2720,7 +1780,9 @@
     },
     "/tools/steam/stats": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam game statistics",
         "operationId": "runSteamStats",
         "requestBody": {
@@ -2744,7 +1806,9 @@
     },
     "/tools/steam/inventory": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get Steam public inventory",
         "operationId": "runSteamInventory",
         "requestBody": {
@@ -2768,7 +1832,9 @@
     },
     "/tools/steam/inventory-detail": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Get complete Steam inventory item details and market price",
         "operationId": "runSteamInventoryDetail",
         "requestBody": {
@@ -2792,7 +1858,9 @@
     },
     "/tools/steam/all": {
       "post": {
-        "tags": ["Steam"],
+        "tags": [
+          "Steam"
+        ],
         "summary": "Run all Steam collectors",
         "operationId": "runSteamAll",
         "requestBody": {
@@ -2831,13 +1899,11 @@
         "schema": {
           "type": "string",
           "enum": [
-            "domain-intelligence",
-            "ip-intelligence",
             "epic-games",
-            "socialclub",
+            "vehicle-history-finder",
             "xbox",
             "playstation",
-            "steam"
+            "roblox"
           ]
         }
       },
@@ -2852,42 +1918,30 @@
       }
     },
     "requestBodies": {
-      "DomainRequest": {
+      "EpicGamesRequest": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/DomainRequest"
-            },
-            "example": {
-              "domain": "example.com"
-            }
-          }
-        }
-      },
-      "IpRequest": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/IpRequest"
-            },
-            "example": {
-              "ip": "8.8.8.8"
-            }
-          }
-        }
-      },
-      "GamingToolRequest": {
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/GamingToolRequest"
+              "$ref": "#/components/schemas/EpicGamesRequest"
             },
             "example": {
               "value": "some-player",
-              "type": "username"
+              "type": "epic_display_name"
+            }
+          }
+        }
+      },
+      "XboxRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/XboxRequest"
+            },
+            "example": {
+              "value": "SomeGamertag",
+              "type": "gamertag"
             }
           }
         }
@@ -2907,12 +1961,42 @@
           }
         }
       },
-      "CriminalIntelligenceRequest": {
+      "VehicleHistoryFinderRequest": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/CriminalIntelligenceRequest"
+              "$ref": "#/components/schemas/VehicleHistoryFinderRequest"
+            },
+            "examples": {
+              "plateFr": {
+                "summary": "French license plate",
+                "value": {
+                  "value": "AB-123-CD",
+                  "type": "plate_fr"
+                }
+              },
+              "vin": {
+                "summary": "US VIN",
+                "value": {
+                  "value": "1HGCM82633A004352",
+                  "type": "vin"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PlayStationRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PlayStationRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "online_id"
             }
           }
         }
@@ -2989,99 +2073,58 @@
               "additionalProperties": true
             },
             "example": {
-              "tool": "domain-intelligence",
+              "tool": "epic-games",
               "operation": "index",
               "query": {
-                "domain": "domain-intelligence"
+                "tool": "epic-games"
               },
               "data": {
                 "routes": [
                   {
                     "method": "GET",
-                    "path": "/tools/domain-intelligence/costs"
-                  },
-                  {
-                    "method": "GET",
-                    "path": "/tools/domain-intelligence/infos"
+                    "path": "/tools/epic-games"
                   },
                   {
                     "method": "POST",
-                    "path": "/tools/domain-intelligence/dns"
+                    "path": "/tools/epic-games/search"
                   },
                   {
                     "method": "POST",
-                    "path": "/tools/domain-intelligence/reputation"
+                    "path": "/tools/epic-games/suggestions"
                   },
                   {
                     "method": "POST",
-                    "path": "/tools/domain-intelligence/all"
+                    "path": "/tools/epic-games/resolve"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/linked-accounts"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/tags"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/regions"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/friends-achievements"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/creator"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/profile-db"
+                  },
+                  {
+                    "method": "POST",
+                    "path": "/tools/epic-games/all"
                   }
                 ]
-              },
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "DomainToolResponse": {
-        "description": "Domain tool response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/DomainToolResponse"
-            },
-            "example": {
-              "tool": "domain-intelligence",
-              "operation": "dns",
-              "query": {
-                "domain": "example.com"
-              },
-              "data": {
-                "primaryIp": "93.184.216.34",
-                "records": {
-                  "A": ["93.184.216.34"],
-                  "AAAA": [],
-                  "MX": [],
-                  "TXT": ["v=spf1 -all"]
-                },
-                "dnssec": {
-                  "authenticated": false,
-                  "dsPresent": false
-                },
-                "emailAuth": {
-                  "spf": "v=spf1 -all",
-                  "dmarc": null,
-                  "dkim": []
-                }
-              },
-              "meta": {
-                "timestamp": "2026-06-28T12:00:00.000Z"
-              }
-            }
-          }
-        }
-      },
-      "IpToolResponse": {
-        "description": "IP tool response",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/IpToolResponse"
-            },
-            "example": {
-              "tool": "ip-intelligence",
-              "operation": "ports",
-              "query": {
-                "ip": "8.8.8.8"
-              },
-              "data": {
-                "ports": [53, 443],
-                "tags": ["dns"],
-                "hostnames": ["dns.google"],
-                "cpes": [],
-                "vulns": []
               },
               "meta": {
                 "timestamp": "2026-06-28T12:00:00.000Z"
@@ -3103,8 +2146,8 @@
                 "message": "Invalid request body",
                 "details": [
                   {
-                    "path": "domain",
-                    "message": "Invalid domain"
+                    "path": "value",
+                    "message": "Invalid value"
                   }
                 ]
               },
@@ -3176,7 +2219,7 @@
         }
       },
       "NotFound": {
-        "description": "Tool not found",
+        "description": "Resource not found",
         "content": {
           "application/json": {
             "schema": {
@@ -3185,7 +2228,7 @@
             "example": {
               "error": {
                 "code": "NOT_FOUND",
-                "message": "Tool not found"
+                "message": "Not found"
               },
               "meta": {
                 "timestamp": "2026-06-28T12:00:00.000Z"
@@ -3195,21 +2238,72 @@
         }
       },
       "GamingToolResponse": {
-        "description": "Gaming tool response",
+        "description": "Tool response",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/GamingToolResponse"
             },
             "example": {
-              "tool": "xbox",
-              "operation": "resolve",
+              "tool": "epic-games",
+              "operation": "search",
               "query": {
-                "value": "SomeGamertag",
-                "type": "gamertag",
-                "normalizedType": "gamertag"
+                "value": "some-player",
+                "type": "epic_display_name"
               },
               "data": {},
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "EpicGamesCreatorResponse": {
+        "description": "Epic Games creator response. Creator profile fields are public and nullable when unavailable.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EpicGamesCreatorResponse"
+            }
+          }
+        }
+      },
+      "VehicleHistoryFinderResponse": {
+        "description": "Vehicle history finder response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/VehicleHistoryFinderResponse"
+            },
+            "example": {
+              "tool": "vehicle-history-finder",
+              "operation": "vin",
+              "query": {
+                "value": "1HGCM82633A004352",
+                "type": "vin"
+              },
+              "data": {
+                "vehicle": {
+                  "found": true,
+                  "presentation": {
+                    "title": "Honda Accord 2003",
+                    "make": "Honda",
+                    "model": "Accord",
+                    "year": 2003,
+                    "bodyClass": "Sedan",
+                    "engine": "2.4L L4"
+                  }
+                },
+                "castrol": {
+                  "metadata": null
+                },
+                "nhtsa": {
+                  "recalls": [],
+                  "complaints": [],
+                  "safetyRatings": []
+                }
+              },
               "meta": {
                 "timestamp": "2026-06-28T12:00:00.000Z"
               }
@@ -3222,27 +2316,11 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "required": ["data", "meta", "operation", "query", "tool"],
-              "properties": {
-                "data": {
-                  "additionalProperties": true
-                },
-                "meta": {
-                  "$ref": "#/components/schemas/ResponseMeta"
-                },
-                "operation": {
-                  "type": "string"
-                },
-                "query": {
-                  "type": "object",
-                  "additionalProperties": true
-                },
-                "tool": {
-                  "type": "string"
-                }
-              },
-              "additionalProperties": true
+              "$ref": "#/components/schemas/SavedToolResult"
+            },
+            "example": {
+              "id": "00000000-0000-0000-0000-000000000000",
+              "url": "https://api.osint.ly/tools/results/00000000-0000-0000-0000-000000000000"
             }
           }
         }
@@ -3269,43 +2347,14 @@
       }
     },
     "schemas": {
-      "DomainRequest": {
-        "type": "object",
-        "required": ["domain"],
-        "properties": {
-          "domain": {
-            "type": "string",
-            "description": "Domain to enrich. Schemes and paths are normalized away before validation.",
-            "example": "example.com"
-          },
-          "save": {
-            "type": "boolean",
-            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
-            "default": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "IpRequest": {
-        "type": "object",
-        "required": ["ip"],
-        "properties": {
-          "ip": {
-            "type": "string",
-            "description": "IPv4 or IPv6 address to enrich.",
-            "example": "8.8.8.8"
-          },
-          "save": {
-            "type": "boolean",
-            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
-            "default": false
-          }
-        },
-        "additionalProperties": false
-      },
       "ToolInfo": {
         "type": "object",
-        "required": ["description", "image", "name", "routePath"],
+        "required": [
+          "description",
+          "image",
+          "name",
+          "routePath"
+        ],
         "properties": {
           "description": {
             "type": "string"
@@ -3322,122 +2371,17 @@
         },
         "additionalProperties": true,
         "example": {
-          "name": "Domain Intelligence",
-          "description": "Investigate domain infrastructure, DNS, SSL, WHOIS, subdomains, exposed emails, ports, and reputation signals.",
-          "image": "/images/tools/domain-intelligence.svg",
-          "routePath": "/domain-intelligence"
-        }
-      },
-      "DomainToolResponse": {
-        "type": "object",
-        "required": ["data", "meta", "operation", "query", "tool"],
-        "properties": {
-          "data": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
-          },
-          "operation": {
-            "type": "string"
-          },
-          "query": {
-            "type": "object",
-            "required": ["domain"],
-            "properties": {
-              "domain": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          },
-          "tool": {
-            "type": "string",
-            "const": "domain-intelligence"
-          }
-        },
-        "additionalProperties": false,
-        "example": {
-          "tool": "domain-intelligence",
-          "operation": "dns",
-          "query": {
-            "domain": "example.com"
-          },
-          "data": {
-            "primaryIp": "93.184.216.34",
-            "records": {
-              "A": ["93.184.216.34"],
-              "AAAA": [],
-              "MX": [],
-              "TXT": ["v=spf1 -all"]
-            },
-            "dnssec": {
-              "authenticated": false,
-              "dsPresent": false
-            },
-            "emailAuth": {
-              "spf": "v=spf1 -all",
-              "dmarc": null,
-              "dkim": []
-            }
-          },
-          "meta": {
-            "timestamp": "2026-06-28T12:00:00.000Z"
-          }
-        }
-      },
-      "IpToolResponse": {
-        "type": "object",
-        "required": ["data", "meta", "operation", "query", "tool"],
-        "properties": {
-          "data": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
-          },
-          "operation": {
-            "type": "string"
-          },
-          "query": {
-            "type": "object",
-            "required": ["ip"],
-            "properties": {
-              "ip": {
-                "type": "string"
-              }
-            },
-            "additionalProperties": false
-          },
-          "tool": {
-            "type": "string",
-            "const": "ip-intelligence"
-          }
-        },
-        "additionalProperties": false,
-        "example": {
-          "tool": "ip-intelligence",
-          "operation": "ports",
-          "query": {
-            "ip": "8.8.8.8"
-          },
-          "data": {
-            "ports": [53, 443],
-            "tags": ["dns"],
-            "hostnames": ["dns.google"],
-            "cpes": [],
-            "vulns": []
-          },
-          "meta": {
-            "timestamp": "2026-06-28T12:00:00.000Z"
-          }
+          "name": "Epic Games",
+          "description": "Direct Epic Games account validation and enrichment endpoints.",
+          "image": "/images/tools/epic-games.svg",
+          "routePath": "/epic-games"
         }
       },
       "ResponseMeta": {
         "type": "object",
-        "required": ["timestamp"],
+        "required": [
+          "timestamp"
+        ],
         "properties": {
           "timestamp": {
             "type": "string",
@@ -3451,7 +2395,10 @@
       },
       "SavedToolResult": {
         "type": "object",
-        "required": ["id", "url"],
+        "required": [
+          "id",
+          "url"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -3466,11 +2413,17 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": ["error", "meta"],
+        "required": [
+          "error",
+          "meta"
+        ],
         "properties": {
           "error": {
             "type": "object",
-            "required": ["code", "message"],
+            "required": [
+              "code",
+              "message"
+            ],
             "properties": {
               "code": {
                 "type": "string"
@@ -3486,70 +2439,17 @@
             "$ref": "#/components/schemas/ResponseMeta"
           }
         },
-        "additionalProperties": false,
-        "example": {
-          "error": {
-            "code": "UNAUTHORIZED",
-            "message": "Unauthorized",
-            "details": "A valid API key is required"
-          },
-          "meta": {
-            "timestamp": "2026-06-28T12:00:00.000Z"
-          }
-        }
-      },
-      "GamingToolRequest": {
-        "type": "object",
-        "required": ["value", "type"],
-        "properties": {
-          "value": {
-            "type": "string",
-            "description": "Account identifier to validate or enrich.",
-            "example": "some-player"
-          },
-          "type": {
-            "type": "string",
-            "description": "Canonical search type or accepted alias for the selected gaming tool.",
-            "example": "username"
-          },
-          "save": {
-            "type": "boolean",
-            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
-            "default": false
-          }
-        },
-        "additionalProperties": false
-      },
-      "XboxTitleDetailRequest": {
-        "type": "object",
-        "required": ["value", "type", "titleId"],
-        "properties": {
-          "value": {
-            "type": "string",
-            "description": "Xbox gamertag or XUID to enrich.",
-            "example": "SomeGamertag"
-          },
-          "type": {
-            "type": "string",
-            "description": "Canonical Xbox search type or accepted alias.",
-            "example": "gamertag"
-          },
-          "titleId": {
-            "type": "string",
-            "description": "Numeric Xbox title ID to enrich.",
-            "example": "12345"
-          },
-          "save": {
-            "type": "boolean",
-            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
-            "default": false
-          }
-        },
         "additionalProperties": false
       },
       "GamingToolResponse": {
         "type": "object",
-        "required": ["data", "meta", "operation", "query", "tool"],
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
         "properties": {
           "data": {
             "type": "object",
@@ -3563,7 +2463,10 @@
           },
           "query": {
             "type": "object",
-            "required": ["value", "type"],
+            "required": [
+              "value",
+              "type"
+            ],
             "properties": {
               "value": {
                 "type": "string"
@@ -3581,53 +2484,540 @@
             "type": "string",
             "enum": [
               "epic-games",
-              "socialclub",
+              "vehicle-history-finder",
               "xbox",
               "playstation",
-              "roblox",
-              "chess-com",
-              "osu",
-              "criminal-intelligence"
+              "roblox"
             ]
           }
         },
         "additionalProperties": false
       },
-      "CriminalIntelligenceRequest": {
+      "EpicGamesCreatorResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GamingToolResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "$ref": "#/components/schemas/EpicGamesCreatorData"
+              },
+              "operation": {
+                "const": "creator"
+              },
+              "tool": {
+                "const": "epic-games"
+              }
+            }
+          }
+        ]
+      },
+      "EpicGamesCreatorData": {
         "type": "object",
-        "required": ["value", "type"],
+        "required": [
+          "accountId",
+          "affiliate",
+          "islands",
+          "profile"
+        ],
+        "properties": {
+          "accountId": {
+            "type": "string"
+          },
+          "affiliate": {
+            "type": "object",
+            "required": [
+              "found"
+            ],
+            "properties": {
+              "found": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          },
+          "islands": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "profile": {
+            "$ref": "#/components/schemas/EpicGamesCreatorProfile"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EpicGamesCreatorProfile": {
+        "type": "object",
+        "required": [
+          "data",
+          "error",
+          "found",
+          "pageProps",
+          "publishedIslands",
+          "raw",
+          "social"
+        ],
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EpicGamesCreatorProfileData"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "error": {
+            "type": "null"
+          },
+          "found": {
+            "type": "boolean"
+          },
+          "pageProps": {
+            "type": "null"
+          },
+          "publishedIslands": {
+            "type": "array",
+            "items": {}
+          },
+          "raw": {
+            "type": "null"
+          },
+          "social": {
+            "$ref": "#/components/schemas/EpicGamesCreatorSocial"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EpicGamesCreatorProfileData": {
+        "type": "object",
+        "required": [
+          "bio",
+          "creatorPageUrl",
+          "displayName",
+          "followerCount",
+          "images",
+          "title"
+        ],
+        "properties": {
+          "bio": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "creatorPageUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "displayName": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "followerCount": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "images": {
+            "$ref": "#/components/schemas/EpicGamesCreatorImages"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "EpicGamesCreatorImages": {
+        "type": "object",
+        "required": [
+          "avatar",
+          "banner"
+        ],
+        "properties": {
+          "avatar": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "banner": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EpicGamesCreatorSocial": {
+        "type": "object",
+        "required": [
+          "discord",
+          "instagram",
+          "tiktok",
+          "twitch",
+          "twitter",
+          "website",
+          "youtube"
+        ],
+        "properties": {
+          "discord": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "instagram": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "tiktok": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "twitch": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "twitter": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "website": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "youtube": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VehicleHistoryFinderResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "required": [
+              "vehicle"
+            ],
+            "properties": {
+              "vehicle": {
+                "type": "object",
+                "required": [
+                  "found",
+                  "presentation"
+                ],
+                "properties": {
+                  "found": {
+                    "type": "boolean"
+                  },
+                  "presentation": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": true
+              },
+              "castrol": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "nhtsa": {
+                "type": "object",
+                "required": [
+                  "recalls",
+                  "complaints",
+                  "safetyRatings"
+                ],
+                "properties": {
+                  "recalls": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "complaints": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  },
+                  "safetyRatings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "save": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          },
+          "tool": {
+            "type": "string",
+            "enum": [
+              "vehicle-history-finder"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "EpicGamesRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
         "properties": {
           "value": {
             "type": "string",
-            "description": "Person name, organization, or keyword to enrich.",
-            "example": "Tayler Anthony Smith"
+            "description": "Epic identifier to enrich.",
+            "examples": [
+              "some-player",
+              "some-player#1234"
+            ]
           },
           "type": {
             "type": "string",
             "description": "Canonical type or accepted alias.",
-            "example": "name"
+            "enum": [
+              "epic_display_name",
+              "epic_account_id",
+              "creator_code",
+              "psn_username",
+              "steam_username",
+              "xbox_username",
+              "psn_account_id",
+              "steam_id",
+              "nintendo_account_id",
+              "epic",
+              "epic_id",
+              "creator",
+              "psn",
+              "playstation",
+              "steam",
+              "steamid",
+              "xbox",
+              "xbl",
+              "xlb",
+              "nintendo"
+            ],
+            "example": "epic_display_name"
           },
-          "limit": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 50,
-            "default": 20
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "XboxRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Xbox gamertag or XUID to enrich.",
+            "examples": [
+              "SomeGamertag",
+              "2533274792004364"
+            ]
           },
-          "interpolNoticeTypes": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["red", "yellow", "un"]
-            },
-            "example": ["red"]
+          "type": {
+            "type": "string",
+            "description": "Canonical Xbox search type or accepted alias.",
+            "enum": [
+              "gamertag",
+              "xuid",
+              "xbox",
+              "xbl",
+              "username",
+              "id",
+              "xbox_id"
+            ],
+            "example": "gamertag"
           },
-          "fdaCategories": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["drug", "food", "device"]
-            },
-            "example": ["drug", "food", "device"]
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "XboxTitleDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "titleId"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Xbox gamertag or XUID to enrich."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "gamertag",
+              "xuid",
+              "xbox",
+              "xbl",
+              "username",
+              "id",
+              "xbox_id"
+            ]
+          },
+          "titleId": {
+            "type": "string",
+            "pattern": "^\\d+$",
+            "description": "Numeric Xbox title ID."
+          }
+        },
+        "additionalProperties": false
+      },
+      "VehicleHistoryFinderRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "VIN or French license plate to validate or enrich.",
+            "examples": [
+              "AB-123-CD",
+              "1HGCM82633A004352"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical type or accepted alias.",
+            "enum": [
+              "vin",
+              "plate_fr",
+              "plate",
+              "plaque",
+              "plaque_fr",
+              "license_plate_fr",
+              "french_plate",
+              "immatriculation"
+            ],
+            "example": "plate_fr"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlayStationRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "PSN online ID or account ID to enrich.",
+            "examples": [
+              "some-player",
+              "1234567890"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical type or accepted alias.",
+            "enum": [
+              "online_id",
+              "account_id",
+              "psn",
+              "playstation",
+              "username",
+              "onlineid",
+              "id",
+              "account",
+              "psn_account_id"
+            ],
+            "example": "online_id"
           },
           "save": {
             "type": "boolean",
@@ -3639,7 +3029,10 @@
       },
       "SteamRequest": {
         "type": "object",
-        "required": ["value", "type"],
+        "required": [
+          "value",
+          "type"
+        ],
         "additionalProperties": false,
         "properties": {
           "value": {
@@ -3672,21 +3065,43 @@
       },
       "SteamGameDetailRequest": {
         "type": "object",
-        "required": ["value", "type", "appId"],
+        "required": [
+          "value",
+          "type",
+          "appId"
+        ],
         "properties": {
-          "value": { "type": "string" },
-          "type": { "type": "string" },
-          "appId": { "type": "integer", "minimum": 1 }
+          "value": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "appId": {
+            "type": "integer",
+            "minimum": 1
+          }
         },
         "additionalProperties": false
       },
       "SteamGroupDetailRequest": {
         "type": "object",
-        "required": ["value", "type", "groupId"],
+        "required": [
+          "value",
+          "type",
+          "groupId"
+        ],
         "properties": {
-          "value": { "type": "string" },
-          "type": { "type": "string" },
-          "groupId": { "type": "string", "pattern": "^\\d{1,20}$" },
+          "value": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string",
+            "pattern": "^\\d{1,20}$"
+          },
           "memberPage": {
             "type": "integer",
             "minimum": 1,
@@ -3698,11 +3113,22 @@
       },
       "SteamInventoryRequest": {
         "type": "object",
-        "required": ["value", "type"],
+        "required": [
+          "value",
+          "type"
+        ],
         "properties": {
-          "value": { "type": "string" },
-          "type": { "type": "string" },
-          "appId": { "type": "integer", "minimum": 1, "default": 753 },
+          "value": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "appId": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 753
+          },
           "contextId": {
             "type": "string",
             "pattern": "^\\d{1,20}$",
@@ -3714,18 +3140,36 @@
             "maximum": 500,
             "default": 100
           },
-          "cursor": { "type": "string", "pattern": "^\\d{1,30}$" }
+          "cursor": {
+            "type": "string",
+            "pattern": "^\\d{1,30}$"
+          }
         },
         "additionalProperties": false
       },
       "SteamInventoryDetailRequest": {
         "type": "object",
-        "required": ["value", "type", "assetId"],
+        "required": [
+          "value",
+          "type",
+          "assetId"
+        ],
         "properties": {
-          "value": { "type": "string" },
-          "type": { "type": "string" },
-          "appId": { "type": "integer", "minimum": 1, "default": 753 },
-          "assetId": { "type": "string", "pattern": "^\\d{1,30}$" },
+          "value": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "appId": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 753
+          },
+          "assetId": {
+            "type": "string",
+            "pattern": "^\\d{1,30}$"
+          },
           "contextId": {
             "type": "string",
             "pattern": "^\\d{1,20}$",
@@ -3737,7 +3181,10 @@
             "maximum": 500,
             "default": 100
           },
-          "cursor": { "type": "string", "pattern": "^\\d{1,30}$" }
+          "cursor": {
+            "type": "string",
+            "pattern": "^\\d{1,30}$"
+          }
         },
         "additionalProperties": false
       }
