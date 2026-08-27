@@ -1,0 +1,152 @@
+---
+title: Social Club
+description: Direct Rockstar Social Club validation and enrichment endpoints for profiles, linked accounts, crews, games, and friends.
+icon: gamepad-2
+---
+
+Social Club endpoints accept a public nickname or numeric Rockstar ID. `POST /search` is validation-only: it normalizes the identifier type without calling Rockstar or consuming credits.
+
+```json
+{
+  "value": "some-player",
+  "type": "nickname"
+}
+```
+
+---
+
+## Search types
+
+Canonical types:
+
+- `nickname`
+- `rockstar_id`
+
+Aliases:
+
+- `username`, `socialclub`, `social_club`, and `social-club` -> `nickname`
+- `id`, `rockstar`, `rockstarid`, and `rockstar_id` -> `rockstar_id`
+
+---
+
+## Endpoint groups
+
+| Operation | Endpoint | Cost | Notes |
+|---|---|---:|---|
+| Search | `POST /tools/socialclub/search` | Free | Validates and normalizes only. |
+| Suggestions | `POST /tools/socialclub/suggestions` | Free | Returns cached nickname matches. |
+| Resolve | `POST /tools/socialclub/resolve` | 1 | Resolves an exact nickname or Rockstar ID. |
+| Profile | `POST /tools/socialclub/profile` | 1 | Profile, country, language, visibility, online state, and last platform. |
+| Linked Accounts | `POST /tools/socialclub/linked-accounts` | 1 | External platform identities linked to the profile. |
+| Crews | `POST /tools/socialclub/crews` | 1 | Crew metadata and official Rockstar emblem URLs. |
+| Crew Detail | `POST /tools/socialclub/crew-detail` | Free | Verifies a linked crew and returns its metadata plus public members. |
+| Games | `POST /tools/socialclub/games` | 1 | Registered games, activity dates, and official catalog image URLs when available. |
+| Game Detail | `POST /tools/socialclub/game-detail` | Free | Verifies a profile game and enriches it with Rockstar title metadata. |
+| Achievements | `POST /tools/socialclub/achievements` | Free | Returns awarded achievement identifiers and unlock dates for a linked game. |
+| Friends | `POST /tools/socialclub/friends` | 2 | Public friend profiles without provider-relative mutual counts or viewer relationships. |
+| All | `POST /tools/socialclub/all` | 3 | Runs the main collectors and charges once. |
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/socialclub/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "socialclub" }'
+```
+
+Use `/all` for the complete public Social Club snapshot.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/socialclub/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "nickname" }'
+```
+
+To save the synchronous result for later retrieval, add `"save": true` to the `/all` body.
+
+Use the free detail routes after a profile lookup. The API verifies that each
+requested resource is linked to the resolved account.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/socialclub/crew-detail" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "nickname", "crewId": 76479976, "memberQuery": "some" }'
+```
+
+`memberQuery` is optional and must contain at least three characters when set.
+`POST /game-detail` uses the same identity body with a positive integer
+`gameId`.
+
+Load the achievements Rockstar exposes for that linked game with the same
+`gameId`:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/socialclub/achievements" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "some-player", "type": "nickname", "gameId": 11 }'
+```
+
+The provider returns only awarded achievement identifiers and unlock dates.
+It does not expose the full title catalog, names, descriptions, icons, or point
+totals through this endpoint, so those aggregate fields can be `null`.
+
+---
+
+## Response data
+
+`POST /all` returns:
+
+- `resolve`: canonical Rockstar ID, nickname, avatar, and source. Nickname
+  resolution is case-insensitive but exact; an approximate provider result is
+  never selected and produces `404 NOT_FOUND` when no exact nickname exists.
+- `profile`: online state, country, language, creation date, declared friend
+  count, gamertag visibility, primary crew, privacy flags, status, and last
+  active platform.
+- `linkedAccounts`: linked platform identities and provider visibility values.
+- `crews`: crew membership and metadata, including an official Rockstar CDN
+  `emblemUrl` derived from the crew ID.
+- `games`: registered Rockstar game records with default platform, friend code,
+  and `imageUrl` when the title is present in the official Rockstar catalog.
+- `friends`: public friend profiles with intrinsic profile, crew, country,
+  language, gamertag, and activity fields. `MutualFriendCount` and
+  `ViewerRelationship` are intentionally excluded because they describe the
+  provider account's relationship with the target.
+- `partialErrors`: secondary collectors that could not be completed.
+
+The route fails when the primary resolver cannot identify an account. Secondary provider failures return a successful response with entries in `partialErrors`.
+
+---
+
+## Authentication
+
+Provider-backed routes use a Worker-compatible Rockstar session managed by `RockstarAuthDO`. The Durable Object persists refreshed launcher tokens and coalesces concurrent refreshes. The achievements route uses a separate Social Club API bearer, also persisted and refreshed by the Durable Object. Tokens are never stored in the Cache API or returned to clients.
+
+If Rockstar credentials are unavailable or cannot be refreshed, provider-backed routes return `503 PROVIDER_UNAVAILABLE` without recording usage.
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized identifier. Cache entries reduce repeated Rockstar calls and do not change route pricing.
+
+| Collector | TTL |
+|---|---:|
+| Suggestions / account search | 10 minutes |
+| Resolve | 30 minutes |
+| Profile | 30 minutes |
+| Linked accounts | 1 hour |
+| Crews | 1 hour |
+| Crew detail | 1 hour |
+| Crew member search | 10 minutes |
+| Games | 6 hours |
+| Game title metadata | 24 hours |
+| Achievements | 30 minutes |
+| Friends | 30 minutes |
