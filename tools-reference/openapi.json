@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, Roblox, and Steam tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, Roblox, Steam, and Social Club tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -48,6 +48,10 @@
     {
       "name": "Steam",
       "description": "Direct Steam account validation and enrichment endpoints."
+    },
+    {
+      "name": "Social Club",
+      "description": "Direct Rockstar Social Club account validation and enrichment endpoints."
     }
   ],
   "paths": {
@@ -1881,6 +1885,324 @@
           }
         }
       }
+    },
+    "/tools/socialclub": {
+      "get": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "List Social Club routes",
+        "operationId": "listSocialClubRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/search": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Validate Social Club search input",
+        "operationId": "runSocialClubSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/suggestions": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club nickname suggestions",
+        "operationId": "runSocialClubSuggestions",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/resolve": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Resolve a Social Club account",
+        "operationId": "runSocialClubResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/profile": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get a Social Club profile",
+        "operationId": "runSocialClubProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/linked-accounts": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get linked Social Club accounts",
+        "operationId": "runSocialClubLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/crews": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club crews",
+        "operationId": "runSocialClubCrews",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/crew-detail": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get linked Social Club crew detail",
+        "operationId": "runSocialClubCrewDetail",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubCrewDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/games": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get Social Club game history",
+        "operationId": "runSocialClubGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/game-detail": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get linked Social Club game detail",
+        "operationId": "runSocialClubGameDetail",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubGameDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/achievements": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get awarded Social Club achievements for a linked game",
+        "description": "Returns awarded achievement identifiers and unlock dates exposed by Rockstar. Full catalog metadata, icons, and point totals are not available from this provider endpoint.",
+        "operationId": "runSocialClubAchievements",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubGameDetailRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/friends": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Get public Social Club friend profiles",
+        "operationId": "runSocialClubFriends",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/socialclub/all": {
+      "post": {
+        "tags": [
+          "Social Club"
+        ],
+        "summary": "Run all Social Club collectors",
+        "operationId": "runSocialClubAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SocialClubRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1904,7 +2226,8 @@
             "xbox",
             "playstation",
             "roblox",
-            "steam"
+            "steam",
+            "socialclub"
           ]
         }
       },
@@ -2073,6 +2396,51 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/SteamInventoryDetailRequest"
+            }
+          }
+        }
+      },
+      "SocialClubRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SocialClubRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "nickname"
+            }
+          }
+        }
+      },
+      "SocialClubCrewDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SocialClubCrewDetailRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "nickname",
+              "crewId": 76479976,
+              "memberQuery": "some"
+            }
+          }
+        }
+      },
+      "SocialClubGameDetailRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SocialClubGameDetailRequest"
+            },
+            "example": {
+              "value": "some-player",
+              "type": "nickname",
+              "gameId": 11
             }
           }
         }
@@ -2483,7 +2851,8 @@
               "xbox",
               "playstation",
               "roblox",
-              "steam"
+              "steam",
+              "socialclub"
             ]
           }
         },
@@ -3234,6 +3603,120 @@
           "cursor": {
             "type": "string",
             "pattern": "^\\d{1,30}$"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SocialClubRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Social Club nickname or numeric Rockstar ID.",
+            "examples": [
+              "some-player",
+              "123456789"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Social Club search type or accepted alias.",
+            "enum": [
+              "nickname",
+              "rockstar_id",
+              "username",
+              "socialclub",
+              "social_club",
+              "social-club",
+              "id",
+              "rockstar",
+              "rockstarid"
+            ],
+            "example": "nickname"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "SocialClubCrewDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "crewId"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "nickname",
+              "rockstar_id",
+              "username",
+              "socialclub",
+              "social_club",
+              "social-club",
+              "id",
+              "rockstar",
+              "rockstarid"
+            ]
+          },
+          "crewId": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "memberQuery": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 64
+          }
+        },
+        "additionalProperties": false
+      },
+      "SocialClubGameDetailRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "gameId"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "nickname",
+              "rockstar_id",
+              "username",
+              "socialclub",
+              "social_club",
+              "social-club",
+              "id",
+              "rockstar",
+              "rockstarid"
+            ]
+          },
+          "gameId": {
+            "type": "integer",
+            "minimum": 1
           }
         },
         "additionalProperties": false
