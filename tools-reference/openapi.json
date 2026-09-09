@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, Roblox, Steam, and Social Club tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, Roblox, Steam, Social Club, and Reddit tools and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -52,6 +52,10 @@
     {
       "name": "Social Club",
       "description": "Direct Rockstar Social Club account validation and enrichment endpoints."
+    },
+    {
+      "name": "Reddit",
+      "description": "Reddit profile and public archived activity validation and enrichment endpoints."
     }
   ],
   "paths": {
@@ -2203,6 +2207,220 @@
           }
         }
       }
+    },
+    "/tools/reddit": {
+      "get": {
+        "tags": ["Reddit"],
+        "summary": "List Reddit routes",
+        "operationId": "getRedditIndex",
+        "responses": {
+          "200": { "$ref": "#/components/responses/ToolRouteIndex" }
+        }
+      }
+    },
+    "/tools/reddit/search": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Validate and normalize a Reddit username",
+        "description": "Validation-only operation. It does not call a provider or consume credits.",
+        "operationId": "runRedditSearch",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" }
+        }
+      }
+    },
+    "/tools/reddit/resolve": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Resolve Reddit profile availability and identity",
+        "operationId": "runRedditResolve",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/profile": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Get Reddit profile and archive metadata",
+        "operationId": "runRedditProfile",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/posts": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Get filtered and paginated archived Reddit posts",
+        "operationId": "runRedditPosts",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/comments": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Get filtered and paginated archived Reddit comments",
+        "operationId": "runRedditComments",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/communities": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Get Reddit community interactions and archived flairs",
+        "operationId": "runRedditCommunities",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/activity": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Get deterministic Reddit activity summaries",
+        "operationId": "runRedditActivity",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/thread": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Get an archived Reddit comment thread",
+        "description": "The post must belong to the queried Reddit username.",
+        "operationId": "runRedditThread",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditThreadRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/lookup": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Start a saved Reddit lookup with browsing included",
+        "description": "Costs 1 core_search unit. Collects only the profile, always saves it (even if save:false), and returns data.profile and meta.savedResult.id. No polling. Subsequent /browse calls with that ID are free. Default page size is 25. Reuse the saved ID rather than calling lookup again on refresh.",
+        "operationId": "runRedditLookup",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": {
+            "schema": { "$ref": "#/components/schemas/RedditLookupRequest" },
+            "example": { "value": "spez", "type": "username" }
+          } }
+        },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "403": { "description": "API authentication or tools plan feature required" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "description": "Insufficient quota" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "503": { "description": "Result could not be saved or quota could not be checked" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/browse": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Browse an owned saved Reddit result without additional search charges",
+        "description": "Free for saved lookup/all results. Verifies creator and API-key ownership before reading cache or calling providers. Account is derived from the saved result. Does not mutate the saved snapshot. Defaults inherit the saved query; options starts a new view. Reuse nextCursor without options for pagination. A cursor is not authorization. Archived coverage and throughput depend on providers.",
+        "operationId": "browseRedditResult",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": {
+            "schema": { "$ref": "#/components/schemas/RedditBrowseRequest" },
+            "example": { "resultId": "1349352c-4306-4d7f-a712-8622d5793515", "section": "posts" }
+          } }
+        },
+        "responses": {
+          "200": { "description": "Section data; posts/comments include pagination.nextCursor (null at end).",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RedditBrowseResponse" } } }
+          },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "403": { "description": "API authentication or tools plan feature required" },
+          "404": { "description": "Saved result unavailable, deleted, belongs to another owner/key, or is not Reddit" },
+          "409": { "description": "RESULT_BROWSING_NOT_INCLUDED: use a saved lookup/all result, or complete a saved profile through feed" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/feed": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Collect feed or complete a saved profile",
+        "description": "Costs 2 core_search units. With resultId, verifies ownership and matching username, then upgrades the saved profile to all under the same ID. Without resultId, returns feed-only data without persistence. Prefer browse for an already completed result.",
+        "operationId": "runRedditFeed",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "429": { "description": "Insufficient quota" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "503": { "description": "Result could not be saved" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
+    },
+    "/tools/reddit/all": {
+      "post": {
+        "tags": ["Reddit"],
+        "summary": "Run all Reddit collectors",
+        "description": "Costs 3 core_search units. Returns the first page only, with up to 100 posts and 100 comments. With save:true, the saved ID includes free /browse pagination and enrichment.",
+        "operationId": "runRedditAll",
+        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "responses": {
+          "200": { "$ref": "#/components/responses/GamingToolResponse" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "502": { "$ref": "#/components/responses/ProviderError" },
+          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+        }
+      }
     }
   },
   "components": {
@@ -2227,7 +2445,8 @@
             "playstation",
             "roblox",
             "steam",
-            "socialclub"
+            "socialclub",
+            "reddit"
           ]
         }
       },
@@ -2444,6 +2663,37 @@
             }
           }
         }
+      },
+      "RedditRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RedditRequest"
+            },
+            "example": {
+              "value": "spez",
+              "type": "username",
+              "limit": 100
+            }
+          }
+        }
+      },
+      "RedditThreadRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RedditThreadRequest"
+            },
+            "example": {
+              "value": "spez",
+              "type": "username",
+              "postId": "t3_abc123",
+              "limit": 100
+            }
+          }
+        }
       }
     },
     "responses": {
@@ -2593,6 +2843,44 @@
                 "code": "PROVIDER_UNAVAILABLE",
                 "message": "Provider unavailable",
                 "details": "A required enrichment source is unavailable for this operation"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ProviderError": {
+        "description": "An upstream Reddit provider request failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PROVIDER_ERROR",
+                "message": "Data unavailable"
+              },
+              "meta": {
+                "timestamp": "2026-06-28T12:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
+      "ProviderTimeout": {
+        "description": "An upstream Reddit provider request timed out",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            },
+            "example": {
+              "error": {
+                "code": "PROVIDER_TIMEOUT",
+                "message": "Request timed out"
               },
               "meta": {
                 "timestamp": "2026-06-28T12:00:00.000Z"
@@ -3717,6 +4005,182 @@
           "gameId": {
             "type": "integer",
             "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "RedditBrowseOptions": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 25 },
+          "sort": { "type": "string", "enum": ["asc", "desc"], "default": "desc" },
+          "after": { "oneOf": [{ "type": "string" }, { "type": "number" }] },
+          "before": { "oneOf": [{ "type": "string" }, { "type": "number" }] },
+          "subreddit": { "type": "string", "maxLength": 64 },
+          "keywords": { "type": "string", "maxLength": 200 },
+          "deletedOnly": { "type": "boolean", "default": false },
+          "nsfwOnly": { "type": "boolean", "default": false }
+        }
+      },
+      "RedditBrowseRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["resultId", "section"],
+        "properties": {
+          "resultId": { "type": "string", "format": "uuid" },
+          "section": { "type": "string", "enum": ["posts", "comments", "activity", "communities"] },
+          "options": { "$ref": "#/components/schemas/RedditBrowseOptions" },
+          "cursor": { "type": "string", "minLength": 1, "maxLength": 4096, "pattern": "^[A-Za-z0-9_-]+$", "description": "Opaque nextCursor from the same result/section; never combine with options." }
+        },
+        "allOf": [{
+          "if": { "required": ["cursor"] },
+          "then": {
+            "not": { "required": ["options"] },
+            "properties": { "section": { "enum": ["posts", "comments"] } }
+          }
+        }]
+      },
+      "RedditBrowseResponse": {
+        "type": "object",
+        "required": ["tool", "operation", "query", "data", "meta"],
+        "properties": {
+          "tool": { "const": "reddit" },
+          "operation": { "enum": ["posts", "comments", "activity", "communities"] },
+          "query": { "type": "object", "additionalProperties": true },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "pagination": { "type": "object", "additionalProperties": true, "properties": {
+                "hasMore": { "type": "boolean" },
+                "nextCursor": { "type": ["string", "null"] },
+                "limit": { "type": "integer" }
+              } }
+            }
+          },
+          "meta": { "type": "object", "required": ["timestamp", "resultId"], "properties": {
+            "timestamp": { "type": "string", "format": "date-time" },
+            "resultId": { "type": "string", "format": "uuid" }
+          } }
+        }
+      },
+      "RedditLookupRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/RedditRequest" },
+          { "properties": { "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 25 } } }
+        ]
+      },
+      "RedditRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256,
+            "description": "Reddit username, u/<username>, @<username>, or Reddit profile URL.",
+            "example": "spez"
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Reddit search type or accepted alias.",
+            "enum": [
+              "username",
+              "pseudonym",
+              "reddit",
+              "u",
+              "user"
+            ],
+            "example": "username"
+          },
+          "after": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ],
+            "description": "ISO date or Unix timestamp lower bound."
+          },
+          "before": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" }
+            ],
+            "description": "ISO date or Unix timestamp upper bound or pagination cursor."
+          },
+          "deletedOnly": {
+            "type": "boolean",
+            "default": false
+          },
+          "keywords": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 100
+          },
+          "nsfwOnly": {
+            "type": "boolean",
+            "default": false
+          },
+          "sort": {
+            "type": "string",
+            "enum": ["asc", "desc", "score"],
+            "default": "desc"
+          },
+          "subreddit": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Used on /all and /profile to save the synchronous response. /lookup always saves, regardless of this flag.",
+            "default": false
+          },
+          "resultId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "For /feed: existing owned saved profile ID to complete under the same ID."
+          }
+        },
+        "additionalProperties": false
+      },
+      "RedditThreadRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type",
+          "postId"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256
+          },
+          "type": {
+            "type": "string",
+            "enum": ["username", "pseudonym", "reddit", "u", "user"]
+          },
+          "postId": {
+            "type": "string",
+            "pattern": "^(?:t3_)?[A-Za-z0-9]+$"
+          },
+          "parentCommentId": {
+            "type": "string",
+            "pattern": "^(?:t1_)?[A-Za-z0-9]+$"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 250,
+            "default": 25
           }
         },
         "additionalProperties": false
