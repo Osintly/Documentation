@@ -2214,7 +2214,9 @@
         "summary": "List Reddit routes",
         "operationId": "getRedditIndex",
         "responses": {
-          "200": { "$ref": "#/components/responses/ToolRouteIndex" }
+          "200": {"$ref":"#/components/responses/ToolRouteIndex"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"}
         }
       }
     },
@@ -2226,8 +2228,10 @@
         "operationId": "runRedditSearch",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"}
         }
       }
     },
@@ -2238,11 +2242,15 @@
         "operationId": "runRedditResolve",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2253,11 +2261,15 @@
         "operationId": "runRedditProfile",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2268,11 +2280,15 @@
         "operationId": "runRedditPosts",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2283,11 +2299,15 @@
         "operationId": "runRedditComments",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2298,11 +2318,15 @@
         "operationId": "runRedditCommunities",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2313,11 +2337,15 @@
         "operationId": "runRedditActivity",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2329,11 +2357,13 @@
         "operationId": "runRedditThread",
         "requestBody": { "$ref": "#/components/requestBodies/RedditThreadRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2351,14 +2381,15 @@
           } }
         },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "403": { "description": "API authentication or tools plan feature required" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "429": { "description": "Insufficient quota" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "503": { "description": "Result could not be saved or quota could not be checked" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2376,15 +2407,14 @@
           } }
         },
         "responses": {
-          "200": { "description": "Section data; posts/comments include pagination.nextCursor (null at end).",
-            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/RedditBrowseResponse" } } }
-          },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "403": { "description": "API authentication or tools plan feature required" },
-          "404": { "description": "Saved result unavailable, deleted, belongs to another owner/key, or is not Reddit" },
-          "409": { "description": "RESULT_BROWSING_NOT_INCLUDED: use a saved lookup/all result, or complete a saved profile through feed" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"description":"Section data; posts/comments include pagination.nextCursor (null at end).","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RedditBrowseResponse"}}}},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"description":"Saved result unavailable, deleted, belongs to another owner/key, or is not Reddit"},
+          "409": {"description":"RESULT_BROWSING_NOT_INCLUDED: use a saved lookup/all result, or complete a saved profile through feed"},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2396,13 +2426,15 @@
         "operationId": "runRedditFeed",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "429": { "description": "Insufficient quota" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "503": { "description": "Result could not be saved" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     },
@@ -2414,11 +2446,15 @@
         "operationId": "runRedditAll",
         "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
         "responses": {
-          "200": { "$ref": "#/components/responses/GamingToolResponse" },
-          "400": { "$ref": "#/components/responses/ValidationError" },
-          "404": { "$ref": "#/components/responses/NotFound" },
-          "502": { "$ref": "#/components/responses/ProviderError" },
-          "504": { "$ref": "#/components/responses/ProviderTimeout" }
+          "200": {"$ref":"#/components/responses/RedditToolResponse"},
+          "400": {"$ref":"#/components/responses/ValidationError"},
+          "401": {"$ref":"#/components/responses/Unauthorized"},
+          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
+          "404": {"$ref":"#/components/responses/NotFound"},
+          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "502": {"$ref":"#/components/responses/ProviderError"},
+          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
+          "504": {"$ref":"#/components/responses/ProviderTimeout"}
         }
       }
     }
@@ -2908,6 +2944,32 @@
           }
         }
       },
+      "RedditToolResponse": {
+        "description": "Structured Reddit tool response. Enriched data varies by operation.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/RedditToolResponse"
+            },
+            "example": {
+              "tool": "reddit",
+              "operation": "search",
+              "query": {
+                "value": "spez",
+                "type": "username",
+                "normalizedType": "username"
+              },
+              "data": {
+                "valid": true,
+                "status": "validated"
+              },
+              "meta": {
+                "timestamp": "2026-09-09T00:00:00.000Z"
+              }
+            }
+          }
+        }
+      },
       "GamingToolResponse": {
         "description": "Tool response",
         "content": {
@@ -3088,6 +3150,52 @@
           },
           "meta": {
             "$ref": "#/components/schemas/ResponseMeta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RedditToolResponse": {
+        "type": "object",
+        "required": [
+          "data",
+          "meta",
+          "operation",
+          "query",
+          "tool"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "value",
+              "type"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "normalizedType": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "tool": {
+            "type": "string",
+            "const": "reddit"
           }
         },
         "additionalProperties": false
