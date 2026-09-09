@@ -1,0 +1,180 @@
+---
+title: Reddit
+description: Validate Reddit usernames and enrich public profile, post, comment, community, activity, and thread data.
+icon: reddit
+iconType: brands
+---
+
+Reddit accepts a Reddit username, `u/<username>`, `@<username>`, or a Reddit profile URL. `POST /search` only validates and normalizes the identifier; it does not call a provider or consume credits.
+
+```json
+{
+  "value": "u/spez",
+  "type": "username"
+}
+```
+
+## Search types
+
+The canonical type is `username`. The aliases `pseudonym`, `reddit`, `u`, and `user` are normalized to `username`.
+
+## Endpoints and costs
+
+| Operation   | Endpoint                         | Cost | Notes                                                         |
+| ----------- | -------------------------------- | ---: | ------------------------------------------------------------- |
+| Search      | `POST /tools/reddit/search`      | Free | Validates and normalizes only.                                |
+| Resolve     | `POST /tools/reddit/resolve`     |    1 | Resolves profile availability and canonical identity.         |
+| Profile     | `POST /tools/reddit/profile`     |    1 | Profile, karma, flags, archive coverage, and account dates.   |
+| Posts       | `POST /tools/reddit/posts`       |    1 | Paginated archived posts with filters and status signals.     |
+| Comments    | `POST /tools/reddit/comments`    |    1 | Paginated archived comments with filters and status signals.  |
+| Communities | `POST /tools/reddit/communities` |    1 | Interacted communities, counts, and archived flair data.      |
+| Activity    | `POST /tools/reddit/activity`    |    1 | Deterministic activity summary, UTC heatmap, and top content. |
+| Thread      | `POST /tools/reddit/thread`      | Free | Loads an archived comment tree for a known post ID.           |
+| All         | `POST /tools/reddit/all`         |    3 | Runs all profile and activity collectors and charges once.    |
+| Lookup      | `POST /tools/reddit/lookup`      |    1 | Returns and saves the profile first; includes subsequent browsing by ID. |
+| Browse      | `POST /tools/reddit/browse`      | Free | Loads sections and pages for an owned saved lookup/all result. |
+| Feed        | `POST /tools/reddit/feed`        |    2 | Collects the feed; optionally completes an owned saved profile. |
+
+Costs are in `core_search` units. Authentication and the `tools` plan feature
+are required even for free operations. Standalone routes retain their per-call
+prices; use the ID-based flow below for a predictable total.
+
+## Recommended: profile first, navigation included
+
+Start one synchronous lookup. It collects the profile only, always saves it,
+and returns `meta.savedResult.id`. No polling or background job is involved.
+`save: false` does not disable persistence on this route.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/reddit/lookup" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"value":"spez","type":"username"}'
+```
+
+The response has `operation: "lookup"`, `data.profile`, and the usual
+`query`/`meta` wrapper. Read the saved profile later using
+`GET /tools/results/<id>`. Use that same ID for navigation:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/reddit/browse" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"resultId":"1349352c-4306-4d7f-a712-8622d5793515","section":"posts"}'
+```
+
+Sections: `posts`, `comments`, `activity`, `communities`. The account is
+derived from the stored result; do not send `value` or `type`. Responses use
+the section name as `operation` and include `meta.resultId`.
+
+**One lookup costs 1; all subsequent `/browse` calls for that ID cost 0.**
+This also applies to saved `/all` results. A saved `/profile` alone does not
+include browsing: complete it with `/feed` (1 + 2 = 3), or start `/lookup`.
+No new usage event is created by `/browse`. Free browsing is not a promise of
+unlimited throughput or complete archives: provider limits still apply.
+
+Each call verifies the creator and the API key that own the saved result.
+An unknown, deleted, foreign, or non-Reddit result returns `404`. A profile-only
+result returns `409 RESULT_BROWSING_NOT_INCLUDED`. Deleting the saved result
+revokes browsing access, including access to cached pages.
+
+### Opaque pagination
+
+Use `data.pagination.nextCursor` unchanged for the next page:
+
+```json
+{
+  "resultId": "1349352c-4306-4d7f-a712-8622d5793515",
+  "section": "posts",
+  "cursor": "<pagination.nextCursor>"
+}
+```
+
+`nextCursor: null` means no continuation is available. Cursors retain filters,
+page size, and chronological direction and are bound to one result/section.
+They are pagination state, not credentials. Do not combine a cursor with
+`options`; malformed or mismatched cursors return `400 VALIDATION_ERROR`.
+
+For a first page, optional `options` accepts `limit` (1-100), `sort` (`asc` or
+`desc`), `after`, `before`, `subreddit`, `keywords`, `deletedOnly`, `nsfwOnly`.
+Omitting `options` inherits the original lookup filters and page size (25 by
+default for `/lookup`). Supplying `options` starts a new filtered view with
+defaults for omitted fields. Changing filters requires dropping the cursor.
+An empty filtered page can still have a continuation; follow `nextCursor`.
+Score ordering remains a standalone-route, within-page sort, not a global
+historical ranking. Archive pagination is timestamp-based and best-effort,
+not an exhaustive export guarantee for extremely high-volume accounts.
+
+### Reuse and persistence
+
+Matching first pages and activity from a saved `/all` are reused directly.
+Activity enrichment reuses the saved profile instead of resolving it again.
+Missing sections are collected on demand; provider and browse responses are
+cached in production. `/browse` does not rewrite the R2 snapshot: the saved
+profile/all response remains unchanged. Later pages may reflect newer archive
+data after cache expiry. Keep returned pages client-side when you need them
+as part of an export. Reopening `/lookup` creates and charges a new lookup;
+reuse the existing ID on refresh.
+
+## Search
+
+```bash
+curl -X POST "https://api.osint.ly/tools/reddit/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "https://www.reddit.com/user/spez/", "type": "reddit" }'
+```
+
+## Complete lookup
+
+`POST /all` returns the first page of profile activity, up to 100 posts and 100 comments. It also returns community and deterministic activity summaries. Secondary provider failures appear in `partialErrors` when another source succeeds.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/reddit/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "spez", "type": "username", "limit": 100, "save": true }'
+```
+
+For saved results, prefer free `/browse` pagination above. Standalone `/posts`
+and `/comments` remain available at 1 per call; pass `pagination.nextBefore`
+unchanged as `before` to load older pages:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/reddit/posts" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "spez", "type": "username", "before": 1700000000, "limit": 100 }'
+```
+
+Supported filters are `after`, `before`, `deletedOnly`, `keywords`, `limit`, `nsfwOnly`, `sort`, and `subreddit`. Date cursors accept ISO dates or Unix timestamps. `sort` accepts `asc`, `desc`, or `score`.
+
+## Threads
+
+Load a known post's archived comments. The post must belong to the queried username. Reddit fullnames such as `t3_abc123` and `t1_def456` are accepted and normalized.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/reddit/thread" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "spez", "type": "username", "postId": "t3_abc123", "limit": 100 }'
+```
+
+## Sources and cache
+
+Arctic Shift is queried first. PullPush supplements incomplete or unavailable
+pages; records are deduplicated by ID. Official profile and author-avatar
+requests require server-side OAuth configuration; the unauthenticated Reddit
+profile endpoint is not used. Profile-report and archive sources remain
+available without Reddit OAuth. Avatars, banners and other account fields
+are nullable when unavailable; archived activity can still be returned.
+
+Public errors and `partialErrors` expose stable codes, generic messages and
+capability names, not upstream URLs or diagnostic messages. Secondary failures
+can produce a successful but partial response.
+
+In production, recent content and browse responses are cached for 15 minutes,
+current profiles for 30 minutes, date-bounded history and community metadata
+for 6 hours, and threads for 1 hour. Provider caching is disabled outside
+production. Cache hits do not change route pricing. Stored results are not
+the provider cache and remain accessible until deleted.
