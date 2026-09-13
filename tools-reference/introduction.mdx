@@ -7,6 +7,12 @@ icon: wrench
 The Tools API exposes focused enrichment endpoints that run immediately and return a normalized JSON response. Use tools when you need a direct lookup for one observable, without creating a full Osintly search.
 
 <CardGroup cols={2}>
+  <Card title="IP Intelligence" icon="network-wired" href="/tools-reference/ip-intelligence">
+    Investigate IP geolocation, network ownership, routing, services and threat indicators.
+  </Card>
+  <Card title="Domain Intelligence" icon="globe" href="/tools-reference/domain-intelligence">
+    Investigate DNS, certificates, registration, infrastructure and public exposure.
+  </Card>
   <Card
     title="Epic Games"
     icon="/images/tools/epic-games.svg"
@@ -135,6 +141,8 @@ curl -X GET "https://api.osint.ly/tools/results/<result_id>" \
 ```
 
 Only the API key and creator that saved the result can retrieve it.
+
+To delete saved snapshots you no longer need, call `POST /tools/results/delete` with `{ "ids": ["<result-uuid>"] }`. The request accepts 1–100 IDs, is all-or-nothing for inaccessible IDs, and returns `202` with the queued IDs when accepted. Deletion does not re-run enrichment.
 
 ---
 

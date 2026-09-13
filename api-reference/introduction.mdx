@@ -33,6 +33,7 @@ The Osintly API lets you create searches, stream progress in real time, retrieve
 | System | `GET /health` |
 | Auth | `GET /` |
 | Usage | `GET /usage` |
+| Modules | `GET /modules` |
 | Radar (Free plan) | `GET /radar/breaches`, `GET /radar/breaches/{name}` |
 | Search | `POST /search`, `POST /search/module/once`, `POST /search/delete`, `GET /search/{id}`, `GET /search/{id}/results`, `GET /search/{id}/byok`, `GET /search/{id}/stream`, `GET /search/{id}/results/leaks`, `GET /search/{id}/results/leaks/{source}` |
 | Webhook delivery | Configured in `POST /search` with `delivery.webhook` |
@@ -50,6 +51,12 @@ The Search API and Tools API use the same Osintly authentication model, API keys
 Use the Search API when you want Osintly to orchestrate a full investigation workflow: create a search, stream progress, retrieve persisted results, use BYOK providers, and receive webhook callbacks.
 
 Use the Tools API when you want direct enrichment for one observable, such as a domain or IP address, without creating a full search run.
+
+<Warning>
+Domain Name and IP Address are still accepted by the Search API today, but support for them in `POST /search` and `POST /search/module/once` will end soon. For new lookups, these search types will be replaced by [Domain Intelligence](/tools-reference/domain-intelligence) and [IP Intelligence](/tools-reference/ip-intelligence). No cutoff date has been announced; do not treat this as an already-active breaking change.
+</Warning>
+
+The website's [free search previews](/guides/free-searches) are separate from API plans and are not exposed as a public Search API endpoint.
 
 Tools are documented separately in [Tools API](/tools-reference/introduction).
 
