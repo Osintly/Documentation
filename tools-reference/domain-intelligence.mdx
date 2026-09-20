@@ -1,0 +1,126 @@
+---
+title: Domain Intelligence
+description: Domain DNS, infrastructure, certificates, registration and exposure intelligence.
+icon: globe
+---
+
+## Request
+
+Additional fields include DNS `recordDetails` (record type, owner name, value and TTL in seconds), IPv4/IPv6 `addresses`, RDAP contacts and delegation metadata, and up to 25 deduplicated certificate transparency records including the current entry. CT metadata does not prove the certificate is currently served; missing revocation data is null.
+
+Passive port results also include associated hostnames, CPE software identifiers, reported CVEs and tags. These are observations, not a live vulnerability assessment. The app supports direct IP/domain pivots and an approximate network-location map when coordinates are available.
+
+All business routes use `POST /tools/domain-intelligence/<operation>` with
+`{ "domain": "example.com" }`. Domains are lowercased; HTTP(S) URLs, paths and
+a trailing dot are normalized. Invalid input returns `400 VALIDATION_ERROR`.
+Bearer authentication and a plan with the `tools` feature are required, including
+for free operations. No provider credentials are supplied by API consumers.
+
+| Operation | Cost | Data |
+| --- | --- | --- |
+| `GET /`, `/infos`, `/costs` | Free | Metadata and pricing |
+| `POST /dns` | Free | Records, primary IP, DNSSEC, email authentication |
+| `POST /http` | Free | HTTP status, headers, redirects and security headers |
+| `POST /ssl` | Free | Certificate transparency records and certificate history |
+| `POST /technologies` | Free | Technologies inferred from HTTP headers |
+| `POST /whois` | Free | Registration dates, registrar, contacts and nameservers |
+| `POST /security` | Free | Security-related public files |
+| `POST /risk` | Free | Deterministic lexical domain signals |
+| `POST /archives` | Free | Archived years and daily capture previews |
+| `POST /subdomains` | 1 core search | Subdomains, IPs and geolocation |
+| `POST /emails` | 1 core search | Discovered email addresses |
+| `POST /ports` | 1 core search | Reported open ports |
+| `POST /reputation` | 1 core search | Available reputation signals |
+| `POST /all` | 1 core search | All collectors, or selected sections |
+
+There is no validation-only `/search` operation for this tool. `/risk` analyzes
+the domain string; its score is not a verdict that a domain is malicious.
+Certificate transparency records are not a live TLS handshake or a guarantee
+of current revocation status. Missing values do not imply a negative finding.
+Port results use passive IP observations on the domain's primary IP, not a live
+scan or proof that a service belongs exclusively to this domain. The response
+includes `ip`, `collection: "passive"`, `count` and `openPorts`; service names
+are `null` when unknown. No C99 credential is needed for this operation.
+
+## Full lookup
+
+```bash
+curl -X POST "https://api.osint.ly/tools/domain-intelligence/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"domain":"example.com","save":true}'
+```
+
+The response uses `{ tool, operation, query, data, meta }`, where `tool` is
+`domain-intelligence` and `query.domain` is the normalized domain. `/all` returns
+`dns`, `http`, `ssl`, `technologies`, `whois`, `security`, `risk`, `subdomains`,
+`emails`, `ports`, `reputation`, `collectedSections` and `partialErrors`.
+
+## Progressive loading
+
+To load a smaller first view, supply `sections` to `/all`:
+
+```bash
+curl -X POST "https://api.osint.ly/tools/domain-intelligence/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"domain":"example.com","sections":["dns","http","risk"],"save":true}'
+```
+
+`sections` accepts 1 to 11 entries using the collector names above. Duplicates
+are collected once. Omit it to preserve the full lookup behavior. Unrequested
+sections are `null`; `collectedSections` lists the requested collectors.
+This option is rejected on split routes. `/all` still costs 1 core search,
+regardless of the selected sections. Later split requests have their normal cost.
+
+Successful collectors are retained when another fails. Failed collectors are
+`null` with `{ collector, code, message }` entries in `partialErrors`. If every
+selected collector fails, the request returns a non-2xx error. Provider errors
+use generic messages, without upstream URLs or credentials.
+
+## Website history
+
+`POST /tools/domain-intelligence/archives` is an independent, free operation,
+not part of `/all`. Authentication and the tools feature are still required.
+
+```json
+{ "domain": "example.com", "path": "/", "year": 2025 }
+```
+
+Omit `year` to retrieve available `years` (newest first). Supply a year from
+1996 through the current UTC year to retrieve `captures`. `path` defaults to
+`/` and must be an exact path without a query, fragment or wildcard.
+The response includes `domain`, `path`, `year`, `years`, `captures`,
+`sampled`, `granularity`, `truncated` and `returnedCount`.
+Captures contain `timestamp`, `date`, `originalUrl`, `replayUrl` and `status`.
+Only successful HTML captures are included, sampled once per year for the
+year index and once per day for a selected year. These are not total capture
+counts. Provider responses are bounded to 400 rows; `truncated` signals the cap.
+`save` and `sections` are not accepted on this route.
+
+Archive metadata is cached for 24 hours in production. The app loads the index
+near the viewport, then the selected year's dates. Selecting a date opens an
+isolated fullscreen archive viewer. Archived content is served by Wayback, not
+proxied through the Osintly application origin. Playback availability and speed
+depend on the archive; the viewer provides an external fallback link.
+Upstream throttling returns `503 PROVIDER_RATE_LIMITED` with `Retry-After: 60`;
+the caller should wait before retrying. Other failures remain `502`/`504` and
+are never presented as an empty archive history.
+
+## Snapshot storage
+
+`save: true` on `/all` persists exactly the returned snapshot and exposes
+`meta.savedResult.id`. Read it with `GET /tools/results/<id>` using the same API
+key and creator. Subsequent split lookups do not modify that snapshot. The app
+also checks ownership against the signed-in user before reading a saved result.
+
+Provider cache is shared by `/all` and split routes and never changes pricing.
+DNS is cached for 10 minutes; HTTP, technologies and security files for 30 minutes;
+certificates for 12 hours; registration and subdomains for 24 hours; emails and
+ports for 6 hours; geolocation for 7 days; reputation for 30 minutes.
+Cache is disabled outside production.
+
+Errors include `401` for invalid authentication, `403 PLAN_FEATURE_REQUIRED`,
+`429 RATE_LIMIT_EXCEEDED` on paid routes, and `502`/`503`/`504` for unavailable
+enrichment. A missing server-side provider configuration returns `503` only when
+the selected operation requires it. Failed requests do not incur a success usage event.

@@ -1,102 +1,31 @@
 ---
-title: Monitoring Runbook
-description: Operate, review, and troubleshoot monitoring workflows in production.
+title: Legacy Monitoring runbook
+description: Review and wind down existing legacy Monitoring workflows while Security Watch is prepared.
 icon: bell
 ---
 
-This runbook explains day-to-day operations for monitors, alerts, and channel delivery.
-
-<Note>
-Monitoring is available on Pro and Advanced plans. See [osint.ly/pricing](https://osint.ly/pricing) for current limits.
-</Note>
-
----
-
-## Daily operations
-
-<Steps>
-  <Step title="Review monitor health">
-    Open Monitoring and scan active monitors, last run timestamps, and recent alert volume.
-  </Step>
-  <Step title="Triage new alerts">
-    Prioritize alerts by severity and target criticality before updating workflow status.
-  </Step>
-  <Step title="Validate channel delivery">
-    Confirm email and Discord webhook delivery for alerts generated in the last period.
-  </Step>
-  <Step title="Clean obsolete monitors">
-    Pause or delete monitors that are no longer part of active investigations.
-  </Step>
-</Steps>
-
----
-
-## Monitor configuration standards
-
-| Field | Standard |
-|---|---|
-| Monitor name | Include case or client identifier + target |
-| Frequency | Start daily, then increase only if investigation needs it |
-| Type | Match target shape (Email Registration, Global Search, Module Query) |
-| Ownership | Keep monitors inside the correct solo or team workspace |
-
----
-
-## Alert workflow
-
-<AccordionGroup>
-  <Accordion title="new" icon="circle-dot">
-    Initial state after alert creation. Requires triage.
-  </Accordion>
-  <Accordion title="investigating" icon="magnifying-glass">
-    Analyst is validating signal quality and impact.
-  </Accordion>
-  <Accordion title="resolved" icon="circle-check">
-    Investigation action completed and no pending follow-up.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Failure patterns and actions
-
-<Tabs>
-  <Tab title="No alerts expected">
-    - Confirm monitor is active
-    - Confirm target and type are valid
-    - Verify schedule frequency
-    - Check whether the underlying data source has new events
-  </Tab>
-  <Tab title="No alerts but changes expected">
-    - Run one manual search on the same target
-    - Compare manual result with latest monitor state
-    - Check whether monitor query parameters were narrowed too much
-  </Tab>
-  <Tab title="Channel delivery failed">
-    - Recheck email destination or Discord webhook URL
-    - Validate destination permissions
-    - Retry with a controlled test event
-  </Tab>
-</Tabs>
-
----
-
-## Capacity and cost hygiene
-
-- Keep high-frequency monitors only for high-priority targets
-- Review monitor count weekly against plan limits
-- Use history and project context to avoid duplicate monitors
-- Archive resolved investigations to keep alert queues actionable
-
 <Warning>
-If monitor creation is blocked, the workspace has reached plan monitor limits. Remove obsolete monitors or upgrade plan.
+Legacy Monitoring is being retired. Do not create new monitors or build new operational workflows on it. Security Watch will replace this experience.
 </Warning>
 
----
+## Handling an existing monitor
+
+1. Open the legacy Monitoring dashboard and record the monitor target, status, latest run, and any unresolved alerts.
+2. Preserve investigation context in the correct Personal or organization history, notes, or export before the transition.
+3. Pause or delete monitors that are no longer required.
+4. For a live issue, use a new full search or focused tool lookup to validate the target instead of relying only on a scheduled legacy run.
+5. Escalate delivery or data-retention concerns to [support](https://osint.ly/support).
+
+## Transition checklist
+
+- Identify legacy monitors that are still business-critical.
+- Record their target, intended cadence, notification recipients, and current alert state.
+- Confirm the workspace that owns the related investigation.
+- Remove obsolete monitors to avoid depending on a retiring service.
+- Follow Security Watch release and migration guidance when it is available.
 
 ## Related resources
 
-- Product support: [osint.ly/support](https://osint.ly/support)
-- Community: [osint.ly/community](https://osint.ly/community)
-- Sales/support for plan changes: [osint.ly/support/sales](https://osint.ly/support/sales)
-- Documentation hub: [docs.osint.ly](https://docs.osint.ly)
+- [Monitoring retirement](/operations/monitoring)
+- [Organizations & workspaces](/collaboration/organizations)
+- [Tool usage limits](/tools-reference/usage-limits)

@@ -3,7 +3,7 @@
   "info": {
     "title": "Osintly Tools API",
     "version": "1.0.0",
-    "description": "OpenAPI specification for Osintly Epic Games, Vehicle History Finder, Xbox, PlayStation Network, Roblox, Steam, Social Club, and Reddit tools and catalog endpoints.",
+    "description": "OpenAPI specification for Osintly intelligence and gaming tools, saved results, and catalog endpoints.",
     "contact": {
       "name": "Osintly",
       "url": "https://docs.osint.ly/tools-reference/introduction"
@@ -21,6 +21,10 @@
     }
   ],
   "tags": [
+    {
+      "name": "Domain Intelligence",
+      "description": "Domain infrastructure and exposure intelligence."
+    },
     {
       "name": "Tools Catalog",
       "description": "Discover available tools, metadata, and route costs."
@@ -56,9 +60,720 @@
     {
       "name": "Reddit",
       "description": "Reddit profile and public archived activity validation and enrichment endpoints."
+    },
+    {
+      "name": "IP Intelligence",
+      "description": "IP ownership, routing and public exposure."
     }
   ],
   "paths": {
+    "/tools/domain-intelligence/archives": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "operationId": "domainIntelligenceArchives",
+        "summary": "List archived years or daily captures (free)",
+        "description": "Exact URL path lookup. Omit year for available years; provide year for daily sampled successful HTML captures. At most 400 upstream rows. Independent of /all. Metadata cache: 24 hours in production. No save or sections options.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "domain"
+                ],
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "example": "example.com"
+                  },
+                  "path": {
+                    "type": "string",
+                    "default": "/",
+                    "maxLength": 1024,
+                    "description": "Exact path without wildcard, query or fragment"
+                  },
+                  "year": {
+                    "type": "integer",
+                    "minimum": 1996,
+                    "description": "At most the current UTC year"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Standard tool envelope with years, captures, sampled, granularity, truncated and returnedCount. Each capture includes timestamp, date, originalUrl, replayUrl and status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Tools feature required"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "description": "Archive temporarily rate limited; Retry-After header indicates the retry delay"
+          },
+          "504": {
+            "description": "Provider timeout"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/dns": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: dns",
+        "operationId": "domainIntelligenceDns",
+        "description": "Free. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/http": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: http",
+        "operationId": "domainIntelligenceHttp",
+        "description": "Free. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/ssl": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: ssl",
+        "operationId": "domainIntelligenceSsl",
+        "description": "Free. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/technologies": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: technologies",
+        "operationId": "domainIntelligenceTechnologies",
+        "description": "Free. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/whois": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: whois",
+        "operationId": "domainIntelligenceWhois",
+        "description": "Free. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/security": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: security",
+        "operationId": "domainIntelligenceSecurity",
+        "description": "Free. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/risk": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: risk",
+        "operationId": "domainIntelligenceRisk",
+        "description": "Free. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/subdomains": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: subdomains",
+        "operationId": "domainIntelligenceSubdomains",
+        "description": "Cost: 1 core search. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/emails": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: emails",
+        "operationId": "domainIntelligenceEmails",
+        "description": "Cost: 1 core search. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/ports": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: ports",
+        "operationId": "domainIntelligencePorts",
+        "description": "Cost: 1 core search. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/reputation": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: reputation",
+        "operationId": "domainIntelligenceReputation",
+        "description": "Cost: 1 core search. Returns structured domain intelligence.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/all": {
+      "post": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence: all",
+        "operationId": "domainIntelligenceAll",
+        "description": "Cost: 1 core search. Optional sections select collectors. Unrequested sections are null; failures appear in partialErrors. save persists exactly the returned snapshot.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainAllRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Domain intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          },
+          "504": {
+            "description": "Request timed out"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence": {
+      "get": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence routes",
+        "operationId": "domainIntelligenceIndex",
+        "responses": {
+          "200": {
+            "description": "Route index"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          }
+        }
+      }
+    },
     "/tools": {
       "get": {
         "tags": [
@@ -411,6 +1126,23 @@
           "404": {
             "$ref": "#/components/responses/NotFound"
           }
+        }
+      }
+    },
+    "/tools/results/delete": {
+      "post": {
+        "tags": ["Tools Catalog"],
+        "operationId": "deleteSavedToolResults",
+        "summary": "Delete saved tool results",
+        "description": "Delete 1–100 saved result IDs owned by the authenticated key and creator. Returns 202 with accepted IDs; inaccessible IDs cause a 404 response.",
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["ids"], "properties": { "ids": { "type": "array", "minItems": 1, "maxItems": 100, "items": { "type": "string", "format": "uuid" } } } } } } },
+        "responses": {
+          "202": { "description": "Deletion accepted" },
+          "400": { "$ref": "#/components/responses/ValidationError" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/PlanFeatureRequired" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "503": { "description": "Deletion failed" }
         }
       }
     },
@@ -2210,251 +2942,1213 @@
     },
     "/tools/reddit": {
       "get": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "List Reddit routes",
         "operationId": "getRedditIndex",
         "responses": {
-          "200": {"$ref":"#/components/responses/ToolRouteIndex"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"}
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          }
         }
       }
     },
     "/tools/reddit/search": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Validate and normalize a Reddit username",
         "description": "Validation-only operation. It does not call a provider or consume credits.",
         "operationId": "runRedditSearch",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          }
         }
       }
     },
     "/tools/reddit/resolve": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Resolve Reddit profile availability and identity",
         "operationId": "runRedditResolve",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/profile": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Get Reddit profile and archive metadata",
         "operationId": "runRedditProfile",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Result could not be saved or quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/posts": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Get filtered and paginated archived Reddit posts",
         "operationId": "runRedditPosts",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/comments": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Get filtered and paginated archived Reddit comments",
         "operationId": "runRedditComments",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/communities": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Get Reddit community interactions and archived flairs",
         "operationId": "runRedditCommunities",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/activity": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Get deterministic Reddit activity summaries",
         "operationId": "runRedditActivity",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/thread": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Get an archived Reddit comment thread",
         "description": "The post must belong to the queried Reddit username.",
         "operationId": "runRedditThread",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditThreadRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditThreadRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/lookup": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Start a saved Reddit lookup with browsing included",
         "description": "Costs 1 core_search unit. Collects only the profile, always saves it (even if save:false), and returns data.profile and meta.savedResult.id. No polling. Subsequent /browse calls with that ID are free. Default page size is 25. Reuse the saved ID rather than calling lookup again on refresh.",
         "operationId": "runRedditLookup",
         "requestBody": {
           "required": true,
-          "content": { "application/json": {
-            "schema": { "$ref": "#/components/schemas/RedditLookupRequest" },
-            "example": { "value": "spez", "type": "username" }
-          } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedditLookupRequest"
+              },
+              "example": {
+                "value": "spez",
+                "type": "username"
+              }
+            }
+          }
         },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Result could not be saved or quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/browse": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Browse an owned saved Reddit result without additional search charges",
         "description": "Free for saved lookup/all results. Verifies creator and API-key ownership before reading cache or calling providers. Account is derived from the saved result. Does not mutate the saved snapshot. Defaults inherit the saved query; options starts a new view. Reuse nextCursor without options for pagination. A cursor is not authorization. Archived coverage and throughput depend on providers.",
         "operationId": "browseRedditResult",
         "requestBody": {
           "required": true,
-          "content": { "application/json": {
-            "schema": { "$ref": "#/components/schemas/RedditBrowseRequest" },
-            "example": { "resultId": "1349352c-4306-4d7f-a712-8622d5793515", "section": "posts" }
-          } }
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedditBrowseRequest"
+              },
+              "example": {
+                "resultId": "1349352c-4306-4d7f-a712-8622d5793515",
+                "section": "posts"
+              }
+            }
+          }
         },
         "responses": {
-          "200": {"description":"Section data; posts/comments include pagination.nextCursor (null at end).","content":{"application/json":{"schema":{"$ref":"#/components/schemas/RedditBrowseResponse"}}}},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"description":"Saved result unavailable, deleted, belongs to another owner/key, or is not Reddit"},
-          "409": {"description":"RESULT_BROWSING_NOT_INCLUDED: use a saved lookup/all result, or complete a saved profile through feed"},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "description": "Section data; posts/comments include pagination.nextCursor (null at end).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedditBrowseResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "description": "Saved result unavailable, deleted, belongs to another owner/key, or is not Reddit"
+          },
+          "409": {
+            "description": "RESULT_BROWSING_NOT_INCLUDED: use a saved lookup/all result, or complete a saved profile through feed"
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/feed": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Collect feed or complete a saved profile",
         "description": "Costs 2 core_search units. With resultId, verifies ownership and matching username, then upgrades the saved profile to all under the same ID. Without resultId, returns feed-only data without persistence. Prefer browse for an already completed result.",
         "operationId": "runRedditFeed",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Result could not be saved or quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
         }
       }
     },
     "/tools/reddit/all": {
       "post": {
-        "tags": ["Reddit"],
+        "tags": [
+          "Reddit"
+        ],
         "summary": "Run all Reddit collectors",
         "description": "Costs 3 core_search units. Returns the first page only, with up to 100 posts and 100 comments. With save:true, the saved ID includes free /browse pagination and enrichment.",
         "operationId": "runRedditAll",
-        "requestBody": { "$ref": "#/components/requestBodies/RedditRequest" },
+        "requestBody": {
+          "$ref": "#/components/requestBodies/RedditRequest"
+        },
         "responses": {
-          "200": {"$ref":"#/components/responses/RedditToolResponse"},
-          "400": {"$ref":"#/components/responses/ValidationError"},
-          "401": {"$ref":"#/components/responses/Unauthorized"},
-          "403": {"$ref":"#/components/responses/PlanFeatureRequired"},
-          "404": {"$ref":"#/components/responses/NotFound"},
-          "429": {"description":"Insufficient quota (RATE_LIMIT_EXCEEDED)","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "502": {"$ref":"#/components/responses/ProviderError"},
-          "503": {"description":"Result could not be saved or quota could not be checked","content":{"application/json":{"schema":{"$ref":"#/components/schemas/ErrorResponse"}}}},
-          "504": {"$ref":"#/components/responses/ProviderTimeout"}
+          "200": {
+            "$ref": "#/components/responses/RedditToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "description": "Insufficient quota (RATE_LIMIT_EXCEEDED)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "$ref": "#/components/responses/ProviderError"
+          },
+          "503": {
+            "description": "Result could not be saved or quota could not be checked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "$ref": "#/components/responses/ProviderTimeout"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/geo": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: geo",
+        "operationId": "ipIntelligenceGeo",
+        "description": "Free. Requires the tools feature.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/network": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: network",
+        "operationId": "ipIntelligenceNetwork",
+        "description": "Free. Requires the tools feature.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/bgp": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: bgp",
+        "operationId": "ipIntelligenceBgp",
+        "description": "Free. Requires the tools feature.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/whois": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: whois",
+        "operationId": "ipIntelligenceWhois",
+        "description": "Free. Requires the tools feature.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/rdns": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: rdns",
+        "operationId": "ipIntelligenceRdns",
+        "description": "Free. Requires the tools feature.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/risk": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: risk",
+        "operationId": "ipIntelligenceRisk",
+        "description": "Free. Requires the tools feature.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/ports": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: ports",
+        "operationId": "ipIntelligencePorts",
+        "description": "Cost: 1 core search.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/reputation": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: reputation",
+        "operationId": "ipIntelligenceReputation",
+        "description": "Cost: 1 core search.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/hosted-domains": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: hosted-domains",
+        "operationId": "ipIntelligenceHostedDomains",
+        "description": "Cost: 1 core search.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/all": {
+      "post": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence: all",
+        "operationId": "ipIntelligenceAll",
+        "description": "Cost: 1 core search.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IpAllRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "IP intelligence",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IpResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "429": {
+            "description": "Quota exceeded"
+          },
+          "502": {
+            "description": "Data unavailable"
+          },
+          "504": {
+            "description": "Data unavailable"
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence": {
+      "get": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence index",
+        "responses": {
+          "200": {
+            "description": "Tool metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/infos": {
+      "get": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence /infos",
+        "responses": {
+          "200": {
+            "description": "Tool metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools/ip-intelligence/costs": {
+      "get": {
+        "tags": [
+          "IP Intelligence"
+        ],
+        "summary": "IP Intelligence /costs",
+        "responses": {
+          "200": {
+            "description": "Tool metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -2475,6 +4169,8 @@
         "schema": {
           "type": "string",
           "enum": [
+            "domain-intelligence",
+            "ip-intelligence",
             "epic-games",
             "vehicle-history-finder",
             "xbox",
@@ -3060,6 +4756,99 @@
       }
     },
     "schemas": {
+      "DomainRequest": {
+        "type": "object",
+        "required": [
+          "domain"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "example": "example.com"
+          }
+        }
+      },
+      "DomainAllRequest": {
+        "type": "object",
+        "required": [
+          "domain"
+        ],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "example": "example.com"
+          },
+          "save": {
+            "type": "boolean",
+            "default": false
+          },
+          "sections": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 11,
+            "items": {
+              "type": "string",
+              "enum": [
+                "dns",
+                "http",
+                "ssl",
+                "technologies",
+                "whois",
+                "security",
+                "risk",
+                "subdomains",
+                "emails",
+                "ports",
+                "reputation"
+              ]
+            }
+          }
+        }
+      },
+      "DomainResponse": {
+        "type": "object",
+        "required": [
+          "tool",
+          "operation",
+          "query",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "tool": {
+            "type": "string",
+            "const": "domain-intelligence"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "type": "object",
+            "required": [
+              "domain"
+            ],
+            "properties": {
+              "domain": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
       "ToolInfo": {
         "type": "object",
         "required": [
@@ -4121,62 +5910,198 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 25 },
-          "sort": { "type": "string", "enum": ["asc", "desc"], "default": "desc" },
-          "after": { "oneOf": [{ "type": "string" }, { "type": "number" }] },
-          "before": { "oneOf": [{ "type": "string" }, { "type": "number" }] },
-          "subreddit": { "type": "string", "maxLength": 64 },
-          "keywords": { "type": "string", "maxLength": 200 },
-          "deletedOnly": { "type": "boolean", "default": false },
-          "nsfwOnly": { "type": "boolean", "default": false }
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25
+          },
+          "sort": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "default": "desc"
+          },
+          "after": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "before": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "subreddit": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "keywords": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "deletedOnly": {
+            "type": "boolean",
+            "default": false
+          },
+          "nsfwOnly": {
+            "type": "boolean",
+            "default": false
+          }
         }
       },
       "RedditBrowseRequest": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["resultId", "section"],
+        "required": [
+          "resultId",
+          "section"
+        ],
         "properties": {
-          "resultId": { "type": "string", "format": "uuid" },
-          "section": { "type": "string", "enum": ["posts", "comments", "activity", "communities"] },
-          "options": { "$ref": "#/components/schemas/RedditBrowseOptions" },
-          "cursor": { "type": "string", "minLength": 1, "maxLength": 4096, "pattern": "^[A-Za-z0-9_-]+$", "description": "Opaque nextCursor from the same result/section; never combine with options." }
-        },
-        "allOf": [{
-          "if": { "required": ["cursor"] },
-          "then": {
-            "not": { "required": ["options"] },
-            "properties": { "section": { "enum": ["posts", "comments"] } }
+          "resultId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "section": {
+            "type": "string",
+            "enum": [
+              "posts",
+              "comments",
+              "activity",
+              "communities"
+            ]
+          },
+          "options": {
+            "$ref": "#/components/schemas/RedditBrowseOptions"
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "Opaque nextCursor from the same result/section; never combine with options."
           }
-        }]
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "cursor"
+              ]
+            },
+            "then": {
+              "not": {
+                "required": [
+                  "options"
+                ]
+              },
+              "properties": {
+                "section": {
+                  "enum": [
+                    "posts",
+                    "comments"
+                  ]
+                }
+              }
+            }
+          }
+        ]
       },
       "RedditBrowseResponse": {
         "type": "object",
-        "required": ["tool", "operation", "query", "data", "meta"],
+        "required": [
+          "tool",
+          "operation",
+          "query",
+          "data",
+          "meta"
+        ],
         "properties": {
-          "tool": { "const": "reddit" },
-          "operation": { "enum": ["posts", "comments", "activity", "communities"] },
-          "query": { "type": "object", "additionalProperties": true },
+          "tool": {
+            "const": "reddit"
+          },
+          "operation": {
+            "enum": [
+              "posts",
+              "comments",
+              "activity",
+              "communities"
+            ]
+          },
+          "query": {
+            "type": "object",
+            "additionalProperties": true
+          },
           "data": {
             "type": "object",
             "additionalProperties": true,
             "properties": {
-              "pagination": { "type": "object", "additionalProperties": true, "properties": {
-                "hasMore": { "type": "boolean" },
-                "nextCursor": { "type": ["string", "null"] },
-                "limit": { "type": "integer" }
-              } }
+              "pagination": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "hasMore": {
+                    "type": "boolean"
+                  },
+                  "nextCursor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "limit": {
+                    "type": "integer"
+                  }
+                }
+              }
             }
           },
-          "meta": { "type": "object", "required": ["timestamp", "resultId"], "properties": {
-            "timestamp": { "type": "string", "format": "date-time" },
-            "resultId": { "type": "string", "format": "uuid" }
-          } }
+          "meta": {
+            "type": "object",
+            "required": [
+              "timestamp",
+              "resultId"
+            ],
+            "properties": {
+              "timestamp": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "resultId": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
         }
       },
       "RedditLookupRequest": {
         "allOf": [
-          { "$ref": "#/components/schemas/RedditRequest" },
-          { "properties": { "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 25 } } }
+          {
+            "$ref": "#/components/schemas/RedditRequest"
+          },
+          {
+            "properties": {
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100,
+                "default": 25
+              }
+            }
+          }
         ]
       },
       "RedditRequest": {
@@ -4207,15 +6132,23 @@
           },
           "after": {
             "oneOf": [
-              { "type": "string" },
-              { "type": "number" }
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
             ],
             "description": "ISO date or Unix timestamp lower bound."
           },
           "before": {
             "oneOf": [
-              { "type": "string" },
-              { "type": "number" }
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
             ],
             "description": "ISO date or Unix timestamp upper bound or pagination cursor."
           },
@@ -4239,7 +6172,11 @@
           },
           "sort": {
             "type": "string",
-            "enum": ["asc", "desc", "score"],
+            "enum": [
+              "asc",
+              "desc",
+              "score"
+            ],
             "default": "desc"
           },
           "subreddit": {
@@ -4274,7 +6211,13 @@
           },
           "type": {
             "type": "string",
-            "enum": ["username", "pseudonym", "reddit", "u", "user"]
+            "enum": [
+              "username",
+              "pseudonym",
+              "reddit",
+              "u",
+              "user"
+            ]
           },
           "postId": {
             "type": "string",
@@ -4292,6 +6235,85 @@
           }
         },
         "additionalProperties": false
+      },
+      "IpRequest": {
+        "type": "object",
+        "required": [
+          "ip"
+        ],
+        "properties": {
+          "ip": {
+            "type": "string",
+            "description": "IPv4 or IPv6 address",
+            "example": "1.1.1.1"
+          }
+        }
+      },
+      "IpAllRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IpRequest"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "save": {
+                "type": "boolean",
+                "default": false
+              },
+              "sections": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 9,
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "geo",
+                    "network",
+                    "bgp",
+                    "whois",
+                    "rdns",
+                    "risk",
+                    "ports",
+                    "reputation",
+                    "hosted-domains"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "IpResponse": {
+        "type": "object",
+        "required": [
+          "tool",
+          "operation",
+          "query",
+          "data",
+          "meta"
+        ],
+        "properties": {
+          "tool": {
+            "type": "string",
+            "enum": [
+              "ip-intelligence"
+            ]
+          },
+          "operation": {
+            "type": "string"
+          },
+          "query": {
+            "$ref": "#/components/schemas/IpRequest"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ResponseMeta"
+          }
+        }
       }
     }
   }

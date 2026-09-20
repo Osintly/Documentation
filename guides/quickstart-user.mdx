@@ -7,24 +7,24 @@ icon: rocket
 ## Before you start
 
 <Steps>
-  <Step title="Create your account">
-    Go to [Osintly](https://osint.ly/#signup). You can sign up with email/password or via Google, Discord, GitHub, X, LinkedIn, or Facebook.
+  <Step title="Try a preview or create an account">
+    You can run a [free preview](/guides/free-searches) without signing up. For full searches and saved history, go to [Osintly](https://osint.ly/#signup) and create an account.
 
     <Tip>Enable MFA right after signup. It takes 30 seconds and protects your investigation data.</Tip>
   </Step>
   <Step title="Pick a plan">
-    Each search costs credits. Choose based on your expected volume. Full details on [osint.ly/pricing](https://osint.ly/pricing):
+    You can first try a [limited pseudonym or email preview](/guides/free-searches) without an account or subscription. Full saved searches cost credits; choose a plan based on your expected volume. Full details on [osint.ly/pricing](https://osint.ly/pricing):
 
     | Plan | Credits/month | Best for |
     |---|---|---|
     | Standard (€9.99) | 25 | Occasional solo investigations |
-    | Pro (€24.99) | 100 | Regular analysts, small teams |
-    | Advanced (€94.99) | 200 | Power users, team workspaces |
+    | Pro (€24.99) | 100 | Regular analysts |
+    | Ultimate (€94.99) | 200 | Power users and larger workflows |
 
     <Note>You can upgrade at any time. Credits do not roll over month to month.</Note>
   </Step>
   <Step title="Complete your profile">
-    Set your username and avatar. If you're on a team plan, your display name is visible to teammates.
+    Set your username and avatar. Your display name identifies searches you create in an organization workspace.
   </Step>
 </Steps>
 
@@ -43,13 +43,12 @@ icon: rocket
     |---|---|
     | <Icon iconType="solid" icon="at" /> Pseudonym | `johndoe42` |
     | <Icon iconType="solid" icon="envelope" /> Email Address | `john@example.com` |
-    | <Icon iconType="solid" icon="phone" /> Phone | `+1 555 000 1234` |
-    | <Icon iconType="solid" icon="network-wired" /> IP address | `192.168.1.1` |
-    | <Icon iconType="solid" icon="globe" /> Domain | `example.com` |
+    | <Icon iconType="solid" icon="network-wired" /> IP address | `1.1.1.1` — [IP Intelligence](/tools-reference/ip-intelligence) is recommended |
+    | <Icon iconType="solid" icon="globe" /> Domain | `example.com` — [Domain Intelligence](/tools-reference/domain-intelligence) is recommended |
     | <Icon iconType="solid" icon="bitcoin-sign" /> Cryptocurrency | `1A1zP1eP5Q...` |
   </Step>
   <Step title="Start the search">
-    Hit **Search**. Results stream in real time via SSE: module cards appear as each source responds. You don't need to wait for everything to finish before reading results.
+    Hit **Start search** for a full search, or **Run free preview** for a limited pseudonym/email lookup when you have no paid app plan. Full results stream in real time via SSE: module cards appear as each source responds.
   </Step>
   <Step title="Read the result page">
     Each module card shows a data source. Click any card to expand linked records, images, and geographic context.
@@ -74,14 +73,14 @@ icon: rocket
         Any geolocation signals are plotted on an interactive map.
       </Accordion>
       <Accordion title="AI Analyst">
-        Available on Pro and Advanced. Open the AI chat to ask questions about the results, generate a timeline, or focus on specific signals. The AI can also run a web search for additional context.
+        Available on Pro and Ultimate. Open the AI chat to ask questions about the results, generate a timeline, or focus on specific signals. The AI can also run a web search for additional context.
       </Accordion>
     </AccordionGroup>
   </Step>
   <Step title="Come back to your results anytime">
-    You can leave the result page freely. Every search is saved automatically and accessible from your [history](https://osint.ly/history). From there you can reopen any past result, continue reading, or attach it to a project later.
+    You can leave a full result page and return to it from your [history](https://osint.ly/history). Free previews are not saved in history and expire after 15 minutes.
 
-    <Tip>Create one project per case. It keeps your search history, attachments, and team context together in one place.</Tip>
+    <Tip>When working in an organization, first select the correct workspace so the search is added to the shared organization history.</Tip>
   </Step>
 </Steps> 
 
@@ -109,15 +108,15 @@ Five quick starting points. For complete step-by-step workflows on each scenario
     <Note>Breach provider access is gated by plan. Check [Pricing](https://osint.ly/pricing) to see what each plan includes.</Note>
   </Accordion>
   <Accordion title="Trace a suspicious IP" icon="network-wired">
-    1. Select **IP address** as input type.
+    1. Open [IP Intelligence](https://osint.ly/tools/ip-intelligence).
     2. Enter the IP (IPv4 or IPv6).
-    3. Check geolocation, hosting provider, ASN, and threat intelligence cards.
+    3. Check geolocation, hosting provider, ASN, and public threat signals.
   </Accordion>
   <Accordion title="Map a domain's infrastructure" icon="globe">
-    1. Select **Domain** as input type.
-    2. Enter the root domain without `https://` or trailing slash.
+    1. Open [Domain Intelligence](https://osint.ly/tools/domain-intelligence).
+    2. Enter the root domain.
     3. Review DNS records, subdomains, WHOIS, and linked IP addresses.
-    4. Cross-reference any discovered IPs with a new IP search.
+    4. Cross-reference discovered IPs in IP Intelligence.
   </Accordion>
   <Accordion title="Trace a crypto wallet" icon="bitcoin-sign">
     1. Select **Cryptocurrency** as input type.
@@ -134,10 +133,10 @@ Five quick starting points. For complete step-by-step workflows on each scenario
   <Card title="Investigation playbooks" icon="route" href="/guides/investigation-playbooks">
     Structured multi-step workflows for real cases.
   </Card>
-  <Card title="Set up a team" icon="users" href="/guides/admin-team-setup">
-    Invite members, assign roles, and manage shared credits.
+  <Card title="Set up an organization" icon="buildings" href="/collaboration/organizations">
+    Invite members, assign roles, and use shared credits.
   </Card>
-  <Card title="Monitoring & alerts" icon="bell" href="/product/detailed-features">
-    Get notified when new data appears for a target.
+  <Card title="Monitoring retirement" icon="bell" href="/operations/monitoring">
+    Review the Security Watch transition guidance for legacy Monitoring.
   </Card>
 </CardGroup>

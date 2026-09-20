@@ -19,6 +19,7 @@
             "pages": [
               "introduction",
               "guides/quickstart-user",
+              "guides/free-searches",
               "use-cases",
               "guides/credits-explained",
               "guides/reading-results",
@@ -53,13 +54,14 @@
             "group": "Investigation & Collaboration",
             "pages": [
               "collaboration/investigation-projects",
+              "collaboration/organizations",
               "collaboration/team-collaboration",
               "collaboration/export-sharing",
               "collaboration/logo-service"
             ]
           },
           {
-            "group": "Monitoring",
+            "group": "Security Watch transition",
             "pages": [
               "operations/monitoring"
             ]
@@ -121,6 +123,8 @@
             "group": "Overview",
             "pages": [
               "tools-reference/introduction",
+              "tools-reference/domain-intelligence",
+              "tools-reference/ip-intelligence",
               "tools-reference/vehicle-history-finder",
               "tools-reference/epic-games",
               "tools-reference/xbox",
@@ -128,7 +132,8 @@
               "tools-reference/playstation",
               "tools-reference/roblox",
               "tools-reference/reddit",
-              "tools-reference/socialclub"
+              "tools-reference/socialclub",
+              "tools-reference/usage-limits"
             ]
           },
           {

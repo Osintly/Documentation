@@ -1,20 +1,20 @@
 ---
 title: OSINT Search
-description: Run a single query across multiple providers using six input types.
+description: Run a full search across supported identifiers, or start with a free preview.
 icon: magnifying-glass
 ---
 
-The Search page is the core of Osintly. You enter one identifier, select the input type, and the platform queries all relevant providers for that type in parallel. Results stream in as each source responds.
+The Search page lets you enter an identifier and select its type. Full searches query the relevant providers in parallel, with results streaming as each source responds. Without an app subscription, you can run a [limited free preview](/guides/free-searches) for a pseudonym or email address.
 
 <CardGroup cols={3}>
-  <Card title="6 input types" icon="layer-group">
-    From usernames to crypto wallets. One input, all relevant providers.
+  <Card title="Supported identifiers" icon="layer-group">
+    Search usernames, emails, domains, IPs, and crypto wallets, subject to plan access.
   </Card>
   <Card title="Streaming results" icon="bolt">
     Results appear as providers respond. No waiting for a full page load.
   </Card>
   <Card title="Search history" icon="clock-rotate-left">
-    Every search is saved. Re-open past results at any time at no credit cost.
+    Full searches are saved. Re-open them later at no additional credit cost.
   </Card>
 </CardGroup>
 
@@ -42,17 +42,8 @@ Each input type maps to a dedicated set of providers. Select the one that matche
 
     **Tips:**
     - The **Registered Accounts** panel is only available on email searches.
-    - If the email uses a custom domain, pivot to a Domain search to investigate the infrastructure behind it.
+    - If the email uses a custom domain, pivot to [Domain Intelligence](/tools-reference/domain-intelligence) to investigate its infrastructure.
     - Multiple breaches with different associated usernames are a strong signal - search each username separately.
-  </Tab>
-  <Tab title="Phone Number">
-    **What to enter:** A phone number. Including the country code is recommended (`+1 555 000 1234`).
-
-    **What it looks up:** Carrier data, reverse lookup, social and messaging platform links.
-
-    **Tips:**
-    - Spaces and dashes are accepted.
-    - Searches without a country code may still return results depending on the provider, but coverage is reduced.
   </Tab>
   <Tab title="IP Address">
     **What to enter:** An IPv4 or IPv6 address.
@@ -61,7 +52,7 @@ Each input type maps to a dedicated set of providers. Select the one that matche
 
     **Tips:**
     - Results include the map view when location data is available.
-    - Chain IP results to Domain or Pseudonym searches to build a broader picture.
+    - For a focused infrastructure lookup, use [IP Intelligence](/tools-reference/ip-intelligence). The Search page may redirect IP input to that tool.
   </Tab>
   <Tab title="Domain">
     **What to enter:** The root domain (`example.com`). Full URLs are also accepted - Osintly extracts the root domain automatically.
@@ -71,7 +62,7 @@ Each input type maps to a dedicated set of providers. Select the one that matche
     **Tips:**
     - Do not include `https://` or a trailing path - or paste the full URL and let Osintly parse it.
     - Subdomains are discovered in the result, not entered manually.
-    - Use the Domain overview block to get a quick risk read before drilling into cards.
+    - For a focused infrastructure lookup, use [Domain Intelligence](/tools-reference/domain-intelligence). The Search page may redirect domain input to that tool.
   </Tab>
   <Tab title="Cryptocurrency">
     **What to enter:** A full wallet address.
@@ -85,13 +76,17 @@ Each input type maps to a dedicated set of providers. Select the one that matche
   </Tab>
 </Tabs>
 
+<Note>
+For domain and IP investigation, use the dedicated intelligence tools. These types remain accepted by the Search API for now, but support there will end soon.
+</Note>
+
 ---
 
 ## Input type detection
 
 Osintly auto-detects the input type as you type. The type chip updates based on the format of the identifier - email pattern, IP format, domain structure, wallet prefix, and so on.
 
-You can override the detected type by clicking a different chip at any time. This is useful when the identifier is ambiguous - for example, forcing a Domain search on a string that looks like an email domain.
+You can override the detected type by clicking a different chip. An unsupported type may still appear in the selector, but the service rejects it at launch.
 
 ---
 
@@ -108,7 +103,7 @@ You can override the detected type by clicking a different chip at any time. Thi
     Click the options icon next to the search input to configure modules, leak sources, dorking, and display preferences before launching.
   </Step>
   <Step title="Launch the search">
-    Click **Search**. Results stream in as each provider responds. 1 credit is deducted per search launched successfully.
+    Click **Start search** to run a full search. Results stream in as providers respond, and a successfully launched full search costs 1 credit. Without a paid app plan, use **Run free preview** for a pseudonym or email; it has separate limits and does not use credits.
 
     <Note>Opening a past result from history does not run a new query and does not consume credits.</Note>
   </Step>
@@ -131,7 +126,7 @@ Configure search behavior before launching from the options panel next to the in
     Use this when you want to narrow execution to a specific subset of sources.
     It is useful for targeted checks, signal confirmation, and reducing noise before analysis.
 
-    <Tip>For API usage, map this behavior to `options.modules` in [Domains](/api-reference/domains).</Tip>
+    <Tip>For API usage, map this behavior to `modules` in [Search request fields](/api-reference/domains).</Tip>
   </Accordion>
   <Accordion title="Leak sources" icon="database">
     Toggle which leak and breach provider categories are included in the search. Disabling a category means those providers are not queried and their cards do not appear in results.
@@ -153,33 +148,32 @@ Configure search behavior before launching from the options panel next to the in
 
 ## Plan limits
 
-Provider coverage depends on your plan. Standard queries a base set of providers. Pro and Advanced unlock additional sources, including premium breach databases and extra leak providers. For full pricing details, see [osint.ly/pricing](https://osint.ly/pricing).
+Provider coverage depends on your plan. Standard queries a base set of providers. Pro and Ultimate unlock additional sources, including premium breach databases and extra leak providers. For full pricing details, see [osint.ly/pricing](https://osint.ly/pricing).
  
 
-| Capability | Standard | Pro | Advanced |
+| Capability | Standard | Pro | Ultimate |
 |---|---:|---:|---:|
 | Monthly credits included | 25 | 100 | 200 |
 | Pseudonym search | Yes | Yes | Yes |
 | Email Address search | Yes | Yes | Yes |
 | IP Address search | Yes | Yes | Yes |
-| Phone Number search | No | No | Yes |
 | Domain Name search | No | Yes | Yes |
 | Cryptocurrency search | No | Yes | Yes |
 | Leak sources | No | Yes | Yes |
 | AI Analyst | No | Yes | Yes |
-| Monitoring | No | Yes (up to 5 monitors) | Yes (up to 15 monitors) |
-| Team members | 0 | 5 | 25 |
+| Security Watch / legacy Monitoring | No | See current product availability | See current product availability |
+| Organization members | — | Plan and paid seats determine access | Plan and paid seats determine access |
 | Result sharing | No | No | Yes |
-| Export (PDF / JSON / DOCX) | Yes | Yes | Yes |
+| Export (PDF / JSON / CSV / Markdown) | Yes | Yes | Yes |
 | Priority support | No | No | Yes |
 
- If a provider is not available on your plan, its card does not appear in results and any related options are disabled in the search settings.
+If a provider is not available on your plan, its card does not appear in results and related options are disabled in search settings. These paid-plan limits do not describe [free previews](/guides/free-searches).
 
 ---
 
 ## Search history
 
-Every search is saved automatically. Access your full history at [osint.ly/history](https://osint.ly/history).
+Full app searches are saved automatically in the workspace selected when they launch. Access them at [osint.ly/history](https://osint.ly/history). Personal history stays private; organization history is shared with the organization’s members and identifies the creator. Free previews are temporary and do not appear there.
 
 From the history page you can:
 - Re-open any past result at no credit cost

@@ -4,10 +4,10 @@ description: How the credit system works, what each plan includes, and how to ma
 icon: credit-card
 ---
 
-Osintly uses a credit-based model. Each search consumes 1 credit. Credits are a standalone currency that can be purchased either as part of a subscription plan or as a one‑off (standalone) purchase.
+Osintly uses a credit-based model for full app searches. Each full search consumes 1 credit. Credits can be purchased as part of a subscription plan or separately. Limited [free search previews](/guides/free-searches) do not consume app credits. Organizations use a separate shared allowance.
 
 <Warning>
-	Spending credits (for example, running searches or monitor executions) requires an active subscription on the account. You may buy credits without an active subscription, but they cannot be spent until an active subscription is present.
+  Spending credits requires an active subscription in the selected workspace. You may buy personal credits without an active subscription, but they cannot be spent until an active subscription is present.
 </Warning>
 
 For more details, see [Credits explained](/guides/credits-explained).
@@ -20,7 +20,9 @@ For more details, see [Credits explained](/guides/credits-explained).
 |---|---|---|
 | **Standard** | €9.99/mo | 25 |
 | **Pro** | €24.99/mo | 100 |
-| **Advanced** | €94.99/mo | 200 |
+| **Ultimate** | €94.99/mo | 200 |
+
+<Note>Ultimate is the current name for the highest plan. Existing Advanced subscriptions receive Ultimate entitlements.</Note>
 
 ---
 
@@ -28,7 +30,7 @@ For more details, see [Credits explained](/guides/credits-explained).
 
 **Purchased credits** (bought directly) do not expire.
 
-**Promotional or free credits** may have an expiration date as specified in the promotion terms. See [osint.ly/terms](https://rewrite.osint.ly/terms#credits) for details.
+**Promotional or free credits** may have an expiration date as specified in the promotion terms. See [osint.ly/terms](https://osint.ly/terms#credits) for details.
 
 ---
 
@@ -36,13 +38,14 @@ For more details, see [Credits explained](/guides/credits-explained).
 
 - Any new search query (1 credit per query)
 - Re-running an existing search to get fresh results (1 credit)
-- Each monitor execution (1 credit per run)
+- An eligible tool lookup that you explicitly continue with the one-credit override
 
 ## What does not cost a credit
 
 - Re-opening a past result from history
 - Exporting from an existing result
 - AI Analyst conversations on a loaded result
+- Limited free search previews (subject to separate quotas)
 
 ---
 
@@ -52,7 +55,24 @@ Your balance is visible in three places:
 
 - **Sidebar** - below your username in the left navigation panel
 - **Search page** - displayed before running a query
-- **Settings > Credits** - full transaction history including search deductions and monitor executions
+- **Settings > Credits** - full transaction history including search deductions
+
+When an organization is selected, its shared allowance is shown in the workspace context. Open **Organization → Usage** to review consumption across members.
+
+---
+
+## Organization credits
+
+Organization credits are distinct from every member’s personal balance. The organization receives one shared allowance per billing period based on its paid seats:
+
+| Organization plan | Credits per paid seat |
+|---|---:|
+| Pro | 100 |
+| Ultimate | 200 |
+
+All members spend from the same allowance for full searches made in that organization. A successful search consumes one shared credit; a failed launch releases its reservation. Personal credits are not used as a fallback.
+
+Eligible tool volume limits can also be overridden with one shared credit after confirmation. This does not bypass tool cooldowns or concurrency limits. See [Tool usage limits](/tools-reference/usage-limits).
 
 ---
 
@@ -63,12 +83,14 @@ From **Settings > Billing** you can:
 - Cancel your subscription (stays active until the end of the current billing period)
 - Review past invoices
 
-<Note>All sales are final except where required by applicable law. See [osint.ly/terms](https://rewrite.osint.ly/terms) for the full billing policy.</Note>
+Organization owners manage the organization subscription, paid seats, invoices, and payment method from **Organization → Billing**. That page is separate from a member’s personal billing.
+
+<Note>All sales are final except where required by applicable law. See [osint.ly/terms](https://osint.ly/terms) for the full billing policy.</Note>
 
 ---
 
 ## Running out of credits
 
-If your balance reaches 0, new searches are blocked. Monitor executions fail until credits are restored. Your history and existing results remain fully accessible.
+If your balance reaches 0, new full searches and eligible credit overrides are blocked. Limited free previews may still be available under their separate quota. Your history and existing results remain accessible.
 
 For a full breakdown of the credit system, see [Credits explained](/guides/credits-explained).

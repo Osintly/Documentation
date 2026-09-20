@@ -4,14 +4,14 @@ description: Diagnose and resolve common user-facing issues quickly.
 icon: screwdriver-wrench
 ---
 
-Use this runbook when behavior is not matching expected results on search, monitoring, credits, or access.
+Use this runbook when behavior is not matching expected results on search, legacy Monitoring, credits, or access.
 
 <CardGroup cols={3}>
 	<Card title="Search issues" icon="magnifying-glass">
 		No results, missing cards, or partial tabs.
 	</Card>
-	<Card title="Monitoring issues" icon="bell">
-		Missing alerts, delayed runs, or channel delivery problems.
+	<Card title="Legacy Monitoring issues" icon="bell">
+		Preserve affected context and investigate retirement-transition issues.
 	</Card>
 	<Card title="Access issues" icon="user-lock">
 		Login problems, workspace visibility, or role restrictions.
@@ -30,7 +30,7 @@ Use this runbook when behavior is not matching expected results on search, monit
 		Retry with the same query/target and same settings to verify consistency.
 	</Step>
 	<Step title="Capture IDs and timestamps">
-		Collect search ID, monitor ID, and approximate timestamp with timezone.
+		Collect a search ID, any relevant legacy monitor ID, and an approximate timestamp with timezone.
 	</Step>
 	<Step title="Check plan and permissions">
 		Validate plan entitlements and workspace role before deeper debugging.
@@ -64,18 +64,13 @@ Use this runbook when behavior is not matching expected results on search, monit
 		Check:
 
 		- Number of successful search executions launched
-		- Monitoring frequency and active monitor count
-		- Team credit priority path (bank -> owner -> member)
+		- The selected workspace and whether it uses a personal or organization allowance
+		- Eligible tool-limit overrides confirmed with one credit
 		- Whether users are launching new searches instead of reopening history
 	</Accordion>
 
-	<Accordion title="Missing monitoring alerts" icon="triangle-exclamation">
-		Verify:
-
-		- Monitor is active and frequency is correct
-		- Notification channel is configured (email or Discord webhook)
-		- Destination inbox/channel is available and not filtering alerts
-		- Alert status was not already set to resolved during workflow handling
+	<Accordion title="Legacy Monitoring question" icon="triangle-exclamation">
+		The legacy Monitoring experience is being retired. Do not create new monitors; preserve any existing investigation context and contact support if a transition issue affects an active case.
 	</Accordion>
 
 	<Accordion title="Access or auth issues" icon="key">
@@ -83,7 +78,7 @@ Use this runbook when behavior is not matching expected results on search, monit
 
 		- New login session with the same provider
 		- Browser cleanup (cache/cookies) and retry
-		- Role check in team workspace (owner vs member)
+		- Role check in the selected organization workspace (owner, admin, or member)
 		- Private window test to isolate extension/session conflicts
 	</Accordion>
 </AccordionGroup>
@@ -95,7 +90,7 @@ Use this runbook when behavior is not matching expected results on search, monit
 When contacting support, include:
 
 - Workspace name and user email
-- Search ID and/or monitor ID
+- Search ID and/or legacy monitor ID
 - Timestamp and timezone
 - Exact steps to reproduce
 - Screenshot of visible error state

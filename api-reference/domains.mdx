@@ -1,10 +1,14 @@
 ---
-title: Domains
+title: Search request fields
 description: Search types, options, and request payload patterns for Osintly API integrations.
 icon: globe
 ---
 
 Use this page as a quick reference for valid search types and options used by `POST /search`.
+
+<Warning>
+`Domain Name` and `IP Address` remain valid Search API types for now, but they will soon stop being supported there. For new lookups, use their replacements: [Domain Intelligence](/tools-reference/domain-intelligence) and [IP Intelligence](/tools-reference/ip-intelligence). No cutoff date has been announced.
+</Warning>
 
 ---
 
@@ -67,6 +71,8 @@ These values must match the OpenAPI enum exactly.
 
 Use `modules` when you want to restrict execution to a known set of modules.
 
+Fetch current module IDs from `GET /modules` for the selected search type. The UUIDs below illustrate the request shape; do not copy them into production requests without checking the live catalog.
+
 ```json
 {
   "query": {
@@ -91,7 +97,6 @@ Server-side validation rules:
 
 Default behavior:
 
-- If `options.modules` is omitted or empty, Osintly runs the default module set for that search type
 - If `modules` is omitted, Osintly runs the default module set for that search type
 - If `modules.mode` is `selected`, execution is limited to `modules.ids`
 

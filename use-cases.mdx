@@ -23,8 +23,8 @@ A handle found on a forum, a Telegram username, a Reddit account. This is often 
   <Step title="Identify linked emails or phone numbers">
     Check the module cards for associated contact data. If you find an email, run a new **Email** search in the same project to expand the profile.
   </Step>
-  <Step title="Stack searches across modules">
-    Layer results: username to email to phone to IP. Each layer adds context and confirms or rules out connections between accounts.
+  <Step title="Pivot between identifiers">
+    Layer supported searches from username to email, then inspect any discovered IP in [IP Intelligence](/tools-reference/ip-intelligence). Treat each association as a lead to verify, not proof of identity.
   </Step>
   <Step title="Review breach exposure">
     The **Leaked Results** and **Breached Accounts** panels show what data appeared in known breaches: password hashes, previous IPs, service names.
@@ -32,7 +32,7 @@ A handle found on a forum, a Telegram username, a Reddit account. This is often 
   <Step title="Generate a timeline with AI Analyst">
     Open the AI Analyst chat and ask it to build a chronological timeline from the results. Useful for establishing account creation dates and activity patterns.
 
-    <Note>AI Analyst is available on Pro and Advanced plans.</Note>
+    <Note>AI Analyst is available on Pro and Ultimate plans.</Note>
   </Step>
 </Steps>
 
@@ -53,7 +53,7 @@ You received a phishing email, a threat, or a contact request you cannot verify.
     **Breached Accounts** shows which data breaches included this address and what fields were exposed: password hash, username, IP, and more.
   </Step>
   <Step title="Pivot to the domain">
-    If the email uses a custom domain rather than Gmail or Outlook, run a **Domain** search to understand the infrastructure behind it.
+    If the email uses a custom domain rather than Gmail or Outlook, inspect it with [Domain Intelligence](/tools-reference/domain-intelligence).
   </Step>
 </Steps>
 
@@ -67,18 +67,18 @@ You have a domain or IP from a malware sample, a C2 server, or a suspicious redi
 
 <Steps>
   <Step title="Start with the domain">
-    Select **Domain** and enter the root domain. Review DNS records, subdomains, WHOIS registration data, and linked IPs.
+    Open [Domain Intelligence](/tools-reference/domain-intelligence) and enter the root domain. Review DNS records, subdomains, registration data, and linked IPs.
   </Step>
   <Step title="Pivot to each IP">
-    For every IP discovered, run a new **IP address** search. Check ASN, hosting provider, geolocation, and threat intelligence signals.
+    Inspect relevant IPs in [IP Intelligence](/tools-reference/ip-intelligence). Check ASN, hosting provider, approximate geolocation, and public threat signals.
   </Step>
   <Step title="Use the map view">
     Geographic clustering of IPs can reveal whether infrastructure is centralized or deliberately spread across jurisdictions.
   </Step>
-  <Step title="Set up a monitor">
-    If the domain is active, create a monitor to get alerted when new DNS records, subdomains, or IP changes appear.
+  <Step title="Preserve a repeatable follow-up">
+    Save the search in the correct workspace and repeat focused domain or IP checks when you need fresh DNS, subdomain, or IP data.
 
-    <Note>Monitoring is available on Pro and Advanced plans.</Note>
+    <Note>The current Monitoring experience is being retired in favor of Security Watch. Avoid creating new monitors.</Note>
   </Step>
 </Steps>
 
@@ -114,10 +114,10 @@ You are evaluating a potential partner, supplier, or acquisition target and need
     If you have emails for founders or executives, run **Email** searches to check for breach exposure or linked accounts.
   </Step>
   <Step title="Monitor for changes">
-    Set a domain monitor to track infrastructure changes, new subdomains, or data leak appearances going forward.
+    Save the domain investigation and repeat focused checks to track infrastructure changes, new subdomains, or data-leak appearances while Security Watch is prepared.
   </Step>
   <Step title="Export a report">
-    Use **Export to PDF** or **DOCX** to produce a structured deliverable for internal review or legal counsel.
+    Use **Export to PDF** or another currently offered format (JSON, CSV, or Markdown) to produce a deliverable for internal review or legal counsel.
 
     <Note>Export formats depend on your plan. See [Credits & subscriptions](/billing/credits-subscriptions).</Note>
   </Step>

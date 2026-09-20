@@ -554,7 +554,7 @@
       "post": {
         "tags": ["Search"],
         "summary": "Create a new search",
-        "description": "Queue a new OSINT search with optional module selection, leak sources, account features, delivery settings, cache mode, and BYOK provider configuration.",
+        "description": "Queue a new OSINT search with optional module selection, leak sources, account features, delivery settings, cache mode, and BYOK provider configuration. Domain Name and IP Address remain accepted for now, but will soon stop being supported in the Search API. Use the Domain Intelligence and IP Intelligence Tools API routes for new integrations; no cutoff date has been announced. Free website previews are not exposed here.",
         "operationId": "createSearch",
         "security": [
           {
@@ -684,7 +684,7 @@
       "post": {
         "tags": ["Search"],
         "summary": "Run one module immediately",
-        "description": "Execute a single module against one query target and return immediate cards in the same response. This endpoint runs only the provided module and does not require stream consumption.",
+        "description": "Execute a single module against one query target and return immediate cards in the same response. This endpoint runs only the provided module and does not require stream consumption. Domain Name and IP Address are accepted for now but will soon stop being supported in the Search API; migrate to the corresponding intelligence tools.",
         "operationId": "runModuleOnce",
         "security": [
           {
@@ -1881,6 +1881,7 @@
       },
       "SearchType": {
         "type": "string",
+        "description": "Currently accepted Search API types. Domain Name and IP Address will soon stop being supported here; migrate those lookups to the corresponding intelligence tools. No cutoff date has been announced.",
         "enum": [
           "Pseudonym",
           "Email Address",

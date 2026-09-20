@@ -20,16 +20,17 @@ Osintly removes that overhead. One query hits all relevant providers at once. Re
 
 ## What it covers
 
-Six input types, each mapped to a dedicated set of providers:
+The current search service accepts five input types, each mapped to relevant providers:
 
 | Input type | What it looks up |
 |---|---|
 | **Pseudonym** | Social profiles, forum accounts, leak databases, registered services |
 | **Email Address** | Breach records, registered accounts, social profiles, leak databases |
-| **Phone Number** | Carrier data, reverse lookup, social and messaging platform links |
 | **IP address** | Geolocation, ASN, hosting provider, threat intelligence signals |
 | **Domain** | DNS records, WHOIS, subdomains, linked IPs, risk signals |
 | **Cryptocurrency** | Transaction history, linked wallets, risk and fraud signals |
+
+Domain and IP investigation is moving toward dedicated [Domain Intelligence](/tools-reference/domain-intelligence) and [IP Intelligence](/tools-reference/ip-intelligence) tools.
 
 ---
 
@@ -45,16 +46,16 @@ The result page organizes output into module cards, synthesis blocks (map, profi
 
 <CardGroup cols={2}>
   <Card title="AI Analyst" icon="robot">
-    A conversational panel on every result page. Builds timelines, generates charts, filters results, runs web searches, and fetches detailed leaked records on demand. Available on Pro and Advanced plans.
+    A conversational panel on every result page. Builds timelines, generates charts, filters results, runs web searches, and fetches detailed leaked records on demand. Available on Pro and Ultimate plans.
   </Card>
-  <Card title="Monitoring" icon="bell">
-    Saves a query and re-runs it automatically at a frequency you set. Sends an alert when new data appears. Each execution consumes 1 credit, the same as a manual search. Available on Pro and Advanced plans.
+  <Card title="Security Watch" icon="shield-halved">
+    The legacy Monitoring experience is being retired and will be replaced by Security Watch. Avoid creating new legacy monitors.
   </Card>
   <Card title="Breach & leak data" icon="database">
     Access to breach and leak providers beyond basic public data. Provider coverage varies by plan. Higher plans unlock more sources.
   </Card>
-  <Card title="Collaboration" icon="users">
-    Link a result to a team workspace so teammates can view and work on it in real time. Access to collaboration features depends on your plan.
+  <Card title="Organizations" icon="buildings">
+    A shared workspace with members, roles, history, credits, API access, and billing that remain separate from Personal.
   </Card>
 </CardGroup>
 

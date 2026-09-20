@@ -1,0 +1,77 @@
+---
+title: 'IP Intelligence'
+description: 'IP geolocation, routing, registration, exposed services and public threat indicators.'
+---
+
+## Request
+
+All business routes use `POST` with an IPv4 or IPv6 address:
+
+```json
+{ "ip": "1.1.1.1" }
+```
+
+Authenticate with `Authorization: Bearer <API_KEY>`. All routes require the `tools` plan feature.
+
+| Route | Cost |
+| --- | --- |
+| `GET /tools/ip-intelligence` | Free |
+| `GET /tools/ip-intelligence/infos` | Free |
+| `GET /tools/ip-intelligence/costs` | Free |
+| `POST /tools/ip-intelligence/geo` | Free |
+| `POST /tools/ip-intelligence/network` | Free |
+| `POST /tools/ip-intelligence/bgp` | Free |
+| `POST /tools/ip-intelligence/whois` | Free |
+| `POST /tools/ip-intelligence/rdns` | Free |
+| `POST /tools/ip-intelligence/risk` | Free |
+| `POST /tools/ip-intelligence/ports` | core_search(1) |
+| `POST /tools/ip-intelligence/reputation` | core_search(1) |
+| `POST /tools/ip-intelligence/hosted-domains` | core_search(1) |
+| `POST /tools/ip-intelligence/all` | core_search(1) |
+
+## Complete lookup
+
+```bash
+curl -X POST "$API_URL/tools/ip-intelligence/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"ip":"1.1.1.1","save":true}'
+```
+
+Responses use `{ tool, operation, query, data, meta }`. `/all` returns `geo`, `network`, `bgp`, `whois`, `rdns`, `ports`, `reputation`, `hostedDomains`, merged `hostnames`, `risk`, `collectedSections` and `partialErrors`.
+
+`save: true` on `/all` saves the response and returns `meta.savedResult.id`. Read it with `GET /tools/results/:id`; no enrichment is re-executed on retrieval. Saving a partial lookup stores only the data collected in that request.
+
+## Progressive loading
+
+Start with the account-independent location and network data:
+
+```json
+{ "ip": "1.1.1.1", "sections": ["geo", "network"], "save": true }
+```
+
+`sections` is optional and accepted only by `/all`. Values: `geo`, `network`, `bgp`, `whois`, `rdns`, `risk`, `ports`, `reputation`, `hosted-domains`. Omission runs the complete lookup. Unrequested collectors are not called; their fields are null. Geo/network share a provider request. `/all` costs 1 regardless of selection; subsequent split requests retain their listed price.
+
+## Data coverage
+
+The app provides an interactive map for available coordinates and clickable hostnames/IP addresses to start another saved lookup. Location is approximate network geolocation, not a person's location. Map tiles load separately from the intelligence API.
+
+`bgp.routing` includes observation time, first/last observed routes, RIS visibility, origins, and more/less-specific prefixes. `bgp.rpki` gives the validity of the primary prefix/ASN pair; null means unavailable, not valid. Secondary routing failures preserve BGP results and populate `bgp.partialErrors` with generic messages.
+
+`whois` also exposes registry status, notices, remarks, links and IP version. `reputation.otx.reports` includes up to 20 available reports with dates, descriptions, tags and references. Reports mentioning an IP are investigative leads, not proof of malicious activity.
+
+- Location: country, region, city, postal code, coordinates and time zone. Coordinates describe an approximate network location, not a person's location.
+- Network: ASN, ASN name, ISP, organization, reverse hostname and hosting/mobile/proxy indicators.
+- BGP: containing prefix, available announcing ASNs and allocation metadata. A routing fallback may not expose allocation or organization details.
+- Registration: address range, registry handle, dates, events and available registrant, abuse, technical, NOC and routing contacts.
+- Services: passively observed ports, hostnames, CPE software identifiers, tags and reported CVEs. This is not a live scan and does not confirm current exploitability.
+- Reputation: DNS blocklist observations, Tor signals and available threat reports. Missing sources are null, not a clean verdict.
+- Hosted domains: public reverse-IP observations; coverage is not exhaustive and does not prove common ownership.
+
+The free `/risk` route summarizes network flags only. `/all` adds the available reputation and vulnerability observations when those sections are selected. A zero score is not a safety guarantee.
+
+## Cache and errors
+
+Production collector cache: geo/network and reverse DNS 1h; BGP and hosted domains 12h; registration 24h; services 6h; reputation 30min. Non-production bypasses the tool cache. Cache hits do not alter pricing.
+
+Invalid input returns `400 VALIDATION_ERROR`. Split provider failures return generic `502 PROVIDER_ERROR` or `504 PROVIDER_TIMEOUT`. `/all` preserves successful collectors and reports failed ones in `partialErrors`, without exposing provider error text. No provider secret is required for baseline data; URLhaus enrichment depends on the optional server-side `URLHAUS_API_KEY`.
