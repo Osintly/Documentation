@@ -1,0 +1,64 @@
+---
+title: Tool usage limits
+description: Lookup volume, cooldown, concurrency, organization capacity, and the one-credit override.
+icon: gauge-high
+---
+
+This page covers the limits for focused lookups in the Osintly web application. They apply to a **new** tool lookup; opening a result that has already been saved does not consume a lookup allowance. Search API capacity is separate—see [API plans & capacity](/api-reference/api-plans-capacity).
+
+Limits use rolling five-minute, hourly, and 24-hour windows. The same operation can also have a cooldown and a cap on concurrent requests.
+
+---
+
+## Personal lookup limits
+
+| Access level | 5 minutes | Hour | 24 hours | Concurrent | Same-operation cooldown |
+|---|---:|---:|---:|---:|---:|
+| Guest | 2 | 2 | 3 | 1 | 10 seconds |
+| Free account | 3 | 5 | 10 | 1 | 5 seconds |
+| Standard | 5 | 15 | 30 | 1 | 4 seconds |
+| Pro | 10 | 40 | 100 | 1 | 2 seconds |
+| Ultimate | 60 | 300 | 750 | 3 | None |
+
+When a limit is reached, the interface tells you why and when to retry. Depending on your access level, it may also offer account creation or an appropriate plan upgrade.
+
+<Note>
+Ultimate is the current plan name. Accounts still recorded under the former **Advanced** name receive Ultimate entitlements.
+</Note>
+
+---
+
+## Organization capacity
+
+Organizations use both an individual member limit and a shared workspace limit. This prevents one member from consuming all capacity while letting the organization benefit from its paid seats.
+
+The shared five-minute, hourly, and daily volume limits equal the plan limit multiplied by the number of paid seats. Shared concurrency also scales with seats, up to a fixed cap.
+
+| Organization plan | Per seat: 5 minutes | Per seat: hour | Per seat: 24 hours | Shared concurrency |
+|---|---:|---:|---:|---:|
+| Pro | 10 | 40 | 100 | 1 per seat, capped at 8 |
+| Ultimate | 60 | 300 | 750 | 3 per seat, capped at 16 |
+
+Both checks must pass for a new lookup. Organization capacity comes from the selected plan and paid seat count; there is no separate capacity pack.
+
+---
+
+## Continue with one credit
+
+For a five-minute, hourly, or daily volume limit, an authenticated user may be offered **Use 1 credit**. This requires explicit confirmation and starts the lookup immediately.
+
+- A credit override never bypasses a cooldown or a concurrency limit.
+- In Personal, the credit comes from your personal balance.
+- In an organization, the credit comes from the organization’s shared allowance.
+- Osintly reserves the credit before contacting the upstream tool. If the lookup or result storage fails, that reservation is released rather than spent.
+
+If no credit is available, wait for the indicated window to reset or choose an eligible upgrade. The server decides whether an override is available; changing the browser request cannot create one.
+
+---
+
+## Good operating practice
+
+- Reopen saved results instead of repeating the same lookup.
+- Avoid launching the same operation concurrently from several tabs.
+- In an organization, use **Organization → Usage** to review the shared allowance before a high-volume investigation.
+- Use a focused lookup only for an observable you already know; use the [Search API](/api-reference/introduction) for full search orchestration.

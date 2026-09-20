@@ -54,13 +54,14 @@
             "group": "Investigation & Collaboration",
             "pages": [
               "collaboration/investigation-projects",
+              "collaboration/organizations",
               "collaboration/team-collaboration",
               "collaboration/export-sharing",
               "collaboration/logo-service"
             ]
           },
           {
-            "group": "Monitoring",
+            "group": "Security Watch transition",
             "pages": [
               "operations/monitoring"
             ]
@@ -131,7 +132,8 @@
               "tools-reference/playstation",
               "tools-reference/roblox",
               "tools-reference/reddit",
-              "tools-reference/socialclub"
+              "tools-reference/socialclub",
+              "tools-reference/usage-limits"
             ]
           },
           {

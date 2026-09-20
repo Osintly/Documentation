@@ -1,85 +1,70 @@
 ---
-title: Team collaboration
-description: Create a team, invite members, assign roles, and work together on investigations.
+title: Members & permissions
+description: Invite members to an organization and assign the right level of access.
 icon: users
 ---
 
-Teams let multiple users share investigations, projects, and credits policies in one workspace.
+Organizations use three fixed roles. They are applied to the selected organization only, so a person can have a different role in each organization they belong to.
+
+For creating an organization, switching workspace, and shared credit behavior, see [Organizations & workspaces](/collaboration/organizations).
 
 ---
 
-## Creating a team
+## Invite members
 
 <Steps>
-  <Step title="Open Team settings">
-    Go to **Settings** and open the **Team** section.
+  <Step title="Select the organization">
+    Open the workspace menu in the sidebar and choose the organization you want to manage.
   </Step>
-  <Step title="Create the team">
-    Click **Create team** and give it a name.
+  <Step title="Open Members">
+    Go to **Organization → Members**.
   </Step>
-  <Step title="Invite members">
-    Enter the email addresses of the people you want to add and choose a role. Invitations are sent by email.
+  <Step title="Send an invitation">
+    Enter the person's email address and choose **Admin** or **Member**. A pending invitation reserves one of the organization's paid seats.
+  </Step>
+  <Step title="Review membership">
+    Use the Members page to review pending invitations and current access. Revoking or letting an invitation expire releases the reserved seat.
   </Step>
 </Steps>
 
 <Note>
-Team creation is available on Pro and Advanced plans.
+An organization owner or admin can invite members when a paid seat is available. An invitation does not change the number of billed seats.
 </Note>
 
 ---
 
 ## Roles
 
-| Role | Permissions |
-|---|---|
-| **Owner** | Full team control: settings, role changes, deletion, member management |
-| **Admin** | Can invite and remove members (with owner-only restrictions) |
-| **Editor** | Operational contributor role for team workflows |
-| **Viewer** | Restricted role (cannot create team projects) |
+| Capability | Owner | Admin | Member |
+|---|---:|---:|---:|
+| Run and view organization searches | Yes | Yes | Yes |
+| View organization history and tool results | Yes | Yes | Yes |
+| Delete any organization search | Yes | Yes | No — own searches only |
+| View API keys and API usage | Yes | Yes | Yes |
+| Create, revoke, or manage API keys | Yes | Yes | No |
+| Invite members | Yes | Yes | No |
+| Remove a member | Yes | Members only | No |
+| Change roles or transfer ownership | Yes | No | No |
+| Manage SSO, billing, or delete the organization | Yes | No | No |
+
+Admins cannot remove the owner or another admin. Roles are predefined: there are no custom organization roles.
 
 ---
 
-## Invitations and joining
+## Managing the organization
 
-Invitations are role-based and time-limited.
+Owners and admins can update the organization's name and logo. Only the owner can transfer ownership, manage billing, configure company SSO, change roles, or close the organization.
 
-- Invitees join through an invitation code flow.
-- Invitation must match the invitee account email.
-- A user cannot join if already in another team.
+Deleting an organization is intentionally restricted: its subscription must no longer be active, and the owner must confirm the exact organization name. Closing an organization removes workspace access and invitations; it does not erase financial records that must be retained.
 
 ---
 
-## Credit management in a team
+## Organization SSO
 
-Credits in a team context follow a priority order based on settings configured by the owner:
+Organization SSO is configured by the owner. A member can use the organization’s company sign-in only after their membership or invitation is verified. Personal workspace access still uses a classic Osintly account, so an SSO session does not grant access to a member’s Personal workspace or another organization.
 
-1. **Team credit bank** - if enabled and has at least 1 credit, searches deduct from it first.
-2. **Owner credits** - if the bank is empty or disabled and the "use owner credits" option is on, searches deduct from the owner's balance.
-3. **Member credits** - if neither applies, each member's searches deduct from their own balance.
+Members who need both sign-in methods can connect company SSO to the same verified email address. Disconnecting company SSO affects only that organization's company sign-in; it does not delete the personal account.
 
-The owner configures this in the team settings panel.
-
----
-
-## Real-time collaboration
-
-Team members can collaborate on shared result contexts and team projects.
-
-In shared result views, collaboration state/presence is synchronized (for example, collaborator presence and shared workspace context).
-
----
-
-## Managing the team
-
-Owner/Admin can:
-
-- Remove a member
-- Invite members
-
-Owner-only actions include:
-
-- Change member roles
-- Update team settings (including credit policy)
-- Delete/dissolve the team
-
-<Warning>Dissolving a team permanently removes access to all team projects for all members. Solo projects belonging to individual members are not affected.</Warning>
+<Warning>
+Legacy Team projects use their own historical membership model. Do not use a legacy Team’s role settings as a substitute for organization permissions.
+</Warning>

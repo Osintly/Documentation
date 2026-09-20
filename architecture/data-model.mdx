@@ -1,6 +1,6 @@
 ---
 title: Data model
-description: Product-level entities used across search execution, monitoring, projects, and team collaboration.
+description: Product-level entities used across search execution, workspaces, projects, and organization collaboration.
 icon: database
 ---
 
@@ -12,15 +12,17 @@ This page summarizes the main entities visible in the product and API flows.
 
 | Entity | Purpose | Key fields |
 |---|---|---|
-| Search | One launched search execution | `id`, `type`, `value`, `status`, `created_at`, `user_id`, `project_id`, `team_id`, `search_metadata` |
+| Search | One launched search execution | `id`, `type`, `value`, `status`, `created_at`, `user_id`, `organization_id`, `project_id`, `team_id`, `search_metadata` |
 | Search Result payload | Stored final payload attached to a search | `result.cards[]`, `result.leaked_data`, `result.breached_accounts[]`, `result.registered_accounts[]` |
 | Stream event | Incremental event consumed by the result page | `taskId`, `moduleId`, `moduleName`, `result`, `timestamp`, `status` |
-| Monitor | Scheduled monitoring definition | `id`, `user_id`, `name`, `type`, `target`, `frequency`, `status` |
-| Monitoring Alert | Alert emitted by monitor processing | `id`, `user_id`, `monitor_id`, `severity`, `message`, `status`, `created_at` |
-| Project | Investigation workspace | `id`, `title`, `description`, `content`, `owner_id`, `team_id`, `created_at`, `updated_at` |
-| Team | Collaboration boundary | `id`, `owner_id`, `name`, `credit_bank_enabled`, `credit_bank_balance`, `use_owner_credits` |
-| Team Membership | User role inside a team | `team_id`, `user_id`, `role` (`owner`, `admin`, `editor`, `viewer`) |
-| Team Invitation | Pending invitation workflow | `team_id`, `email`, `role`, `invitation_code`, `expires_at`, `accepted_at` |
+| Monitor (legacy) | Scheduled monitoring definition being retired | `id`, `user_id`, `name`, `type`, `target`, `frequency`, `status` |
+| Monitoring Alert (legacy) | Alert emitted by the retiring monitor processor | `id`, `user_id`, `monitor_id`, `severity`, `message`, `status`, `created_at` |
+| Tool result | Saved focused lookup | `id`, `tool_slug`, `title`, `query`, `created_at`, `user_id`, `organization_id` |
+| Organization | Shared paid workspace | `id`, `name`, `status`, subscription and paid-seat context |
+| Organization Membership | User role inside an organization | `organization_id`, `user_id`, `role` (`owner`, `admin`, `member`) |
+| Organization Invitation | Pending organization access | `organization_id`, `email`, `role`, invitation state, seat reservation |
+| Project | Personal or legacy Team investigation workspace | `id`, `title`, `description`, `content`, `owner_id`, `team_id`, `created_at`, `updated_at` |
+| Team (legacy) | Historical collaboration boundary | `id`, `owner_id`, `name`, legacy credit-policy fields |
 
 ---
 
@@ -69,10 +71,13 @@ Missing panel usually means no applicable data was returned, not a rendering iss
   <Accordion title="Search -> Result payload" icon="chart-simple">
     One search can include cards plus optional leaked, breached, and registered account datasets in its stored result payload.
   </Accordion>
-  <Accordion title="Team -> Projects -> Searches" icon="users">
-    Teams group projects, and projects can reference saved searches, notes, and attachments.
+  <Accordion title="Organization -> Searches and tool results" icon="buildings">
+    An organization owns searches and saved tool results launched while it is selected. The launching member remains recorded as the creator.
   </Accordion>
-  <Accordion title="Monitor -> Alerts" icon="bell">
-    One monitor can generate many alert records over time, each with its own workflow status.
+  <Accordion title="Legacy Team -> Projects -> Searches" icon="users">
+    Legacy Teams group projects, and projects can reference saved searches, notes, and attachments. They do not overlap with organization scope.
+  </Accordion>
+  <Accordion title="Legacy Monitor -> Alerts" icon="bell">
+    The retiring Monitoring experience can contain alert records with their own workflow status. New Security Watch guidance will be published separately.
   </Accordion>
 </AccordionGroup>

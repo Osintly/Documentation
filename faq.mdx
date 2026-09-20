@@ -40,7 +40,11 @@ icon: circle-question
   </Accordion>
 
   <Accordion title="How do I cancel my subscription?" icon="ban">
-    Go to your account settings and open the **Billing** section. You can cancel at any time. Your plan stays active until the end of the current billing period.
+    For Personal, go to **Settings → Billing**. For an organization, its owner goes to **Organization → Billing**. You can cancel at any time; access remains active through the current billing period.
+  </Accordion>
+
+  <Accordion title="Do organizations replace my Personal workspace?" icon="buildings">
+    No. Personal and organization workspaces remain separate. Switching workspace changes which plan, shared credit allowance, history, API account, and billing context apply to your next action. See [Organizations & workspaces](/collaboration/organizations).
   </Accordion>
 </AccordionGroup>
 
@@ -59,7 +63,7 @@ icon: circle-question
 
     If you select no modules, Osintly uses the default module set for the search type. If you select one or more modules, execution is limited to that selection.
 
-    Credits and access rules do not change: module selection follows the same subscription and team credit logic as a standard search.
+    Credits and access rules do not change: module selection follows the selected workspace's subscription and credit rules.
   </Accordion>
 
   <Accordion title="Can I search in any language?" icon="language">
@@ -87,21 +91,19 @@ icon: circle-question
   <Accordion title="What is AI Analyst?" icon="robot">
     AI Analyst is a conversational panel on the result page. Once results are loaded, you can ask it to build timelines, summarize findings, generate charts, focus on a specific record, or filter results using natural language. It can also run a web search or fetch detailed data from a specific leaked record when asked.
 
-    Available on Pro and Advanced plans.
+    Available on Pro and Ultimate plans.
   </Accordion>
 
   <Accordion title="Why is AI Analyst blocked for me?" icon="lock">
-    AI Analyst requires a Pro or Advanced plan. If you are on Standard, the panel is visible but locked. Upgrade your plan to activate it.
+    AI Analyst requires a Pro or Ultimate plan. If you are on Standard, the panel is visible but locked. Upgrade your plan to activate it.
   </Accordion>
 
-  <Accordion title="What does monitoring do?" icon="bell">
-    Monitoring tracks a saved query and runs it automatically at a frequency you set. Each execution deducts 1 credit. You receive an alert when new data appears for that target.
-
-    Available on Pro and Advanced plans.
+  <Accordion title="What happened to Monitoring?" icon="bell">
+    The current Monitoring experience is being retired and will be replaced by Security Watch. Avoid creating new legacy monitors and follow product updates for the replacement.
   </Accordion>
 
   <Accordion title="Can I share a result with someone who does not have an account?" icon="share-nodes">
-    The Collaborate feature lets you share a result with teammates. Public sharing options may vary depending on your plan and team configuration.
+    Organization members can view searches made in their selected organization's shared history. Legacy Team project sharing remains a separate workflow; public sharing options may vary by plan and configuration.
   </Accordion>
 </AccordionGroup>
 
@@ -115,7 +117,7 @@ icon: circle-question
   </Accordion>
 
   <Accordion title="Does Osintly store my searches?" icon="database">
-    Full searches are stored in your account history at [osint.ly/history](https://osint.ly/history). You can delete individual entries or select multiple entries for bulk deletion. Free previews are temporary, are not linked to account history, and expire after 15 minutes.
+    Full searches are stored in the selected workspace history at [osint.ly/history](https://osint.ly/history). Personal history stays personal; organization history is visible to its members and identifies the creator. Free previews are temporary, are not linked to history, and expire after 15 minutes.
   </Accordion>
 </AccordionGroup>
 

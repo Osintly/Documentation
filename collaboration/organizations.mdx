@@ -1,0 +1,98 @@
+---
+title: Organizations & workspaces
+description: Create an organization, switch workspaces, and understand shared searches, credits, and usage.
+icon: buildings
+---
+
+An organization is a paid, shared Osintly workspace for a company, agency, or research group. It has its own members, plan, credit allowance, search history, API account, and billing. Your **Personal** workspace always remains separate.
+
+<Note>
+Organizations are the current shared-workspace model. Existing legacy Team projects remain separate; a search cannot belong to both a Team and an organization.
+</Note>
+
+---
+
+## Personal and organization workspaces
+
+Use the workspace menu in the sidebar to switch between **Personal** and any organization you belong to. The selected workspace determines which plan, credits, history, and API account are used for your next action.
+
+| In Personal | In an organization |
+|---|---|
+| Your individual plan and credit balance apply | The organization's plan and shared credit allowance apply |
+| History contains your personal searches | History contains searches made by organization members |
+| API keys and usage belong to your account | API keys and usage belong to the organization |
+| Your personal billing is managed in Settings | Organization billing is managed by its owner |
+
+Switching workspace does not move existing searches, credits, subscriptions, or API keys. Members can belong to more than one organization, and each membership is independent.
+
+---
+
+## Create an organization
+
+<Steps>
+  <Step title="Open the workspace menu">
+    In the sidebar, open the workspace switcher and select **Create organization**.
+  </Step>
+  <Step title="Choose a name, plan, and seats">
+    Select **Pro** or **Ultimate**, then choose the number of paid seats. The owner counts as one seat.
+  </Step>
+  <Step title="Review and complete checkout">
+    Osintly shows the recurring amount before payment. The organization becomes available after payment is confirmed.
+  </Step>
+  <Step title="Invite members">
+    Select the organization, open **Members**, and send email invitations to the people who need access.
+  </Step>
+</Steps>
+
+Self-service organizations support from 1 to 25 paid seats. For larger deployments or custom requirements, contact [sales](https://osint.ly/support/sales).
+
+---
+
+## Shared searches and history
+
+Searches run while an organization is selected are stored in that organization’s history. All members can view them, and the history identifies the member who launched each search.
+
+- Members can delete their own organization searches.
+- Owners and admins can delete searches created by any organization member.
+- Searches in Personal, a legacy Team, or another organization are not shown in the active organization history.
+- Saved tool results follow the selected workspace too, so members can revisit the organization’s shared tool history.
+
+Organization projects are not yet available. The legacy Team project flow is still separate, so do not expect a Team project to become an organization project when you switch workspaces.
+
+---
+
+## Shared credits and usage
+
+The organization has one shared search allowance per billing period:
+
+| Organization plan | Included credits per paid seat |
+|---|---:|
+| Pro | 100 |
+| Ultimate | 200 |
+
+The allowance is calculated from the number of paid seats. For example, a three-seat Pro organization has 300 shared credits for the billing period. Credits are not split into individual member wallets: one member may use more of the shared allowance than another.
+
+Before a full search starts, Osintly reserves one organization credit. It settles the credit only after the search is created and releases the reservation if the launch fails, which prevents concurrent members from overspending the shared allowance.
+
+Open **Organization → Usage** to review shared consumption and member activity. See [Credits explained](/guides/credits-explained) and [Tool usage limits](/tools-reference/usage-limits) for spending and volume rules.
+
+---
+
+## Access when billing changes
+
+An organization must have an active subscription for members to use its product workspace. If the subscription becomes inactive, members cannot continue to use that organization’s paid workspace. The owner can still use organization billing to resolve the subscription; Personal workspaces and other organizations are unaffected.
+
+Changing or cancelling an organization subscription does not alter members’ personal subscriptions or data.
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Members & permissions" icon="users" href="/collaboration/team-collaboration">
+    Invite people and assign the right role.
+  </Card>
+  <Card title="API plans & capacity" icon="code" href="/api-reference/api-plans-capacity">
+    Use organization-scoped API keys, usage, and billing.
+  </Card>
+</CardGroup>

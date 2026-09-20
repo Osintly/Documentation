@@ -1,21 +1,21 @@
 ---
 title: RBAC and permissions
-description: Access model for solo and team workspaces, including role capabilities and team billing behavior.
+description: Access model for Personal and organization workspaces, including roles, billing, and data boundaries.
 icon: user-shield
 ---
 
-Osintly supports solo investigations and team collaboration with a simple role model focused on shared execution and controlled workspace management.
+Osintly separates Personal workspaces from organization workspaces. Organization permissions are checked for every protected action, not only when an interface button is visible.
 
 ---
 
 ## Workspace modes
 
 <CardGroup cols={2}>
-  <Card title="Solo workspace" icon="user">
-    One user owns searches, projects, monitors, and billing context.
+  <Card title="Personal workspace" icon="user">
+    One user owns their plan, credits, searches, API keys, and billing context.
   </Card>
-  <Card title="Team workspace" icon="users">
-    Members collaborate in shared projects and consume credits using team priority rules.
+  <Card title="Organization workspace" icon="buildings">
+    Members use a shared plan, credits, history, API account, and organization billing.
   </Card>
 </CardGroup>
 
@@ -23,32 +23,31 @@ Osintly supports solo investigations and team collaboration with a simple role m
 
 ## Roles
 
-| Capability | Owner | Admin | Editor | Viewer |
-|---|---:|---:|---:|---:|
-| View team projects and results | Yes | Yes | Yes | Yes |
-| Create team projects | Yes | Yes | Yes | No |
-| Edit project content | Yes | Yes | Yes | No |
-| Delete projects/files | Yes | Yes | No | No |
-| Invite members | Yes | Yes | No | No |
-| Remove members | Yes | Yes* | No | No |
-| Change member roles | Yes | No | No | No |
-| Update team settings | Yes | No | No | No |
-| Delete team | Yes | No | No | No |
+| Capability | Owner | Admin | Member |
+|---|---:|---:|---:|
+| View organization history | Yes | Yes | Yes |
+| View organization usage | Yes | Yes | No |
+| Invite members | Yes | Yes | No |
+| Remove members | Yes | Yes* | No |
+| Change member roles | Yes | No | No |
+| Manage organization API keys | Yes | Yes | No |
+| Manage billing, SSO, ownership, or deletion | Yes | No | No |
 
-\* Admins can remove members but cannot remove the owner and cannot remove other admins.
+\* Admins can remove members but cannot remove the owner or another admin.
 
 ---
 
-## Team billing behavior
+## Billing and credit behavior
 
-When a member launches a billable search in team mode, Osintly applies conditional fallback logic:
+When a member launches a full search in an organization workspace, one credit is reserved from the organization's shared allowance. The same organization subscription determines plan access for all members of that workspace.
 
-1. Use team credit bank when enabled and balance is available
-2. Otherwise use owner credits if owner fallback is enabled
-3. Otherwise use the member's own credits
+- Personal subscriptions and credits are never used automatically in the organization.
+- An organization subscription does not upgrade a member's Personal workspace.
+- A member in several organizations gets a separate role and organization allowance in each one.
+- The owner is the only role that can manage organization billing.
 
 <Note>
-The active source depends on team settings and available balance at execution time.
+Tool lookup overrides also use the organization allowance when the organization is active. See [Tool usage limits](/tools-reference/usage-limits).
 </Note>
 
 ---
@@ -56,14 +55,14 @@ The active source depends on team settings and available balance at execution ti
 ## Access behavior
 
 <AccordionGroup>
-  <Accordion title="Project visibility" icon="folder-open">
-    Team projects are visible to team members. Solo projects stay private to their owner.
+  <Accordion title="History visibility" icon="clock-rotate-left">
+    Organization history is visible to all organization members and identifies the member who created each entry. Personal history stays private to its owner.
   </Accordion>
-  <Accordion title="Result collaboration" icon="share-nodes">
-    Shared results are accessible to users with access to the corresponding workspace or project.
+  <Accordion title="Workspace isolation" icon="buildings">
+    Selecting an organization does not expose Personal data, another organization, or legacy Team data. A workspace preference is rechecked server-side and is never treated as authorization by itself.
   </Accordion>
-  <Accordion title="Monitoring ownership" icon="eye">
-    Monitoring objects are user-scoped in the current implementation and enforced by the authenticated user context.
+  <Accordion title="Legacy Monitoring" icon="eye">
+    The current Monitoring experience is being retired in favor of Security Watch. Do not use legacy monitor access as the basis for a new operational workflow.
   </Accordion>
 </AccordionGroup>
 
@@ -71,6 +70,6 @@ The active source depends on team settings and available balance at execution ti
 
 ## Operational recommendations
 
-- Keep owner role limited to users responsible for billing and team administration
-- Use project structure to separate investigations by client, incident, or campaign
-- Review monitor counts and active permissions regularly to keep execution predictable
+- Keep the owner role limited to people responsible for billing and lifecycle actions.
+- Use the workspace switcher deliberately before launching a search or creating an API key.
+- Review members, pending invitations, usage, and API keys regularly.
