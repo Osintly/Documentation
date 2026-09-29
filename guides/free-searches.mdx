@@ -1,0 +1,28 @@
+---
+title: Free search previews
+description: Try a limited pseudonym or email search without an account or app subscription.
+icon: gift
+---
+
+You can try Osintly from the [Search page](https://osint.ly/search) without creating an account. Free searches are **previews**, not full saved investigations. Signed-in users without an active app subscription can use them too.
+
+## What is available
+
+- **Inputs:** pseudonyms and email addresses only. For a domain or IP address, use [Domain Intelligence](/tools-reference/domain-intelligence) or [IP Intelligence](/tools-reference/ip-intelligence) instead.
+- **Results:** a limited view of module cards and account/breach summaries. Raw leak datasets, exports, AI analysis, and full result details are not included.
+- **Freshness:** Osintly prefers cached results when available. A preview may show data collected during an earlier search.
+- **Access:** the preview link works in the same browser session for 15 minutes. It is not added to your account's search history.
+
+## How to run one
+
+1. Enter a pseudonym or email address on [osint.ly/search](https://osint.ly/search).
+2. Select **Run free preview** and complete the human-verification challenge.
+3. Open the limited results page. To retain a full investigation, use an eligible paid app subscription and run a regular search.
+
+## Limits
+
+Guest previews are limited to **2 in a rolling hour** and **3 in a rolling 24-hour period**, shared by devices using the same IP address. Signed-in accounts have the same per-account limits, even when the IP address changes; a shared network limit of **6 per hour** and **12 per 24 hours** also applies. Service-wide capacity can reduce availability. The Search page shows the remaining allowance, and a limit response includes a retry delay.
+
+<Note>
+Free previews are a feature of the Osintly website, not the public Search API. The Free API plan currently provides authenticated Radar access; it does not grant full Search API or Tools API execution.
+</Note>

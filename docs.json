@@ -19,9 +19,11 @@
             "pages": [
               "introduction",
               "guides/quickstart-user",
+              "guides/free-searches",
               "use-cases",
               "guides/credits-explained",
               "guides/reading-results",
+              "guides/history",
               "faq"
             ]
           },
@@ -53,13 +55,16 @@
             "group": "Investigation & Collaboration",
             "pages": [
               "collaboration/investigation-projects",
+              "collaboration/organizations",
+              "collaboration/legacy-team-transition",
+              "collaboration/organization-activity",
               "collaboration/team-collaboration",
               "collaboration/export-sharing",
               "collaboration/logo-service"
             ]
           },
           {
-            "group": "Monitoring",
+            "group": "Monitoring & Alerts",
             "pages": [
               "operations/monitoring"
             ]
@@ -67,7 +72,8 @@
           {
             "group": "Plans & Credits",
             "pages": [
-              "billing/credits-subscriptions"
+              "billing/credits-subscriptions",
+              "guides/personal-checkout"
             ]
           },
           {
@@ -121,6 +127,9 @@
             "group": "Overview",
             "pages": [
               "tools-reference/introduction",
+              "tools-reference/catalog",
+              "tools-reference/domain-intelligence",
+              "tools-reference/ip-intelligence",
               "tools-reference/vehicle-history-finder",
               "tools-reference/epic-games",
               "tools-reference/xbox",
@@ -128,7 +137,8 @@
               "tools-reference/playstation",
               "tools-reference/roblox",
               "tools-reference/reddit",
-              "tools-reference/socialclub"
+              "tools-reference/socialclub",
+              "tools-reference/usage-limits"
             ]
           },
           {

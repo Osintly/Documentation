@@ -4,7 +4,7 @@ description: How to export results and share them within collaborative workflows
 icon: share-nodes
 ---
 
-Osintly supports card-level and map-level exports today, plus team sharing workflows through project association.
+Osintly supports result, card, map, and investigation exports. Organization searches are visible in shared history and can be organized in an organization investigation.
 
 ---
 
@@ -14,7 +14,7 @@ Osintly supports card-level and map-level exports today, plus team sharing workf
 |---|---|---|
 | **JSON** | Card expansion modal | Available per card. Exports the raw structured data returned by that provider. |
 | **CSV / JSON (map)** | Map synthesis block | Exports the geographic data points from the map view. |
-| **PDF / JSON / DOCX** | Result page header (`Export`) | Export options are visible in the header menu. Actual file generation can vary by rollout/environment. |
+| **PDF / JSON / CSV / Markdown** | Result page header (`Export`) | Choose a format and the Osintly results, leak results, or both when available. DOCX is not currently offered in this menu. |
 
 ---
 
@@ -23,7 +23,7 @@ Osintly supports card-level and map-level exports today, plus team sharing workf
 1. Click any module card to open the expansion modal.
 2. Use the export option in the modal to download the card's data as JSON.
 
-This is available on all plans and does not consume credits.
+This is available on paid app plans for full result pages and does not consume additional credits. Free previews do not include exports.
 
 ---
 
@@ -45,21 +45,15 @@ From the result page header, click **Export** to access available output options
 
 ---
 
-## Sharing within a team
+## Complete organization history export
 
-Results can be linked to a **Team project**, making them available in the shared team workspace.
+In an organization, select 1–100 saved searches or tool results in [History](/guides/history) to download their complete payloads as a JSON archive. This bulk action requires `history.export` permission and is separate from the per-result PDF/JSON/CSV/Markdown menu. Personal history does not provide the organization archive. The export is logged in [Organization activity](/collaboration/organization-activity).
 
-From the result page header, use **Collaborate** to:
+---
 
-- pick an existing team project, or
-- create a new team project and attach the current search.
+## Sharing in an organization investigation
 
-The collaborate flow requires:
-
-- being part of a team,
-- choosing a team project (solo projects are rejected for collaboration association).
-
-<Note>Collaboration features require an active team workspace. See [Team collaboration](/collaboration/team-collaboration) for setup details.</Note>
+Select an active organization and create an [investigation](/collaboration/investigation-projects) to group searches, notes, and files for its members. Organization searches are also visible in shared history. Preserved Solo investigations can be downloaded as ZIP. Legacy Team investigations are export-only until the owner [transfers the whole Team](/collaboration/legacy-team-transition) to an eligible organization.
 
 ---
 

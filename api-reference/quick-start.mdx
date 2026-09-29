@@ -10,6 +10,8 @@ This guide walks through the minimal API flow using cURL.
 You need a valid bearer token first. See [Authentication](/api-reference/authentification).
 </Note>
 
+Creating a Search API run requires an API plan that includes Search. The website's [free search previews](/guides/free-searches) do not grant public Search API access. For a new domain or IP integration, use [Domain Intelligence](/tools-reference/domain-intelligence) or [IP Intelligence](/tools-reference/ip-intelligence): those types will soon stop being supported in the Search API, although both still work today. No cutoff date has been announced.
+
 ## 1) Check service health
 
 ```bash
@@ -53,9 +55,11 @@ curl -X POST "https://api.osint.ly/search" \
   }'
 ```
 
-Save the returned `search.id` for the next calls.
+Save the returned `data.search.id` for the next calls.
 
 ### Optional: run selected modules only
+
+Use real, currently listed module IDs from `GET /modules`. The UUIDs in this example show the payload shape and are not guaranteed to exist.
 
 ```bash
 curl -X POST "https://api.osint.ly/search" \

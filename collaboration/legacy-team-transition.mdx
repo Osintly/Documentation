@@ -1,0 +1,77 @@
+---
+title: Move a legacy Team to an organization
+description: Export your Team data or transfer its work, members, and remaining credits before the transition deadline.
+icon: arrow-right
+---
+
+Legacy Teams are read-only. You can review their existing records, but you cannot create a Team, invite members, or add new work to one. The Team owner has **90 days from the transition launch** to download a full archive or transfer the Team to an organization. The **Team transition** page shows the exact deadline for your account.
+
+Only accounts with an eligible legacy Team see **Team transition** in the sidebar. If you are a Team member, you can still export individual investigations that you have access to from **Investigations**.
+
+<Note>
+Export or transfer before the deadline shown on the Team transition page. After that date, the full Team export and transfer actions close. The deadline does not automatically delete Team data.
+</Note>
+
+## Download a full Team archive
+
+Only the Team owner can download the full archive.
+
+<Steps>
+  <Step title="Open Team transition">
+    Select **Team transition** in the sidebar. Review the Team name and deadline.
+  </Step>
+  <Step title="Export the Team">
+    Choose **Export team ZIP** under **Download a copy** and save the file.
+  </Step>
+  <Step title="Check the archive">
+    Open the ZIP and review `manifest.json` and `export-warnings.json` before relying on it as your copy.
+  </Step>
+</Steps>
+
+The archive includes Team members and roles, pending invitations, credit history, investigations, searches, notes, and available attachments. The manifest lists exported files. If a complete search result or attachment is unavailable, `export-warnings.json` identifies it; the stored search data is included when a complete result cannot be reconstructed. Pending invitations are historical records in the ZIP, not active organization invitations.
+
+Members can use **Export ZIP** for an individual legacy investigation they can access. They cannot export or transfer the entire Team.
+
+## Transfer the Team to an organization
+
+The destination must be an **active organization owned by the Team owner**. If you do not have one, select **Create organization** on the Team transition page, finish the organization checkout, then return to the Team. Creating an organization has its own plan and billing; the transfer itself does not create a subscription or charge.
+
+<Steps>
+  <Step title="Choose the destination">
+    On **Team transition**, select the organization under **Move to an organization**.
+  </Step>
+  <Step title="Review the preview">
+    Check the destination's available seats, investigation limit, attachment storage limit, member roles, and Team credit balance. The transfer is blocked if the organization cannot accept the entire Team.
+  </Step>
+  <Step title="Confirm the role changes">
+    Read the role warning and select **I understand the role changes**. A former Team viewer will have more access as an organization member.
+  </Step>
+  <Step title="Transfer the Team">
+    Select **Transfer team**. When the transfer completes, select the destination organization to continue working with its investigations and searches.
+  </Step>
+</Steps>
+
+| Legacy Team role | Role after transfer |
+|---|---|
+| Owner | Remains the organization owner |
+| Admin | Admin |
+| Editor or viewer | Member |
+
+Someone who is already in the destination organization keeps their current organization role. The transfer moves Team members, investigations, searches, attachments, and the remaining Team bank credits together. Historical investigation and search identifiers and authors are retained where possible. The credit balance is added once to the organization's purchased-credit wallet; it is not refunded to the owner's Personal balance. Your Personal subscription and the organization's billing remain separate.
+
+Pending Team invitations do **not** become organization memberships. Reissue any needed invitations from **Organization → Members** after the transfer. You cannot download another full Team ZIP after transfer; export investigations from the organization instead.
+
+<Warning>
+The Team's old viewer role becomes **Member**, which can edit organization investigations. Review the destination's [member permissions](/collaboration/team-collaboration) before confirming.
+</Warning>
+
+## Delete the old Team
+
+The owner can select **Delete team** on the Team transition page and type `DELETE` to confirm. This cannot be undone.
+
+- **Before transfer:** deletion removes the Team and its investigations, searches, notes, and attachments. Any remaining Team bank credits are returned once to the owner's Personal balance. Download and inspect the ZIP first if you need those records.
+- **After transfer:** deletion removes the old Team and its membership and invitation records. Work and credits already moved to the organization stay there.
+
+Attachment cleanup may finish in the background. Team data is not automatically deleted when the 90-day transition window ends.
+
+If the preview reports insufficient seats or limits, increase the destination's capacity or choose another active organization you own. For a missing archive file or a blocked migration you cannot resolve, [contact support](https://osint.ly/support) before the deadline.

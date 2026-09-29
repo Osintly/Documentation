@@ -4,7 +4,7 @@ description: Plan activation, billing separation, API key limits, concurrency, a
 icon: gauge-high
 ---
 
-This page documents how Osintly API plans work, how they differ from Osintly app plans, and how runtime capacity is enforced.
+This page documents how Osintly API plans work, how they differ from Osintly app plans, how API access follows the active workspace, and how runtime capacity is enforced.
 
 ## Plan model
 
@@ -15,12 +15,43 @@ This page documents how Osintly API plans work, how they differ from Osintly app
   - app plan only
   - neither
 - If you have an API plan without an Osintly app plan, you get API access only.
+- An organization can hold its own API plan. It remains separate from the organization app plan and from each member's personal API plan.
+
+## API workspace scope
+
+Open [https://osint.ly/workspace/api](https://osint.ly/workspace/api) after selecting the workspace you want to manage.
+
+| Active workspace | API account used |
+|---|---|
+| Personal | Your personal API keys, usage, and billing |
+| Organization | The organization’s API keys, usage, and billing |
+
+Within an organization, owners and admins can create, revoke, and manage API keys. All members can view API keys and usage. Only the owner can manage organization API billing and invoices.
+
+An organization API key belongs to the organization, not to the member who created it. Switching workspaces does not move keys, usage, subscriptions, or invoices.
+
+## API workspace console
+
+The selected workspace's API console has **Access**, **Keys**, **Usage**, and **Docs** views. When billing access is available, it also shows **Billing** and **Invoices**. Keys can be created or revoked within the current plan's key limit; the Usage view shows daily and monthly consumption and any active API add-ons. Billing lists the API plan and add-ons as separate items, while Invoices shows their billing documents. Available tabs and actions depend on the selected workspace, subscription, and role.
+
+API add-ons can extend the API capacity shown in the console. Review the add-on's included units, request rate, concurrency, status, and billing terms before purchase. Add-on usage and subscription management are separate from app search credits; changing a Personal app plan does not change API capacity.
+
+Dates and clock times displayed in the Osintly API console are in **UTC**.
+
+---
+
+## Buying API access
+
+From the API pricing page, choose a plan and enter the API checkout. If you belong to one or more organizations, checkout asks whether to bill **Personal** or a selected organization before payment. Authentication and MFA may be required first. The account or organization chosen at checkout owns the resulting API subscription and keys. API add-ons are managed in the same workspace's API console after activation. Verify the target workspace before confirming a purchase.
+
+---
 
 ## Free API plan
 
 - The Free API plan can evolve over time.
 - Current behavior: free API key access plus unlimited Radar API access.
 - Radar endpoints still require authentication with an API key.
+- The website's limited [free search previews](/guides/free-searches) are a separate feature. They do not grant `POST /search` access on the Free API plan.
 
 ## How to claim Free API plan
 
@@ -51,6 +82,8 @@ If you downgrade to a plan with a lower API key limit:
 
 - API billing: [https://osint.ly/workspace/api#workspace-api-billing](https://osint.ly/workspace/api#workspace-api-billing)
 - Osintly app billing: [https://osint.ly/settings/billing](https://osint.ly/settings/billing)
+
+For an organization, API billing remains separate from the organization app subscription and is managed by the organization owner in the active organization workspace.
 
 ## Capacity and limits
 

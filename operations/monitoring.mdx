@@ -1,145 +1,35 @@
 ---
-title: Monitoring & alerts
-description: Track targets over time with scheduled checks and alert history.
+title: Monitoring & Alerts
+description: Create scheduled monitors, review alerts, and configure notification channels.
 icon: bell
 ---
 
-Monitoring lets you track a target over time without repeating manual checks.  
-You create a monitor, choose a schedule, and Osintly records runs and alerts in the Monitoring dashboard.
+Open [Monitoring & Alerts](https://osint.ly/monitoring) from the selected Personal or organization workspace. Access depends on the workspace plan and permissions. The dashboard shows summary counts and three tabs: **Alerts**, **Monitors**, and **Channels**.
 
-<Note>
-Monitoring is available on Pro and Advanced plans.
-</Note>
+## Create and manage monitors
 
----
+Select **Create Monitor**, give the monitor a name and target, choose the check type, rules, and frequency, then save it. The available check types are:
 
-## How monitoring works
+| Type | What it checks |
+| --- | --- |
+| Email Registration | Changes in account registration signals for an email address |
+| Module Query | Results from selected search modules and configured rules |
+| Global Search | New findings from a scheduled search for the selected input |
 
-Each monitor stores:
+The form shows an estimated run cost. Available frequencies are hourly, every six hours, daily, and weekly. The number of monitors you may create depends on the selected workspace's plan. Existing monitors can be edited, paused, resumed, or deleted when your role permits it. The **Monitors** tab shows status, target, frequency, and latest run.
 
-- a monitor type (Email Registration, Global Search, or Module Query)
-- a target/query
-- a run frequency (`hourly`, `6hours`, `daily`, `weekly`)
-- an active/paused state
+## Review alerts
 
-When runs execute, monitor metadata is updated (including last run) and alerts can be created when conditions are met.
-
----
-
-## Monitor types
-
-<AccordionGroup>
-  <Accordion title="Email Registration" icon="envelope">
-    Track a single email-style target for registration/exposure-style changes.
-  </Accordion>
-
-  <Accordion title="Global Search" icon="globe">
-    Track a target using a selected search input type (for example Pseudonym, Email Address, IP Address, Domain Name, etc.).
-    Input validation is enforced against the selected search type.
-  </Accordion>
-
-  <Accordion title="Module Query" icon="cube">
-    Track a query against selected module(s).  
-    Selected modules must be valid and share the same input type.
-  </Accordion>
-</AccordionGroup>
-
----
-
-## Creating a monitor
-
-<Steps>
-  <Step title="Open Monitoring">
-    Go to [osint.ly/monitoring](https://osint.ly/monitoring).
-  </Step>
-
-  <Step title="Click Create Monitor">
-    Use **Create Monitor** from the Monitoring dashboard.
-  </Step>
-
-  <Step title="Configure monitor settings">
-    Set:
-    - Name
-    - Frequency
-    - Monitor type
-    - Query/target + type-specific fields
-  </Step>
-
-  <Step title="Save">
-    The monitor is created as **active** (unless you later pause it).
-  </Step>
-</Steps>
-
-<Note>
-In the current interface, monitor creation is managed from the Monitoring dashboard (not from a dedicated “Monitor” button in result header actions).
-</Note>
-
----
-
-## Frequency and expected run volume
-
-| Frequency | Approx. runs/day | Approx. runs/30 days |
-|---|---:|---:|
-| Hourly | 24 | 720 |
-| Every 6 hours | 4 | 120 |
-| Daily | 1 | 30 |
-| Weekly | ~0.14 | ~4 |
-
-Use this table to estimate operational load and expected alert cadence.
-
----
-
-## Plan limits
-
-| Plan | Monitoring feature | Max monitors |
-|---|---|---:|
-| Standard | No | 0 |
-| Pro | Yes | 5 |
-| Advanced | Yes | 15 |
-
-If you hit your limit, monitor creation is blocked until you delete monitors or upgrade. See [osint.ly/pricing](https://osint.ly/pricing) for full plan details.
-
----
-
-## Alerts and status workflow
-
-The Alerts tab provides:
-
-- severity
-- type
-- target
-- message
-- timestamp
-- workflow status
-
-Supported alert statuses:
-
-- `new`
-- `investigating`
-- `resolved`
-
-You can update status directly from the alerts table and remove alerts when needed.
-
----
+The **Alerts** tab lists findings, severity, status, target, creation time, and—within an organization—the member who created the monitor. You can update alert status or delete an alert where permitted. Open the related investigation or run a fresh search to verify a finding; provider data can change between scheduled runs.
 
 ## Notification channels
 
-Notification channel settings are managed in **Monitoring → Notification Channels**.
+The **Channels** tab configures workspace-level delivery. Email and Discord settings apply to every monitor in the selected workspace. Organization owners and admins can manage channels; other members can view the available settings according to their permissions. Check the current form for supported delivery options and test a destination before relying on notifications.
 
-Currently configurable in UI:
+## Workspaces, credits, and time
 
-- **Email recipient**
-- **Discord webhook**
+Monitoring uses the selected workspace. Its plan controls access and monitor count, and its permissions control who can create monitors and manage channels. Review the displayed run estimate and the workspace's credits before saving frequent checks.
 
+**Every date and clock time displayed in the Osintly interface is in UTC.** This includes alert creation times and monitor run times. Relative labels such as “2 hours ago” are elapsed time from the underlying UTC timestamp; they do not imply a separate local timezone.
 
----
-
-## Managing monitors
-
-From the Monitors tab you can:
-
-- Edit monitor configuration
-- Pause/Resume
-- Delete monitor
-- Review last run timestamp
-- View configured channel indicators
+See [Organizations & workspaces](/collaboration/organizations), [Credits explained](/guides/credits-explained), and [Monitoring runbook](/runbooks/operations-monitoring).

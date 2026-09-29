@@ -4,7 +4,7 @@ description: Authenticate every API request with your bearer token.
 icon: lock
 ---
 
-All API endpoints require a bearer token in the `Authorization` header.
+Most API endpoints require a bearer token in the `Authorization` header. `GET /health` is public; `GET /`, Search, Tools, Radar, Modules, and Usage require a valid key.
 
 <Note>
 Radar is included in the Free plan, but it still requires authentication. Create an Osintly account, generate a free API key, then call `GET /radar/breaches` and `GET /radar/breaches/{name}` with that key.
