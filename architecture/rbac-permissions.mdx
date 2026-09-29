@@ -26,7 +26,9 @@ Osintly separates Personal workspaces from organization workspaces. Organization
 | Capability | Owner | Admin | Member |
 |---|---:|---:|---:|
 | View organization history | Yes | Yes | Yes |
-| View organization usage | Yes | Yes | No |
+| View organization usage and activity | Yes | Yes | No |
+| Create or update organization investigations | Yes | Yes | Yes |
+| Delete organization investigations | Yes | Yes | No |
 | Invite members | Yes | Yes | No |
 | Remove members | Yes | Yes* | No |
 | Change member roles | Yes | No | No |
@@ -61,8 +63,8 @@ Tool lookup overrides also use the organization allowance when the organization 
   <Accordion title="Workspace isolation" icon="buildings">
     Selecting an organization does not expose Personal data, another organization, or legacy Team data. A workspace preference is rechecked server-side and is never treated as authorization by itself.
   </Accordion>
-  <Accordion title="Legacy Monitoring" icon="eye">
-    The current Monitoring experience is being retired in favor of Security Watch. Do not use legacy monitor access as the basis for a new operational workflow.
+  <Accordion title="Monitoring & Alerts" icon="eye">
+    Monitoring permissions are scoped to the selected workspace. Owners and admins can manage organization notification channels; see [Monitoring & Alerts](/operations/monitoring).
   </Accordion>
 </AccordionGroup>
 

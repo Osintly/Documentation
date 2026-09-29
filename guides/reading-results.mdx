@@ -3,6 +3,7 @@ title: Reading results
 description: What each panel on the result page means and how to get the most out of it.
 icon: table-list
 ---
+<Note>Dates and clock times shown in Osintly result cards, timelines, and panels are displayed in **UTC**. A raw date string returned by a third-party provider may have its own stated timezone; check the source field before comparing events.</Note>
 
 After you run a search, Osintly streams results in real time. This page explains every section of the result page so you know where to look and what each element means.
 
@@ -89,7 +90,7 @@ These blocks appear at the top of the result page when relevant data is availabl
     Export the full result set as PDF, JSON, CSV, or Markdown. Individual card modals offer JSON; the map offers CSV and JSON. DOCX is not currently offered in the result export menu.
   </Accordion>
   <Accordion title="Collaborate" icon="users">
-    Link a result to a legacy Team project for its existing collaboration flow. In an organization, searches are instead visible to organization members in shared history; organization projects are not yet available.
+    Associate an eligible result with an organization investigation. Legacy Team association remains a separate historical flow; see [Investigation projects](/collaboration/investigation-projects).
   </Accordion>
   <Accordion title="AI Analyst" icon="robot">
     Opens or closes the AI Analyst side panel. See the section below for what it can do.

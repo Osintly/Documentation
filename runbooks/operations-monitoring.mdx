@@ -1,31 +1,13 @@
 ---
-title: Legacy Monitoring runbook
-description: Review and wind down existing legacy Monitoring workflows while Security Watch is prepared.
+title: Monitoring runbook
+description: Check scheduled monitors, alerts, and notification delivery.
 icon: bell
 ---
 
-<Warning>
-Legacy Monitoring is being retired. Do not create new monitors or build new operational workflows on it. Security Watch will replace this experience.
-</Warning>
+1. Select the Personal or organization workspace that owns the monitor, then open [Monitoring & Alerts](https://osint.ly/monitoring).
+2. In **Monitors**, confirm that the target, check type, frequency, and status match the intended investigation. Check the latest run time; displayed dates and times are UTC.
+3. In **Alerts**, review new findings, severity, and workflow status. Verify significant findings with a fresh search or source record before acting.
+4. In **Channels**, confirm the email or Discord destination for this workspace. Organization owners and admins manage channels.
+5. If a scheduled check did not run, verify the workspace plan, monitor limit, remaining credits, and role. Capture the monitor ID, the UTC time of the expected run, and any error before contacting [support](https://osint.ly/support).
 
-## Handling an existing monitor
-
-1. Open the legacy Monitoring dashboard and record the monitor target, status, latest run, and any unresolved alerts.
-2. Preserve investigation context in the correct Personal or organization history, notes, or export before the transition.
-3. Pause or delete monitors that are no longer required.
-4. For a live issue, use a new full search or focused tool lookup to validate the target instead of relying only on a scheduled legacy run.
-5. Escalate delivery or data-retention concerns to [support](https://osint.ly/support).
-
-## Transition checklist
-
-- Identify legacy monitors that are still business-critical.
-- Record their target, intended cadence, notification recipients, and current alert state.
-- Confirm the workspace that owns the related investigation.
-- Remove obsolete monitors to avoid depending on a retiring service.
-- Follow Security Watch release and migration guidance when it is available.
-
-## Related resources
-
-- [Monitoring retirement](/operations/monitoring)
-- [Organizations & workspaces](/collaboration/organizations)
-- [Tool usage limits](/tools-reference/usage-limits)
+See [Monitoring & Alerts](/operations/monitoring) for the user-facing workflow.

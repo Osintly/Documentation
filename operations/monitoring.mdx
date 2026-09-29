@@ -1,35 +1,35 @@
 ---
-title: Monitoring retirement
-description: Status of the legacy Monitoring experience and the transition to Security Watch.
+title: Monitoring & Alerts
+description: Create scheduled monitors, review alerts, and configure notification channels.
 icon: bell
 ---
 
-<Warning>
-The current Monitoring & Alerts experience is being retired and will be replaced by **Security Watch**, Osintly’s new security monitoring product. Do not create new monitors in the legacy interface.
-</Warning>
+Open [Monitoring & Alerts](https://osint.ly/monitoring) from the selected Personal or organization workspace. Access depends on the workspace plan and permissions. The dashboard shows summary counts and three tabs: **Alerts**, **Monitors**, and **Channels**.
 
-The existing Monitoring dashboard may still show previously created monitors, alerts, and notification channels while the transition is in progress. Its availability, limits, and delivery behavior should not be treated as a commitment for new investigations.
+## Create and manage monitors
 
----
+Select **Create Monitor**, give the monitor a name and target, choose the check type, rules, and frequency, then save it. The available check types are:
 
-## What to do now
+| Type | What it checks |
+| --- | --- |
+| Email Registration | Changes in account registration signals for an email address |
+| Module Query | Results from selected search modules and configured rules |
+| Global Search | New findings from a scheduled search for the selected input |
 
-- Use full searches and focused tool lookups for current checks.
-- Save important searches in the correct Personal or organization workspace so they remain available from history.
-- Export or record the context of existing legacy-monitor investigations where required by your workflow.
-- Follow product updates for Security Watch availability and migration guidance.
+The form shows an estimated run cost. Available frequencies are hourly, every six hours, daily, and weekly. The number of monitors you may create depends on the selected workspace's plan. Existing monitors can be edited, paused, resumed, or deleted when your role permits it. The **Monitors** tab shows status, target, frequency, and latest run.
 
-## Existing legacy monitors
+## Review alerts
 
-If you still need to review the legacy interface:
+The **Alerts** tab lists findings, severity, status, target, creation time, and—within an organization—the member who created the monitor. You can update alert status or delete an alert where permitted. Open the related investigation or run a fresh search to verify a finding; provider data can change between scheduled runs.
 
-1. Open [osint.ly/monitoring](https://osint.ly/monitoring).
-2. Review current monitor state and alert history.
-3. Avoid relying on it for new operational coverage.
-4. Contact [support](https://osint.ly/support) if an existing monitor needs attention during the transition.
+## Notification channels
 
-## Related documentation
+The **Channels** tab configures workspace-level delivery. Email and Discord settings apply to every monitor in the selected workspace. Organization owners and admins can manage channels; other members can view the available settings according to their permissions. Check the current form for supported delivery options and test a destination before relying on notifications.
 
-- [Organizations & workspaces](/collaboration/organizations)
-- [Search & analysis](/search-analysis/osint-search)
-- [Tool usage limits](/tools-reference/usage-limits)
+## Workspaces, credits, and time
+
+Monitoring uses the selected workspace. Its plan controls access and monitor count, and its permissions control who can create monitors and manage channels. Review the displayed run estimate and the workspace's credits before saving frequent checks.
+
+**Every date and clock time displayed in the Osintly interface is in UTC.** This includes alert creation times and monitor run times. Relative labels such as “2 hours ago” are elapsed time from the underlying UTC timestamp; they do not imply a separate local timezone.
+
+See [Organizations & workspaces](/collaboration/organizations), [Credits explained](/guides/credits-explained), and [Monitoring runbook](/runbooks/operations-monitoring).

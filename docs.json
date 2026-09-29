@@ -23,6 +23,7 @@
               "use-cases",
               "guides/credits-explained",
               "guides/reading-results",
+              "guides/history",
               "faq"
             ]
           },
@@ -55,13 +56,14 @@
             "pages": [
               "collaboration/investigation-projects",
               "collaboration/organizations",
+              "collaboration/organization-activity",
               "collaboration/team-collaboration",
               "collaboration/export-sharing",
               "collaboration/logo-service"
             ]
           },
           {
-            "group": "Security Watch transition",
+            "group": "Monitoring & Alerts",
             "pages": [
               "operations/monitoring"
             ]
@@ -69,7 +71,8 @@
           {
             "group": "Plans & Credits",
             "pages": [
-              "billing/credits-subscriptions"
+              "billing/credits-subscriptions",
+              "guides/personal-checkout"
             ]
           },
           {
@@ -123,6 +126,7 @@
             "group": "Overview",
             "pages": [
               "tools-reference/introduction",
+              "tools-reference/catalog",
               "tools-reference/domain-intelligence",
               "tools-reference/ip-intelligence",
               "tools-reference/vehicle-history-finder",

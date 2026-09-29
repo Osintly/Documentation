@@ -21,7 +21,7 @@ A handle found on a forum, a Telegram username, a Reddit account. This is often 
     Go to [Search](https://osint.ly/search), select **Pseudonym**, and enter the handle. Results stream in from social platforms, forums, and leak databases.
   </Step>
   <Step title="Identify linked emails or phone numbers">
-    Check the module cards for associated contact data. If you find an email, run a new **Email** search in the same project to expand the profile.
+    Check the module cards for associated contact data. If you find an email, run a new **Email** search to expand the profile. In an active organization, keep both searches in the same investigation.
   </Step>
   <Step title="Pivot between identifiers">
     Layer supported searches from username to email, then inspect any discovered IP in [IP Intelligence](/tools-reference/ip-intelligence). Treat each association as a lead to verify, not proof of identity.
@@ -78,7 +78,7 @@ You have a domain or IP from a malware sample, a C2 server, or a suspicious redi
   <Step title="Preserve a repeatable follow-up">
     Save the search in the correct workspace and repeat focused domain or IP checks when you need fresh DNS, subdomain, or IP data.
 
-    <Note>The current Monitoring experience is being retired in favor of Security Watch. Avoid creating new monitors.</Note>
+    <Note>Eligible workspaces can schedule checks with [Monitoring & Alerts](/operations/monitoring).</Note>
   </Step>
 </Steps>
 
@@ -114,7 +114,7 @@ You are evaluating a potential partner, supplier, or acquisition target and need
     If you have emails for founders or executives, run **Email** searches to check for breach exposure or linked accounts.
   </Step>
   <Step title="Monitor for changes">
-    Save the domain investigation and repeat focused checks to track infrastructure changes, new subdomains, or data-leak appearances while Security Watch is prepared.
+    Save the domain search in an organization investigation. Repeat focused checks for fresh data, or create a monitor for scheduled checks.
   </Step>
   <Step title="Export a report">
     Use **Export to PDF** or another currently offered format (JSON, CSV, or Markdown) to produce a deliverable for internal review or legal counsel.

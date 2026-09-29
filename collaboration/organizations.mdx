@@ -3,6 +3,7 @@ title: Organizations & workspaces
 description: Create an organization, switch workspaces, and understand shared searches, credits, and usage.
 icon: buildings
 ---
+<Note>Dates and clock times shown in organization activity, shared history, usage, and billing views are displayed in **UTC**.</Note>
 
 An organization is a paid, shared Osintly workspace for a company, agency, or research group. It has its own members, plan, credit allowance, search history, API account, and billing. Your **Personal** workspace always remains separate.
 
@@ -57,7 +58,7 @@ Searches run while an organization is selected are stored in that organization�
 - Searches in Personal, a legacy Team, or another organization are not shown in the active organization history.
 - Saved tool results follow the selected workspace too, so members can revisit the organization’s shared tool history.
 
-Organization projects are not yet available. The legacy Team project flow is still separate, so do not expect a Team project to become an organization project when you switch workspaces.
+Active organizations can create shared [investigations](/collaboration/investigation-projects) for searches, files, and notes. Legacy Solo and Team projects are export-only in Personal and do not move when you switch workspaces.
 
 ---
 
@@ -74,7 +75,19 @@ The allowance is calculated from the number of paid seats. For example, a three-
 
 Before a full search starts, Osintly reserves one organization credit. It settles the credit only after the search is created and releases the reservation if the launch fails, which prevents concurrent members from overspending the shared allowance.
 
-Open **Organization → Usage** to review shared consumption and member activity. See [Credits explained](/guides/credits-explained) and [Tool usage limits](/tools-reference/usage-limits) for spending and volume rules.
+Open **Organization → Usage** to review shared consumption and limits. Open **Organization → Activity** to inspect and export the audit trail of member actions. See [Credits explained](/guides/credits-explained) and [Tool usage limits](/tools-reference/usage-limits) for spending and volume rules.
+
+---
+
+## Organization console
+
+The selected organization has separate pages for **Overview**, **Members**, **Permissions**, **Usage**, **Activity**, **Credits**, **Billing**, **Settings**, and **Security → SSO**. Available pages and actions depend on your role. The overview summarizes the plan, credit use, members, and recent searches. See [Organization activity](/collaboration/organization-activity) for audit filters and exports and [Members & permissions](/collaboration/team-collaboration) for role controls.
+
+---
+
+## Organization billing
+
+The owner uses **Organization → Billing** to change the Pro/Ultimate plan, manage paid seats, review payment details, and open invoices. The page shows whether a requested change is scheduled, processing, or waiting for payment. A scheduled change can be undone before it takes effect; an open invoice may need payment to restore access. Cancellation can be reversed before the end of the paid period. The organization app subscription and its API subscription have separate billing views.
 
 ---
 

@@ -3,6 +3,7 @@ title: FAQ
 description: Answers to the most common questions about Osintly.
 icon: circle-question
 ---
+<Note>Dates and clock times displayed throughout the Osintly interface use **UTC**. Relative labels such as “1 hour ago” indicate elapsed time; provider-supplied raw fields should be interpreted using their own timezone metadata.</Note>
 
 ## Account & access
 
@@ -37,6 +38,10 @@ icon: circle-question
 
   <Accordion title="Can I get a refund?" icon="money-bill-transfer">
     All sales are final except where required by applicable law. If you believe a charge was made in error, contact [contact@osint.ly](mailto:contact@osint.ly) with the details.
+  </Accordion>
+
+  <Accordion title="What happened to the Advanced plan?" icon="circle-question">
+    Advanced was renamed **Ultimate**. Existing Advanced subscriptions receive Ultimate features, credits, and limits. Current pricing and billing screens use the Ultimate name.
   </Accordion>
 
   <Accordion title="How do I cancel my subscription?" icon="ban">
@@ -74,6 +79,10 @@ icon: circle-question
     Source freshness varies by provider. Breach databases are updated as new leaks are processed. Real-time sources (live account checks, DNS) return current data at the time of the search.
   </Accordion>
 
+  <Accordion title="Are Investigations included with Personal plans?" icon="folder-open">
+    No. Standard, Pro, and Ultimate individual subscriptions no longer include Investigations. Existing Personal and legacy Team investigations are export-only: use **Export ZIP** from the Investigations list to keep their searches, notes, and available attachments. You do not need an Organization plan for that export. New shared investigations require an active Organization plan. See [Investigation projects](/collaboration/investigation-projects).
+  </Accordion>
+
   <Accordion title="Can I export results on Standard?" icon="file-export">
     JSON export is available from individual card expansion modals. CSV and JSON are available for map data. The full-result export menu offers PDF, JSON, CSV, and Markdown on paid plans. DOCX is not currently in the menu. See [Export & sharing](/collaboration/export-sharing).
   </Accordion>
@@ -99,11 +108,11 @@ icon: circle-question
   </Accordion>
 
   <Accordion title="What happened to Monitoring?" icon="bell">
-    The current Monitoring experience is being retired and will be replaced by Security Watch. Avoid creating new legacy monitors and follow product updates for the replacement.
+    Monitoring & Alerts lets eligible workspaces create scheduled monitors, review alerts, and configure notification channels. See [Monitoring & Alerts](/operations/monitoring).
   </Accordion>
 
   <Accordion title="Can I share a result with someone who does not have an account?" icon="share-nodes">
-    Organization members can view searches made in their selected organization's shared history. Legacy Team project sharing remains a separate workflow; public sharing options may vary by plan and configuration.
+    Organization members can view searches made in their selected organization's shared history. Active organizations can organize shared searches in investigations. Older Solo and Team projects in Personal are available only for ZIP export.
   </Accordion>
 </AccordionGroup>
 

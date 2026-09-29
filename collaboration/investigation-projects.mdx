@@ -1,84 +1,33 @@
 ---
 title: Investigation projects
-description: Organize searches, notes, and attachments into personal or legacy Team projects.
+description: Create shared organization investigations and export preserved legacy projects.
 icon: folder-open
 ---
 
-Projects let you group searches, notes, and files into a single investigation workspace. They currently support Personal and legacy Team scopes; organization-scoped projects are not yet available.
+**Investigations** group searches, notes, and files. New investigations are created in an active **organization** workspace. Investigations are no longer included with any individual subscription, including Standard, Pro, and Ultimate. A Personal workspace may still list older Solo and legacy Team investigations, but these are **export-only**: their detail pages cannot be opened and they cannot be edited, receive new searches, or accept uploads.
 
----
+## Create an organization investigation
 
-## Project types
+1. Select an active organization in the workspace menu and open **Investigations**.
+2. Choose **New Investigation**, add a title and description, and save. The organization plan controls how many investigations can be created.
+3. Open the investigation to add searches, write Markdown notes, and upload files. Searches launched in an organization project stay within that organization's history.
 
-| Type | Who can access |
-|---|---|
-| **Solo** | Only the creator |
-| **Team (legacy)** | All members of the associated legacy Team |
+Organization owners, admins, and members can create and update investigations when the organization is active. Owners and admins can delete them. All organization members can read them. The investigation page has **Searches**, **Files**, and **Notes** tabs. You can filter searches and files by text; Files also supports type filters. Notes support editing and preview.
 
----
+The list separates **All Investigations**, **Active**, **Completed**, and **Archived**. A project can include a cover image and description. Creation and update dates displayed by Osintly are in **UTC**.
 
-## What a project contains
+## Reports and audit history
 
-<AccordionGroup>
-  <Accordion title="Searches" icon="magnifying-glass">
-    Searches linked to the project (`project_id` context). You can launch searches directly from a project, and team result pages can be associated to a team project via **Collaborate**.
-  </Accordion>
-  <Accordion title="Notes" icon="note-sticky">
-    Markdown notes attached to the project. Notes auto-save after short inactivity and support preview mode.
-  </Accordion>
-  <Accordion title="Attachments" icon="paperclip">
-    Files uploaded in the project Files tab (images/documents/other supported formats), with storage usage tracking.
-  </Accordion>
-</AccordionGroup>
+Use **Export investigation** on the detail page to download a PDF summary of the project, its searches, notes, files, and storage usage. For organization investigations, owners and admins can open the project audit log and export its entries as JSON or CSV. The project audit log covers recorded project events; the broader [Organization activity](/collaboration/organization-activity) page covers actions across the workspace.
 
----
+## Export an older Personal or Team investigation
 
-## Creating a project
+1. Switch to **Personal** and open **Investigations**. Existing Solo and legacy Team investigations appear in a preservation list.
+2. Select **Export ZIP** beside each investigation. You do **not** need an organization subscription to export an investigation you can access.
+3. Keep the downloaded ZIP in your own storage. The interface warns that legacy investigations will be removed in the future, without giving a removal date. Confirm that the archive opens and contains what you need before choosing **Delete**; deletion is optional and permanent.
 
-<Steps>
-  <Step title="Open the Projects section">
-    Navigate to **Projects** in the left sidebar.
-  </Step>
-  <Step title="Create a new project">
-    Click **New project**. Give it a name and select the type: Solo or legacy Team.
-  </Step>
-  <Step title="Add searches">
-    Open the project and use **New Search** to run a search in that project context.
+Each ZIP contains `investigation.json` (project metadata and counts), `notes.md`, `searches/index.json`, individual search JSON files, `files/index.json`, and downloadable attachments. Search exports include complete results when the complete-result service is available. If a result cannot be reconstructed, the stored search is exported instead. If an attachment cannot be downloaded, or a complete search falls back to stored data, the ZIP includes `export-warnings.json` describing the affected item. Review that file and contact [support](https://osint.ly/support) if essential data is missing.
 
-    For legacy Team investigations, you can also associate a result to a Team project using the result page **Collaborate** action. Organization searches stay in shared organization history and cannot be mixed with a Team project.
-  </Step>
-  <Step title="Add notes and attachments">
-    Open the project and use the Notes and Attachments sections to add context alongside your search data.
-  </Step>
-</Steps>
+Changing a Personal plan does not restore Investigations. An Organization plan permits **new shared investigations**, but it does not migrate the older Personal or Team projects into that organization.
 
----
-
-## Project limits and storage
-
-Project count and storage are plan-dependent.
-
-- Standard: lower project/storage limits
-- Pro: higher limits
-- Ultimate: highest limits
-
-Team project limits are enforced against the team owner plan.
-
----
-
-## Permissions in team projects
-
-Team roles impact what members can do in project workflows.
-
-- Viewer: read-only style access (cannot create team projects)
-- Editor/Admin/Owner: can create and manage team project content
-
-Delete/edit actions for project searches are also role-gated in team projects.
-
----
-
-## Team projects
-
-A Team project is shared with the associated team. Members can access the same searches, notes, and files according to role permissions.
-
-<Note>Legacy Team projects remain separate from [Organizations & workspaces](/collaboration/organizations). Organization projects are coming later.</Note>
+For saved searches outside a project, see [Search and tool history](/guides/history). Organization search results can be associated with an eligible organization investigation; legacy Team collaboration remains a separate historical scope.

@@ -1,0 +1,17 @@
+---
+title: Organization activity
+description: Review and export the audit trail for an organization workspace.
+icon: list-check
+---
+
+Select the organization, then open **Organization → Activity**. Access requires the organization's `activity.read` permission. The log records actions across searches, tools, monitoring, projects, members, API access, billing, and security settings. Each row identifies the action, actor, area, and time; event details vary by action. Activity dates and clock times displayed by Osintly are in **UTC**.
+
+## Filter the log
+
+Search activity text, or narrow the list by area, member, action, and period. Period options are **Last 24 hours**, **Last 7 days**, **Last 30 days**, **Last 90 days**, and **All time**. Sort by date and choose 10, 25, 50, or 100 rows per page. Filters affect the displayed list and reset pagination to the first page when changed.
+
+## Export
+
+Use **Export** to download organization activity as **CSV** or **JSON**. This is an audit trail of actions, not an export of the search or tool result payloads. To download complete selected result payloads, use the organization [History](/guides/history) export instead.
+
+The activity log can help answer who changed a monitor, updated a member role, created an API key, exported a result, or changed billing settings. Availability of older events depends on recorded activity; a missing row does not prove that an action never occurred.

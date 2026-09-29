@@ -15,13 +15,13 @@ This page summarizes the main entities visible in the product and API flows.
 | Search | One launched search execution | `id`, `type`, `value`, `status`, `created_at`, `user_id`, `organization_id`, `project_id`, `team_id`, `search_metadata` |
 | Search Result payload | Stored final payload attached to a search | `result.cards[]`, `result.leaked_data`, `result.breached_accounts[]`, `result.registered_accounts[]` |
 | Stream event | Incremental event consumed by the result page | `taskId`, `moduleId`, `moduleName`, `result`, `timestamp`, `status` |
-| Monitor (legacy) | Scheduled monitoring definition being retired | `id`, `user_id`, `name`, `type`, `target`, `frequency`, `status` |
-| Monitoring Alert (legacy) | Alert emitted by the retiring monitor processor | `id`, `user_id`, `monitor_id`, `severity`, `message`, `status`, `created_at` |
+| Monitor | Scheduled monitoring definition | `id`, `user_id`, `name`, `type`, `target`, `frequency`, `status` |
+| Monitoring Alert | Alert emitted by a scheduled monitor | `id`, `user_id`, `monitor_id`, `severity`, `message`, `status`, `created_at` |
 | Tool result | Saved focused lookup | `id`, `tool_slug`, `title`, `query`, `created_at`, `user_id`, `organization_id` |
 | Organization | Shared paid workspace | `id`, `name`, `status`, subscription and paid-seat context |
 | Organization Membership | User role inside an organization | `organization_id`, `user_id`, `role` (`owner`, `admin`, `member`) |
 | Organization Invitation | Pending organization access | `organization_id`, `email`, `role`, invitation state, seat reservation |
-| Project | Personal or legacy Team investigation workspace | `id`, `title`, `description`, `content`, `owner_id`, `team_id`, `created_at`, `updated_at` |
+| Project | Organization investigation or preserved Personal/legacy Team project | `id`, `title`, `description`, `content`, `owner_id`, `team_id`, `organization_id`, `created_at`, `updated_at` |
 | Team (legacy) | Historical collaboration boundary | `id`, `owner_id`, `name`, legacy credit-policy fields |
 
 ---
@@ -77,7 +77,7 @@ Missing panel usually means no applicable data was returned, not a rendering iss
   <Accordion title="Legacy Team -> Projects -> Searches" icon="users">
     Legacy Teams group projects, and projects can reference saved searches, notes, and attachments. They do not overlap with organization scope.
   </Accordion>
-  <Accordion title="Legacy Monitor -> Alerts" icon="bell">
-    The retiring Monitoring experience can contain alert records with their own workflow status. New Security Watch guidance will be published separately.
+  <Accordion title="Monitor → Alerts" icon="bell">
+    Monitoring alerts have severity and workflow status; see [Monitoring & Alerts](/operations/monitoring).
   </Accordion>
 </AccordionGroup>

@@ -1,0 +1,26 @@
+---
+title: Search and tool history
+description: Find, reopen, export, and manage saved searches and focused tool results.
+icon: clock-rotate-left
+---
+
+Open [History](https://osint.ly/history) after selecting the workspace that owns the investigation. **Personal** history contains your own saved searches and tool results. An organization's history contains the searches and saved tool results created in that organization by its members; the creator is shown where available. Free search previews do not appear here.
+
+## Find a result
+
+- Search by query, type, or result ID.
+- Open **Filters** to switch between **Searches & Tools** and **Searches only**, or select search/tool types. Your choice to show tool results is remembered in this browser.
+- Sort by a table column, change the number of rows per page, or use a project filter when opening History from a project.
+- Select a row to reopen the existing result. Reopening does not launch a lookup or spend a credit; run a new search when you need fresh data.
+
+**Search Date** and other date and clock time labels in the Osintly interface are displayed in **UTC**.
+
+## Manage entries
+
+Use a row action to delete an entry when you have permission. A search still running cannot be deleted. You can also select rows for bulk actions. Available actions depend on the selected workspace and your role; organization members can delete their own searches, while owners and admins can manage organization history. Search entries can be associated with an eligible project where that project flow is available. Saved tool results are separate from project searches.
+
+## Complete organization exports
+
+In an organization with `history.export` permission, select between 1 and 100 eligible search or tool entries and choose **Export**. Osintly downloads a JSON archive containing the complete selected results. This bulk export is scoped to the current organization and is recorded in its [activity log](/collaboration/organization-activity). Personal history does not offer this organization archive action. The export does not run the searches again or charge credits.
+
+For a single result, use its own export menu; available formats depend on the result type. See [Export & sharing](/collaboration/export-sharing).

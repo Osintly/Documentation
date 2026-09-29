@@ -3,6 +3,7 @@ title: Tools Reference
 description: Direct enrichment endpoints for domains, IP addresses, and other focused OSINT lookups.
 icon: wrench
 ---
+<Note>Dates and clock times displayed in the Osintly tools interface and saved-result history are in **UTC**. API timestamps use their own explicit ISO 8601 offset, typically `Z` for UTC.</Note>
 
 The Tools API exposes focused enrichment endpoints that run immediately and return a normalized JSON response. Use tools when you need a direct lookup for one observable, without creating a full Osintly search.
 
@@ -152,7 +153,7 @@ To delete saved snapshots you no longer need, call `POST /tools/results/delete` 
 
 ## Cost discovery
 
-The complete tools catalog is also available in the Osintly dashboard at [osint.ly/tools](https://osint.ly/tools).
+Browse the public [Tools Registry](/tools-reference/catalog) at [osint.ly/tools](https://osint.ly/tools) to discover currently listed tools and their categories.
 
 Every tool exposes a `costs` endpoint.
 
