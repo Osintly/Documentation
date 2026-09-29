@@ -774,6 +774,67 @@
         }
       }
     },
+    "/tools/domain-intelligence/infos": {
+      "get": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence /infos",
+        "operationId": "getDomainIntelligenceInfo",
+        "responses": {
+          "200": {
+            "description": "Tool metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolInfo"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/tools/domain-intelligence/costs": {
+      "get": {
+        "tags": [
+          "Domain Intelligence"
+        ],
+        "summary": "Domain Intelligence /costs",
+        "operationId": "getDomainIntelligenceCosts",
+        "responses": {
+          "200": {
+            "description": "Tool route costs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/PlanFeatureRequired"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
     "/tools": {
       "get": {
         "tags": [

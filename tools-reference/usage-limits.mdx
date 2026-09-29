@@ -45,7 +45,7 @@ Both checks must pass for a new lookup. Organization capacity comes from the sel
 
 ## Continue with one credit
 
-For a five-minute, hourly, or daily volume limit, an authenticated user may be offered **Use 1 credit**. This requires explicit confirmation and starts the lookup immediately.
+For a five-minute, hourly, or daily volume limit, an authenticated user with an available credit in the selected workspace may be offered **Use 1 credit**. This requires explicit confirmation and starts the lookup immediately. Personal credits can be used for this tool override without an active personal subscription. An organization needs an active subscription to use its shared credits.
 
 - A credit override never bypasses a cooldown or a concurrency limit.
 - In Personal, the credit comes from your personal balance.
@@ -67,4 +67,4 @@ Domain Intelligence can load additional sections after the initial `/all` lookup
 - Reopen saved results instead of repeating the same lookup.
 - Avoid launching the same operation concurrently from several tabs.
 - In an organization, use **Organization → Usage** to review the shared allowance before a high-volume investigation.
-- Use a focused lookup only for an observable you already know; use the [Search API](/api-reference/introduction) for full search orchestration.
+- Use a focused lookup only for an observable you already know. Use the [Search page](/search-analysis/osint-search) for a full search in the web app. API clients can use the [Search API](/api-reference/introduction).
