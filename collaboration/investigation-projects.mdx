@@ -28,6 +28,6 @@ Use **Export investigation** on the detail page to download a PDF summary of the
 
 Each ZIP contains `investigation.json` (project metadata and counts), `notes.md`, `searches/index.json`, individual search JSON files, `files/index.json`, and downloadable attachments. Search exports include complete results when the complete-result service is available. If a result cannot be reconstructed, the stored search is exported instead. If an attachment cannot be downloaded, or a complete search falls back to stored data, the ZIP includes `export-warnings.json` describing the affected item. Review that file and contact [support](https://osint.ly/support) if essential data is missing.
 
-Changing a Personal plan does not restore Investigations. An Organization plan permits **new shared investigations**, but it does not migrate the older Personal or Team projects into that organization.
+Changing a Personal plan does not restore Investigations. An Organization plan permits **new shared investigations**, but switching plans or workspaces alone does not migrate older projects. Before the transition deadline, a legacy Team owner can [transfer the whole Team to an organization](/collaboration/legacy-team-transition). Older Solo investigations remain export-only.
 
 For saved searches outside a project, see [Search and tool history](/guides/history). Organization search results can be associated with an eligible organization investigation; legacy Team collaboration remains a separate historical scope.
