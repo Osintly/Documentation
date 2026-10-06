@@ -63,6 +63,27 @@ Use the search bar above the tabs to filter visible results without launching a 
 While modules are still responding, the page stays in **Streaming** state and keeps appending new data.
 When all responses are complete, the page switches to **Finished** and shows total execution time.
 
+### Leaked results while sources are still running
+
+**All Leaked Results** displays records from available sources independently.
+You can inspect ready sources while Snusbase or another provider is still busy.
+For large Snusbase responses, the first page can appear before the provider has
+finished preparing the rest of its records.
+
+A source can therefore still show a loading indicator while its first cards are
+already visible. The available result count and number of pages may increase
+when that source finishes. In an individual source tab, scroll to load subsequent
+pages as they become available. The grid renders a window of cards, so the number
+of cards visible at once is smaller than the total result count.
+
+Registered accounts and breached-account summaries also update independently
+when their data arrives. An empty or failed source does not prevent other ready
+sources from being displayed. A provider error means that source failed; it must
+not be interpreted as confirmation that no matching records exist.
+
+If cards seem to be missing, check the selected source, text search, and active
+filters. Filters apply to loaded records; they do not launch a new provider query.
+
 ---
 
 ## Result freshness

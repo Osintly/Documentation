@@ -180,9 +180,60 @@ event: leak.status
 data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","leaked_code":"snusbase","status":"success","result_count":42,"timestamp":"2026-05-27T12:00:07.000Z"}
 ```
 
+### `leak.page.ready` (optional)
+
+Sent when an early leak page has been stored and is readable, while the source
+can still be `processing`. Currently, Snusbase can publish its first page before
+the remaining pages are ready. This event contains a notification, not leak records.
+
+To receive it, send `X-Osintly-Progressive-Leaks: 1` on the stream request. Use the
+same header on leak overview and leak-page requests. Setting it on `POST /search`
+does not opt subsequent requests in automatically.
+
+```bash
+curl -N "https://api.osint.ly/search/SEARCH_ID/stream" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "X-Osintly-Progressive-Leaks: 1"
+```
+
+```text
+id: 91
+event: leak.page.ready
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","leaked_code":"snusbase","page":1,"timestamp":"2026-10-06T12:00:04.000Z"}
+```
+
+| Field | Meaning |
+| --- | --- |
+| `search_id` | Search UUID |
+| `leaked_code` | Source key, such as `snusbase` |
+| `page` | Available page number; currently the first page |
+| `timestamp` | Event timestamp |
+
+On receipt, refresh [Leaks Overview](/api-reference/endpoint/leaks-overview), then
+fetch the available page with the same opt-in header. During `processing`, the
+source count and pagination describe the published subset. For example,
+`total_pages: 1` and `has_next_page: false` mean that no additional page is
+available **yet**; they do not mean that the source is complete.
+
+Refresh the overview again on the source's terminal `leak.status` event or
+`leaks.finished`. Keep already-loaded pages, update the available page count,
+and load subsequent pages as needed. Deduplicate retried pages and records by
+page number and result key. A page-ready event does not guarantee later source
+success: retain error handling if a subsequent upload or provider step fails.
+
+<Note>
+Without the opt-in header, this event is omitted, processing sources are not
+fetchable, and existing clients continue to retrieve finalized sources as before.
+Opting in does not change authentication, ownership checks, or the final response
+format. Not every source or search emits an early page event.
+</Note>
+
 ### `leaks.finished`
 
 Sent when all leak providers have finished or been skipped.
+
+This completes the leak phase, not the entire search. Modules and account checks
+may still be running; keep the stream open until `search.finished`.
 
 ```text
 event: leaks.finished
@@ -226,6 +277,12 @@ Streams support resuming from an index:
 - Header: `Last-Event-ID`
 
 When available, each streamed event includes an SSE `id:` field. Store the last received id and reconnect from it after disconnects.
+
+Repeat the progressive opt-in header on every reconnect. Handle replayed
+notifications idempotently and ignore event types your client does not use.
+Group overview refreshes during bursts, but retain a trailing refresh if another
+notification arrives while a request is in progress. Fetch the final overview
+even if a short disconnect caused an early-page notification to be missed.
 
 ## Notes
 

@@ -4,7 +4,7 @@ description: Stream real-time search progress with Server-Sent Events (SSE).
 openapi: GET /search/{id}/stream
 ---
 
-See [SSE Reference](/api-reference/sse-reference) for full event coverage and payload examples: `connected`, `search.progress`, `module.result`, `byok.result`, `byok.finished`, `leak.status`, `leaks.finished`, `registered_accounts`, `breached_accounts`, and `search.finished`.
+See [SSE Reference](/api-reference/sse-reference) for full event coverage and payload examples: `connected`, `search.progress`, `module.result`, `byok.result`, `byok.finished`, the optional `leak.page.ready`, `leak.status`, `leaks.finished`, `registered_accounts`, `breached_accounts`, and `search.finished`.
 
 ```bash
 curl -N -X GET "https://api.osint.ly/search/4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f/stream" \
@@ -16,3 +16,13 @@ The stream is live and additive:
 - you can receive mixed events from modules, BYOK providers, and leak/account stages
 - progress messages can include runner-capacity waits and shard progression
 - the authoritative final payload is still fetched from `GET /search/{id}/results`
+
+## Optional early leak pages
+
+Add `X-Osintly-Progressive-Leaks: 1` to this request to receive `leak.page.ready`
+notifications. Add the same header to leak overview and source-page requests to
+read the published subset while a source is still `processing`.
+
+Early availability does not complete the source or search. Refresh source
+pagination when it finishes and keep listening until `search.finished`. Omit the
+header to retain the existing finalized-source behavior.

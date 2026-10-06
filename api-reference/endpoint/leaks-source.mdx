@@ -2,3 +2,28 @@
 title: Leak Source Payload
 openapi: GET /search/{id}/results/leaks/{source}
 ---
+
+## Optional early-page retrieval
+
+```bash
+curl "https://api.osint.ly/search/SEARCH_ID/results/leaks/snusbase?page=1" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "X-Osintly-Progressive-Leaks: 1"
+```
+
+With this header, a published page can return HTTP 200 while
+`data.source.status` remains `processing`. Use the overview's `fetchable` flag
+and published pagination to avoid requesting pages that are not yet available.
+
+`has_next_page: false` on a partial page means there is no next page available at
+that point. Refresh the overview on the terminal source event and update your
+pagination without discarding already-loaded records. Do not hardcode a page
+size or a final record count.
+
+An unpublished page returns HTTP 404 (`LEAK_PAGE_NOT_FOUND`). A processing source
+without opt-in is unavailable (`LEAK_SOURCE_UNAVAILABLE`). A page-ready event
+does not guarantee final source success; handle later source errors separately
+from an empty result set.
+
+Existing finalized-page behavior and authorization checks are unchanged. See
+[SSE Reference](/api-reference/sse-reference) for the complete notification flow.

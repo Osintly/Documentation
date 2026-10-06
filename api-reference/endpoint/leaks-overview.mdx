@@ -2,3 +2,34 @@
 title: Leaks Overview
 openapi: GET /search/{id}/results/leaks
 ---
+
+## Readable sources during a search
+
+Use `fetchable` and `fetch_url` to decide whether a source can be read. One source
+can be ready while another is still processing; do not wait for all providers to
+finish before displaying available records.
+
+With `X-Osintly-Progressive-Leaks: 1`, a source with an early page can have all of:
+
+```json
+{
+  "id": "snusbase",
+  "key": "snusbase",
+  "status": "processing",
+  "count": 500,
+  "fetchable": true,
+  "fetch_url": "https://api.osint.ly/search/SEARCH_ID/results/leaks/snusbase",
+  "pagination": { "page_size": 500, "total_pages": 1 }
+}
+```
+
+This is an illustrative source entry inside `data.sources`, not a complete
+response. Counts and page totals are provisional until the source reaches its
+terminal status. Currently, early publication is supported by Snusbase.
+
+Without this header, processing sources keep `count: 0`, `fetchable: false`,
+`fetch_url: null`, and no provisional pagination. Final successful overviews have
+the same format with and without the header.
+
+Refresh on [`leak.page.ready`, `leak.status`, and `leaks.finished`](/api-reference/sse-reference).
+Repeat the header on each overview/page request and stream reconnect.

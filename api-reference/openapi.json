@@ -1166,7 +1166,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Get leaks overview",
-        "description": "List persisted leak sources for a search with their status, counts, pagination hints, and fetch URLs.",
+        "description": "List persisted leak sources with status, counts, pagination hints, and fetch URLs. With X-Osintly-Progressive-Leaks: 1, processing sources may expose readable early pages; counts and pagination are provisional until the source finishes. Without the header, only finalized sources are fetchable.",
         "operationId": "getSearchLeaksOverview",
         "security": [
           {
@@ -1176,6 +1176,9 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/SearchId"
+          },
+          {
+            "$ref": "#/components/parameters/ProgressiveLeaks"
           }
         ],
         "responses": {
@@ -1232,7 +1235,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Get leak source results",
-        "description": "Return normalized results for a single persisted leak source, including pagination data and the result template.",
+        "description": "Return normalized results for one persisted leak source. With X-Osintly-Progressive-Leaks: 1, published pages can be fetched while source.status is processing. Partial pagination describes the currently published subset; refresh the overview when the source finishes. Unpublished pages return 404.",
         "operationId": "getSearchLeakSource",
         "security": [
           {
@@ -1248,6 +1251,9 @@
           },
           {
             "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/ProgressiveLeaks"
           }
         ],
         "responses": {
@@ -1325,7 +1331,7 @@
       "get": {
         "tags": ["Search"],
         "summary": "Stream search results",
-        "description": "Open a Server-Sent Events stream for real-time search progress, module results, BYOK events, leak status updates, and final completion.",
+        "description": "Open a Server-Sent Events stream for progress, modules, BYOK, leak/account events, and final completion. X-Osintly-Progressive-Leaks: 1 additionally enables leak.page.ready notifications for readable early leak pages. Repeat the header on overview/page requests and reconnects. Keep listening until search.finished; leak.page.ready and leaks.finished do not complete the search.",
         "operationId": "streamSearch",
         "security": [
           {
@@ -1335,6 +1341,12 @@
         "parameters": [
           {
             "$ref": "#/components/parameters/SearchId"
+          },
+          {
+            "$ref": "#/components/parameters/ProgressiveLeaks"
+          },
+          {
+            "$ref": "#/components/parameters/LastEventId"
           }
         ],
         "responses": {
@@ -1375,6 +1387,25 @@
       }
     },
     "parameters": {
+      "ProgressiveLeaks": {
+        "name": "X-Osintly-Progressive-Leaks",
+        "in": "header",
+        "required": false,
+        "description": "Set to the exact string 1 on each stream, leak-overview, and leak-page request to opt in to readable early leak pages. Omit to retain finalized-source behavior. Processing counts and pagination are provisional; final responses and authorization are unchanged.",
+        "schema": {
+          "type": "string",
+          "enum": ["1"]
+        }
+      },
+      "LastEventId": {
+        "name": "Last-Event-ID",
+        "in": "header",
+        "required": false,
+        "description": "Last received SSE id used to resume after a disconnect. Repeat the progressive opt-in header when reconnecting and handle replayed notifications idempotently.",
+        "schema": {
+          "type": "string"
+        }
+      },
       "SearchId": {
         "name": "id",
         "in": "path",
@@ -2541,6 +2572,10 @@
                   "type": "object",
                   "required": ["name", "key", "status", "count", "fetch_url"],
                   "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Leak source identifier."
+                    },
                     "name": {
                       "type": "string"
                     },
@@ -2551,10 +2586,16 @@
                       "type": "string"
                     },
                     "count": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Published record count. Provisional for an opted-in processing source; zero during processing without opt-in."
+                    },
+                    "fetchable": {
+                      "type": "boolean",
+                      "description": "Whether stored records are currently readable. Can be true during processing only for a published subset with progressive opt-in."
                     },
                     "fetch_url": {
-                      "type": "string",
+                      "type": ["string", "null"],
+                      "description": "Source-page endpoint when fetchable; null when no page is available to this request.",
                       "format": "uri"
                     },
                     "pagination": {
@@ -2564,7 +2605,8 @@
                           "type": "integer"
                         },
                         "total_pages": {
-                          "type": "integer"
+                          "type": "integer",
+                          "description": "Published page count, provisional while an opted-in source is processing. Refresh after the terminal source event."
                         }
                       }
                     },
