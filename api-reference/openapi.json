@@ -554,7 +554,10 @@
       "post": {
         "tags": ["Search"],
         "summary": "Create a new search",
-        "description": "Queue a new OSINT search with optional module selection, leak sources, account features, delivery settings, cache mode, and BYOK provider configuration. Domain Name and IP Address remain accepted for now, but will soon stop being supported in the Search API. Use the Domain Intelligence and IP Intelligence Tools API routes for new integrations; no cutoff date has been announced. Free website previews are not exposed here.",
+        "description": "Queue a new OSINT search with optional module selection, leak sources, account features, delivery settings, cache mode, and BYOK provider configuration. Domain Name and IP Address remain accepted for now, but will soon stop being supported in the Search API.",
+        "x-mint": {
+          "content": "<Warning>\n**For domain and IP investigation, use [Domain Intelligence](/tools-reference/domain-intelligence) and [IP Intelligence](/tools-reference/ip-intelligence).** These types remain accepted by the Search API for now, but **support there will end soon**. No cutoff date has been announced.\n</Warning>"
+        },
         "operationId": "createSearch",
         "security": [
           {
@@ -567,55 +570,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SearchCreateRequest"
-              },
-              "examples": {
-                "email_search": {
-                  "summary": "Email search with selected modules, webhook and BYOK",
-                  "value": {
-                    "query": {
-                      "type": "Email Address",
-                      "value": "target@example.com"
-                    },
-                    "modules": {
-                      "mode": "selected",
-                      "ids": [
-                        "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f"
-                      ]
-                    },
-                    "leaks": {
-                      "mode": "selected",
-                      "custom_mapping": true,
-                      "sources": ["Leak Check", "Snusbase"]
-                    },
-                    "features": {
-                      "breached_accounts": true,
-                      "registered_accounts": "include"
-                    },
-                    "cache": {
-                      "mode": "prefer"
-                    },
-                    "delivery": {
-                      "webhook": {
-                        "url": "https://client.example/webhooks/osintly",
-                        "secret": "super-secret-webhook-key"
-                      }
-                    },
-                    "byok": {
-                      "mode": "default",
-                      "osint_industries": {
-                        "api_key": "oi_xxx",
-                        "timeout": 80,
-                        "exact_match": true,
-                        "premium": false,
-                        "premium_modules_only": false
-                      },
-                      "sherlockeye": {
-                        "api_key": "se_xxx",
-                        "additional_modules": ["digital_accounts_expansion"]
-                      }
-                    }
-                  }
-                }
               }
             }
           }
@@ -1987,6 +1941,11 @@
       "SearchFeatures": {
         "type": "object",
         "properties": {
+          "crosssearch": {
+            "type": "boolean",
+            "default": false,
+            "description": "Automatically run compatible modules on profile links found in result cards. Disabled by default; set features.crosssearch to true to enable it for this search. Results use the same search stream and include their source provenance."
+          },
           "breached_accounts": {
             "type": "boolean",
             "default": false

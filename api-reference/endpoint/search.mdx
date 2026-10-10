@@ -7,3 +7,34 @@ openapi: 'POST /search'
 <Warning>
 `Domain Name` and `IP Address` still work in this endpoint, but they will soon stop being supported in the Search API. Their replacements for new lookups are [Domain Intelligence](/tools-reference/domain-intelligence) and [IP Intelligence](/tools-reference/ip-intelligence). No cutoff date has been announced. The website's free previews are not available through this endpoint.
 </Warning>
+
+## Enable CrossSearch
+
+CrossSearch follows profile links found in result cards and runs compatible modules within the same search. For example, a Linktree result can lead to a YouTube or Instagram result when a matching module accepts the detected link.
+
+**CrossSearch is disabled by default in the API.** Set `features.crosssearch` to `true` in each search request to enable it. Omitting the option or setting it to `false` leaves it disabled.
+
+```bash
+curl --request POST 'https://api.osint.ly/search' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "query": {
+      "type": "Pseudonym",
+      "value": "mike"
+    },
+    "modules": {
+      "mode": "all"
+    },
+    "features": {
+      "crosssearch": true,
+      "registered_accounts": "exclude"
+    }
+  }'
+```
+
+The discovered results arrive through the existing search stream. CrossSearch follows one hop from the initial result cards; its discovered cards do not trigger further hops.
+
+<Note>
+In the Osintly app, CrossSearch is available on **Pro and Ultimate**, including those organization plans. It is enabled by default for eligible app searches and can be disabled in search settings. App subscriptions and [API subscriptions](/api-reference/quick-start) are separate; API searches require the explicit option above.
+</Note>

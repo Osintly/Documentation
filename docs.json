@@ -188,8 +188,7 @@
      "grok",
      "mcp",
      "cursor",
-    "vscode",
-    "download-pdf"
+    "vscode"
    ]
  },
   "navbar": {

@@ -6,6 +6,10 @@ icon: magnifying-glass
 
 The Search page lets you enter an identifier and select its type. Full searches query the relevant providers in parallel, with results streaming as each source responds. Without an app subscription, you can run a [limited free preview](/guides/free-searches) for a pseudonym or email address.
 
+<Warning>
+**For domain and IP investigation, use [Domain Intelligence](/tools-reference/domain-intelligence) and [IP Intelligence](/tools-reference/ip-intelligence).** These types remain accepted by the Search API for now, but **support there will end soon**.
+</Warning>
+
 <CardGroup cols={3}>
   <Card title="Supported identifiers" icon="layer-group">
     Search usernames, emails, domains, IPs, and crypto wallets, subject to plan access.
@@ -76,10 +80,6 @@ Each input type maps to a dedicated set of providers. Select the one that matche
   </Tab>
 </Tabs>
 
-<Note>
-For domain and IP investigation, use the dedicated intelligence tools. These types remain accepted by the Search API for now, but support there will end soon.
-</Note>
-
 ---
 
 ## Input type detection
@@ -146,6 +146,14 @@ Configure search behavior before launching from the options panel next to the in
 
 ---
 
+## CrossSearch
+
+CrossSearch is available on **Pro and Ultimate**. It automatically searches compatible profiles linked from your result cards, keeping each discovery attached to its source card. Open the stack next to a source card to see the linked results.
+
+CrossSearch is enabled by default for eligible app searches. Use the **CrossSearch** switch next to the credits in the search box, or change it under **Settings → Search results → CrossSearch**. Both controls share the same saved preference. Standard and free previews do not include it. Organization searches use the organization’s Pro or Ultimate plan.
+
+For API searches, CrossSearch is **disabled by default** and must be enabled with `features.crosssearch: true`; see [Create Search](/api-reference/endpoint/search).
+
 ## Plan limits
 
 Provider coverage depends on your plan. Standard queries a base set of providers. Pro and Ultimate unlock additional sources, including premium breach databases and extra leak providers. For full pricing details, see [osint.ly/pricing](https://osint.ly/pricing).
@@ -159,6 +167,7 @@ Provider coverage depends on your plan. Standard queries a base set of providers
 | IP Address search | Yes | Yes | Yes |
 | Domain Name search | No | Yes | Yes |
 | Cryptocurrency search | No | Yes | Yes |
+| CrossSearch | No | Yes | Yes |
 | Leak sources | No | Yes | Yes |
 | AI Analyst | No | Yes | Yes |
 | Monitoring & Alerts | No | See current product availability | See current product availability |
