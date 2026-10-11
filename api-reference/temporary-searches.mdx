@@ -4,7 +4,7 @@ description: Stream a search without Osintly storing the search or its results.
 icon: clock
 ---
 
-A temporary search runs like a normal search, but its results stream directly in the HTTP response. Osintly does not create a search record, store the results, read or write result caches, or keep a replay of the stream. When the response ends, Osintly has nothing left to return: save what you need in your own system as it arrives.
+A temporary search runs exactly like a normal search: the same modules, leak sources, and account checks, executed the same way, with results arriving as soon as each one is found. The difference is that results stream directly in the HTTP response. Osintly does not create a search record, store the results, read or write result caches, or keep a replay of the stream. When the response ends, Osintly has nothing left to return: save what you need in your own system as it arrives.
 
 Use it when an investigation should leave no searchable trace on Osintly's side, or when your integration already processes results as they stream.
 
@@ -49,17 +49,23 @@ A successful request returns `200` with a Server-Sent Events stream instead of a
 | `X-Search-Id` | Identifier of this run. It cannot be used with other search endpoints. |
 
 ```text
+event: connected
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","timestamp":"2026-10-11T12:00:00.000Z"}
+
 event: search.progress
-data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","status":"running","timestamp":"2026-10-11T12:00:00.000Z"}
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","status":"running","message":"orchestration started","timestamp":"2026-10-11T12:00:00.000Z"}
 
 event: module.result
-data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","module":{"id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","name":"GitHub"},"card":{"github_001":{"username":"target"}},"timestamp":"2026-10-11T12:00:02.000Z"}
-
-event: leak.status
-data: {"leaked_code":"snusbase","status":"success","result_count":2,"timestamp":"2026-10-11T12:00:04.000Z"}
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","result_id":"0b9f6c1e-2a4d-4f8b-9c3e-7d5a1e6f2b80","module":{"id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","name":"GitHub"},"card":{"github_001":{"username":"target"}},"timestamp":"2026-10-11T12:00:02.000Z"}
 
 event: temporary.leak.page
 data: {"source":"snusbase","page":1,"count":2,"template":{...},"results":[{"key":"...","items":[{...}]},{"key":"...","items":[{...}]}]}
+
+event: leak.status
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","leaked_code":"snusbase","status":"success","result_count":2,"message":"Snusbase executed with 2 result cards","timestamp":"2026-10-11T12:00:04.000Z"}
+
+event: leaks.finished
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","executed_codes":["snusbase"],"skipped_codes":[],"failed_codes":[],"timestamp":"2026-10-11T12:00:04.000Z"}
 
 event: search.finished
 data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","status":"completed","totals":{"module_results":1},"execution_time_ms":8120,"timestamp":"2026-10-11T12:00:08.000Z"}
@@ -67,15 +73,14 @@ data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","status":"completed","
 
 ### Events
 
-| Event | When it is sent |
+Events have the same names and fields as in the [normal stream](/api-reference/sse-reference), with two additions for results that cannot be fetched later:
+
+| Event | Difference |
 | --- | --- |
-| `search.progress` | Once, when execution starts |
-| `module.result` | For each module result card, with the same fields as in the [normal stream](/api-reference/sse-reference) |
-| `leak.status` | When a leak source finishes, with `leaked_code`, `status`, and `result_count` |
-| `temporary.leak.page` | For each page of leak records, with the records themselves |
-| `registered_accounts` | During registered-account checks on email searches |
-| `breached_accounts` | When breached-account results are ready, if `features.breached_accounts` is `true` |
-| `search.finished` | Once, at the end, with `status` `completed` or `failed`. `failed_steps` lists account lookups that could not complete, such as `registered_accounts` or `breached_accounts`. If every requested step failed, `status` is `failed`. |
+| `module.result` | Adds a unique `result_id`. Several cards from one module can share a timestamp, so use `result_id` to tell them apart. |
+| `temporary.leak.page` | Sent only by temporary searches, for each page of leak records, with the records themselves. It replaces `leak.page.ready`. |
+
+As in the normal stream, `search.finished` is the last event. If some modules failed, it still has `status` `completed`, with an `error` such as `partial failures: 3 module(s)`. `status` is `failed` only when the search could not run.
 
 Because nothing is stored, leak records arrive inside the stream. Each `temporary.leak.page` event carries one page of up to 500 records:
 
@@ -89,7 +94,7 @@ Because nothing is stored, leak records arrive inside the stream. Each `temporar
 
 ### Differences from the normal stream
 
-- There is no `connected`, `leaks.finished`, `leak.page.ready`, or BYOK event.
+- There is no `leak.page.ready` event, since leak pages arrive as `temporary.leak.page`, and no BYOK event, since temporary searches do not accept `byok`.
 - Events have no SSE `id:`, and the stream cannot be resumed. If the connection drops, the search stops and its results are lost; start a new search to try again.
 - `GET /search/{id}`, `/results`, `/results/leaks`, and `/stream` do not know temporary searches, and the search cannot be deleted because it was never stored.
 
