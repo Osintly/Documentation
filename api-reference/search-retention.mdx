@@ -8,6 +8,10 @@ Osintly stores search outputs so you can fetch state, normalized results, leak p
 
 For long-running integrations, we recommend deleting searches you no longer need.
 
+<Tip>
+If a search should not be stored at all, run it as a [temporary search](/api-reference/temporary-searches). Its results only exist in the streamed response, so there is nothing to delete afterwards.
+</Tip>
+
 ## Why periodic deletion is recommended
 
 - Reduce accumulated stored result volume over time

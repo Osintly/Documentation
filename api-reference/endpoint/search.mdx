@@ -38,3 +38,11 @@ The discovered results arrive through the existing search stream. CrossSearch fo
 <Note>
 In the Osintly app, CrossSearch is available on **Pro and Ultimate**, including those organization plans. It is enabled by default for eligible app searches and can be disabled in search settings. App subscriptions and [API subscriptions](/api-reference/quick-start) are separate; API searches require the explicit option above.
 </Note>
+
+## Run a temporary search
+
+To run a search without Osintly storing it or its results, send the same body to `POST /search/temporary`. The response is a Server-Sent Events stream instead of a JSON body, and the search cannot be fetched afterwards. Delivery webhooks and BYOK are not available in this mode.
+
+This endpoint does not accept a `temporary` field: it returns `400 USE_TEMPORARY_ENDPOINT` and starts no search.
+
+See [Temporary Searches](/api-reference/temporary-searches) for the stream format and limits.

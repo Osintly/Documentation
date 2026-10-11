@@ -1,0 +1,126 @@
+---
+title: Temporary Searches
+description: Stream a search without Osintly storing the search or its results.
+icon: clock
+---
+
+A temporary search runs like a normal search, but its results stream directly in the HTTP response. Osintly does not create a search record, store the results, read or write result caches, or keep a replay of the stream. When the response ends, Osintly has nothing left to return: save what you need in your own system as it arrives.
+
+Use it when an investigation should leave no searchable trace on Osintly's side, or when your integration already processes results as they stream.
+
+## Run a temporary search
+
+Send the same body as [Create Search](/api-reference/endpoint/search) to `POST /search/temporary`, and keep the connection open:
+
+```bash
+curl -N --request POST 'https://api.osint.ly/search/temporary' \
+  --header 'Authorization: Bearer YOUR_API_KEY' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "query": {
+      "type": "Pseudonym",
+      "value": "target"
+    },
+    "modules": {
+      "mode": "all"
+    },
+    "leaks": {
+      "mode": "selected",
+      "sources": ["snusbase"]
+    }
+  }'
+```
+
+Temporary searches only run through this endpoint. `POST /search` rejects a `temporary` field with `400 USE_TEMPORARY_ENDPOINT`, so a request meant to be temporary can never be stored by mistake.
+
+The request goes through the same authentication, plan limits, concurrency check, and blocklist as a normal search, and counts toward your API usage in the same way.
+
+Search options behave as they do on `POST /search`. For example, `features.registered_accounts: "only"` runs only the registered-account check, without modules, leak sources, or breached accounts, and `leaks.custom_mapping` selects the leak record format.
+
+## Response
+
+A successful request returns `200` with a Server-Sent Events stream instead of a JSON body.
+
+| Header | Value |
+| --- | --- |
+| `Content-Type` | `text/event-stream` |
+| `Cache-Control` | `private, no-store` |
+| `X-Osintly-Temporary` | `1` |
+| `X-Search-Id` | Identifier of this run. It cannot be used with other search endpoints. |
+
+```text
+event: search.progress
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","status":"running","timestamp":"2026-10-11T12:00:00.000Z"}
+
+event: module.result
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","module":{"id":"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f","name":"GitHub"},"card":{"github_001":{"username":"target"}},"timestamp":"2026-10-11T12:00:02.000Z"}
+
+event: leak.status
+data: {"leaked_code":"snusbase","status":"success","result_count":2,"timestamp":"2026-10-11T12:00:04.000Z"}
+
+event: temporary.leak.page
+data: {"source":"snusbase","page":1,"count":2,"template":{...},"results":[{"key":"...","items":[{...}]},{"key":"...","items":[{...}]}]}
+
+event: search.finished
+data: {"search_id":"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90","status":"completed","totals":{"module_results":1},"execution_time_ms":8120,"timestamp":"2026-10-11T12:00:08.000Z"}
+```
+
+### Events
+
+| Event | When it is sent |
+| --- | --- |
+| `search.progress` | Once, when execution starts |
+| `module.result` | For each module result card, with the same fields as in the [normal stream](/api-reference/sse-reference) |
+| `leak.status` | When a leak source finishes, with `leaked_code`, `status`, and `result_count` |
+| `temporary.leak.page` | For each page of leak records, with the records themselves |
+| `registered_accounts` | During registered-account checks on email searches |
+| `breached_accounts` | When breached-account results are ready, if `features.breached_accounts` is `true` |
+| `search.finished` | Once, at the end, with `status` `completed` or `failed`. `failed_steps` lists account lookups that could not complete, such as `registered_accounts` or `breached_accounts`. If every requested step failed, `status` is `failed`. |
+
+Because nothing is stored, leak records arrive inside the stream. Each `temporary.leak.page` event carries one page of up to 500 records:
+
+| Field | Meaning |
+| --- | --- |
+| `source` | Leak source key, such as `snusbase` |
+| `page` | Page number, starting at `1` |
+| `count` | Number of records on this page. The source total is `result_count` on its `leak.status` event. |
+| `template` | Display template for the source's records |
+| `results` | Records on this page, in the same entry format as [leak source results](/api-reference/endpoint/leaks-source) |
+
+### Differences from the normal stream
+
+- There is no `connected`, `leaks.finished`, `leak.page.ready`, or BYOK event.
+- Events have no SSE `id:`, and the stream cannot be resumed. If the connection drops, the search stops and its results are lost; start a new search to try again.
+- `GET /search/{id}`, `/results`, `/results/leaks`, and `/stream` do not know temporary searches, and the search cannot be deleted because it was never stored.
+
+## What Osintly does not keep
+
+- No search record, history entry, or search ID that can be fetched later
+- No stored module results, leak records, registered accounts, or breached accounts
+- No result cache: the `cache` option is ignored, every provider is queried fresh, and nothing is written for later searches
+- No module output in runner logs for the search
+
+Usage accounting records the search type and the leak sources you requested, so your plan usage stays accurate. It does not record the searched value.
+
+## Limits and errors
+
+| Status | Code | Cause |
+| --- | --- | --- |
+| `400` | `INVALID_TEMPORARY_DELIVERY` | `delivery.webhook` or `byok` is set. Temporary results are only delivered through the stream. |
+| `400` | `VALIDATION_ERROR` | The body is invalid, as for `POST /search`. |
+| `503` | | No search runner can run temporary searches right now, for a search with modules to run. For an email search, this can also mean registered-account checks are unavailable in temporary mode: retry later or set `features.registered_accounts` to `"exclude"`. |
+| `500` | `TEMPORARY_SEARCH_UNAVAILABLE` | Unexpected error before the stream started. |
+
+Other errors, such as an invalid API key or an exceeded plan limit, are the same as for `POST /search`.
+
+Sending `temporary` to `POST /search` instead returns `400 USE_TEMPORARY_ENDPOINT` and starts no search.
+
+<Note>
+In the Osintly app, temporary search is a separate option on the Search page. See [Temporary search](/search-analysis/osint-search#temporary-search).
+</Note>
+
+## Related docs
+
+- [Create Search](/api-reference/endpoint/search)
+- [SSE Reference](/api-reference/sse-reference)
+- [Search Retention](/api-reference/search-retention)

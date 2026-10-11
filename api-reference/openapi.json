@@ -634,6 +634,80 @@
         }
       }
     },
+    "/search/temporary": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Run a temporary search",
+        "description": "Run a search and stream its results directly in the response. Osintly does not create a search record, store results, use or write result caches, or keep a replay of the stream. Accepts the same body as POST /search, except delivery webhooks and BYOK providers.",
+        "x-mint": {
+          "content": "<Note>\nResults exist only in this response. Read [Temporary Searches](/api-reference/temporary-searches) for the stream format, limits, and what Osintly does not keep.\n</Note>"
+        },
+        "operationId": "createTemporarySearch",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Server-Sent Events stream of the temporary search. Not resumable.",
+            "headers": {
+              "X-Osintly-Temporary": {
+                "description": "Always 1 for a temporary search stream.",
+                "schema": {
+                  "type": "string",
+                  "enum": ["1"]
+                }
+              },
+              "X-Search-Id": {
+                "description": "Identifier of this run. It cannot be used with other search endpoints.",
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            },
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "stream": {
+                    "value": "event: search.progress\ndata: {\"search_id\":\"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90\",\"status\":\"running\",\"timestamp\":\"2026-10-11T12:00:00.000Z\"}\n\nevent: module.result\ndata: {\"search_id\":\"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90\",\"module\":{\"id\":\"4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f\",\"name\":\"GitHub\"},\"card\":{\"github_001\":{\"username\":\"target\"}},\"timestamp\":\"2026-10-11T12:00:02.000Z\"}\n\nevent: search.finished\ndata: {\"search_id\":\"6f1c2a9e-0b7d-4c3e-9a51-2d8e4f7b1c90\",\"status\":\"completed\",\"totals\":{\"module_results\":1},\"execution_time_ms\":8120,\"timestamp\":\"2026-10-11T12:00:08.000Z\"}\n\n"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "429": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "503": {
+            "description": "No search runner, or no registered-account service for an email search, can currently run temporary searches."
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
     "/search/module/once": {
       "post": {
         "tags": ["Search"],

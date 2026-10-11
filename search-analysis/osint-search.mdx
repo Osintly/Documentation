@@ -154,6 +154,24 @@ CrossSearch is enabled by default for eligible app searches. Use the **CrossSear
 
 For API searches, CrossSearch is **disabled by default** and must be enabled with `features.crosssearch: true`; see [Create Search](/api-reference/endpoint/search).
 
+## Temporary search
+
+Use temporary search when a search should not be kept in Osintly. Click the clock in the top-right corner of the Search page to turn it on. The heading changes to **Temporary search**, the search box gets a dashed border, and a note replaces the project selector.
+
+A temporary search:
+
+- Shows its results only in the current tab. They disappear when you refresh or close the tab, or when you start another search.
+- Is not saved to History or to a project, so it cannot be reopened or shared.
+- Does not store its results or reuse cached results: every provider is queried fresh.
+- Does not include the AI Analyst, card annotations, collaboration, or exports, and does not save your result filters.
+- Pauses product analytics and session recording while the mode is on.
+- In an organization, appears in the [activity log](/collaboration/organization-activity) as **Ran a temporary search**, with the member, time, and search type. The searched value and results are never recorded.
+- Costs 1 credit, like a full search.
+
+Temporary search is available on paid app plans, including organization plans, and not on free previews. The mode stays on in your browser until you turn it off, including after a reload. To open the Search page directly in this mode, use [osint.ly/search?temporary=true](https://osint.ly/search?temporary=true).
+
+For API searches, use `POST /search/temporary`; see [Temporary Searches](/api-reference/temporary-searches).
+
 ## Plan limits
 
 Provider coverage depends on your plan. Standard queries a base set of providers. Pro and Ultimate unlock additional sources, including premium breach databases and extra leak providers. For full pricing details, see [osint.ly/pricing](https://osint.ly/pricing).
@@ -168,6 +186,7 @@ Provider coverage depends on your plan. Standard queries a base set of providers
 | Domain Name search | No | Yes | Yes |
 | Cryptocurrency search | No | Yes | Yes |
 | CrossSearch | No | Yes | Yes |
+| Temporary search | Yes | Yes | Yes |
 | Leak sources | No | Yes | Yes |
 | AI Analyst | No | Yes | Yes |
 | Monitoring & Alerts | No | See current product availability | See current product availability |
@@ -182,7 +201,7 @@ If a provider is not available on your plan, its card does not appear in results
 
 ## Search history
 
-Full app searches are saved automatically in the workspace selected when they launch. Access them through [History](/guides/history). Personal history stays private; organization history is shared with the organization’s members and identifies the creator. Free previews are temporary and do not appear there.
+Full app searches are saved automatically in the workspace selected when they launch. Access them through [History](/guides/history). Personal history stays private; organization history is shared with the organization’s members and identifies the creator. Free previews are temporary and do not appear there, and [temporary searches](#temporary-search) are never saved.
 
 From the history page you can:
 - Re-open any past result at no credit cost
