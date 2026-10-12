@@ -700,7 +700,7 @@
             "$ref": "#/components/responses/SearchApiError"
           },
           "503": {
-            "description": "No search runner, or no registered-account service for an email search, can currently run temporary searches."
+            "description": "Registered-account checks for an email search are currently unavailable in temporary mode."
           },
           "500": {
             "$ref": "#/components/responses/SearchApiError"
