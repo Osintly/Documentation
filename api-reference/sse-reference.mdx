@@ -246,12 +246,21 @@ data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","executed_codes":["snu
 
 ### `registered_accounts`
 
-Sent during registered-account checks.
+Sent as each email account-presence check completes. The `module` object carries the service identity, the `found` verdict, and, when available, a `deletion` guide describing how to remove the account.
 
 ```text
 event: registered_accounts
-data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","event":"registered_accounts","type":"result","module":{"name":"Google"},"timestamp":"2026-05-27T12:00:06.000Z"}
+data: {"search_id":"d290f1ee-6c54-4b01-90e6-d701748f0851","event":"registered_accounts","type":"result","module":{"check_id":"7c1f5f0e-6c54-4b01-90e6-d701748f0851","name":"Spotify","domain":"spotify.com","section":"Music & Audio","logo":"https://logos.osint.ly/spotify.com","description":"Music streaming service.","found":true,"deletion":{"url":"https://support.spotify.com/account_data/close-account/","difficulty":"medium","notes":"Use the Close your account flow and confirm by email.","email":null}},"timestamp":"2026-05-27T12:00:06.000Z"}
 ```
+
+| `module` field | Type | Description |
+| --- | --- | --- |
+| `name` / `domain` / `logo` | string | Service identity. |
+| `section` | string | Catalog category, for example `Social & Content`. |
+| `found` | boolean | Whether an account exists for the searched email. |
+| `deletion` | object or null | Deletion guide: `url`, `difficulty` (easy, medium, hard, impossible), `notes`, `email`. |
+
+Rate-limited or errored checks are not emitted on the public stream.
 
 ### `breached_accounts`
 

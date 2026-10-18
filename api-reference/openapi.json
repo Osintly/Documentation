@@ -1052,7 +1052,23 @@
                           }
                         ],
                         "breached_accounts": [],
-                        "registered_accounts": []
+                        "registered_accounts": [
+                          {
+                            "check_id": "7c1f5f0e-6c54-4b01-90e6-d701748f0851",
+                            "name": "Spotify",
+                            "domain": "spotify.com",
+                            "section": "Music & Audio",
+                            "logo": "https://logos.osint.ly/spotify.com",
+                            "description": "Music streaming service.",
+                            "found": true,
+                            "deletion": {
+                              "url": "https://support.spotify.com/account_data/close-account/",
+                              "difficulty": "medium",
+                              "notes": "Use the \"Close your account\" flow in Account settings and confirm by email.",
+                              "email": null
+                            }
+                          }
+                        ]
                       },
                       "meta": {
                         "environment": "production",
@@ -2582,7 +2598,81 @@
               },
               "registered_accounts": {
                 "type": "array",
-                "items": {}
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "domain",
+                    "section",
+                    "logo",
+                    "found"
+                  ],
+                  "properties": {
+                    "check_id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "description": "Identifier of the account check that produced this verdict."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Service display name."
+                    },
+                    "domain": {
+                      "type": "string",
+                      "description": "Service domain."
+                    },
+                    "section": {
+                      "type": "string",
+                      "description": "Catalog category the service belongs to, for example \"Social & Content\"."
+                    },
+                    "logo": {
+                      "type": "string",
+                      "description": "Service logo URL."
+                    },
+                    "description": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Public description of the service."
+                    },
+                    "found": {
+                      "type": "boolean",
+                      "description": "Whether an account exists for the searched email address."
+                    },
+                    "deletion": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "Account deletion guide for the service, when Osintly has one on file.",
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Deletion page URL."
+                        },
+                        "difficulty": {
+                          "type": "string",
+                          "enum": [
+                            "easy",
+                            "medium",
+                            "hard",
+                            "impossible"
+                          ],
+                          "nullable": true,
+                          "description": "How hard it is to delete the account."
+                        },
+                        "notes": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Human-readable deletion instructions."
+                        },
+                        "email": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Support or privacy contact email for deletion requests."
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           },
