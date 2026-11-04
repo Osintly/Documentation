@@ -61,7 +61,7 @@ These values must match the OpenAPI enum exactly.
 | `query` | `object` | Required. Contains `type` and `value`. |
 | `modules` | `object` | Optional. Use `mode: "selected"` plus `ids` to restrict execution. |
 | `leaks` | `object` | Optional. Use `mode: "selected"` plus `sources` to restrict leak providers. |
-| `features` | `object` | Optional. Controls `breached_accounts` and `registered_accounts`. |
+| `features` | `object` | Optional. Controls `breached_accounts` (enabled by default; set `false` to skip breach lookups) and `registered_accounts` (defaults to `"include"`). |
 | `cache` | `object` | Optional. Use `mode: "bypass"` to force a fresh execution. |
 | `delivery` | `object` | Optional. Configure `delivery.webhook`. |
 

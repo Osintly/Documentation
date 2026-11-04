@@ -325,7 +325,7 @@
                     "value": {
                       "success": true,
                       "message": "Usage limits fetched",
-                      "limits": {
+                      "data": {
                         "allowed": true,
                         "limits": {
                           "global": {
@@ -1630,15 +1630,18 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": ["healthy"]
+            "enum": ["healthy"],
+            "description": "Always `healthy` when the API is reachable and responding."
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Server time when the health check was answered (ISO 8601, UTC)."
           },
           "service": {
             "type": "string",
-            "enum": ["api"]
+            "enum": ["api"],
+            "description": "Name of the service that answered. Always `api`."
           }
         }
       },
@@ -1647,11 +1650,13 @@
         "required": ["message", "help"],
         "properties": {
           "message": {
-            "type": "string"
+            "type": "string",
+            "description": "Confirmation that the bearer token is valid."
           },
           "help": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "Link to the API quick start guide."
           }
         }
       },
@@ -1678,14 +1683,16 @@
             "description": "Module UUID"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Module display name."
           },
           "slug": {
             "type": "string",
             "description": "URL-safe module slug"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "Short description of what the module looks up."
           },
           "type": {
             "type": "string",
@@ -1697,11 +1704,13 @@
             "description": "Logo URL, or an empty string when unavailable"
           },
           "featured": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the module is featured in the catalog. Featured modules are listed first."
           },
           "installs": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Number of times the module has been installed."
           },
           "categories": {
             "type": ["array", "null"],
@@ -1745,7 +1754,8 @@
             "description": "Module count by category after applying compatible filters"
           },
           "featuredCount": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of featured modules that match the current filters."
           },
           "searchTypes": {
             "type": "object",
@@ -1755,7 +1765,8 @@
             "description": "Module count by search type after applying compatible filters"
           },
           "totalCount": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of modules that match the current filters."
           }
         },
         "additionalProperties": false
@@ -1772,27 +1783,33 @@
         ],
         "properties": {
           "hasNext": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether another page exists after this one."
           },
           "hasPrevious": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether a page exists before this one."
           },
           "limit": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 250
+            "maximum": 250,
+            "description": "Maximum number of modules returned per page."
           },
           "page": {
             "type": "integer",
-            "minimum": 1
+            "minimum": 1,
+            "description": "Current page number, starting at 1."
           },
           "total": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Number of modules that match the filters, across all pages."
           },
           "totalPages": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Number of pages available with the current `limit`."
           }
         },
         "additionalProperties": false
@@ -1809,19 +1826,22 @@
         ],
         "properties": {
           "aggregations": {
-            "$ref": "#/components/schemas/ModulesAggregations"
+            "$ref": "#/components/schemas/ModulesAggregations",
+            "description": "Module counts by category and search type, used to build filters."
           },
           "featuredModules": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ModulesCatalogItem"
-            }
+            },
+            "description": "Featured modules that match the current filters."
           },
           "items": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ModulesCatalogItem"
-            }
+            },
+            "description": "Modules on the requested page."
           },
           "modules": {
             "type": "array",
@@ -1831,11 +1851,13 @@
             "description": "Alias of `items` for clients that expect a module list property"
           },
           "pagination": {
-            "$ref": "#/components/schemas/ModulesPagination"
+            "$ref": "#/components/schemas/ModulesPagination",
+            "description": "Pagination details for `items`."
           },
           "total": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Number of modules that match the filters, across all pages. Same value as `pagination.total`."
           }
         },
         "additionalProperties": false
@@ -1845,10 +1867,12 @@
         "required": ["used", "max"],
         "properties": {
           "used": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "description": "Searches already counted in this window."
           },
           "max": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "description": "Maximum number of searches allowed in this window, or null when the plan sets no limit."
           }
         }
       },
@@ -1857,10 +1881,12 @@
         "required": ["global", "daily"],
         "properties": {
           "global": {
-            "$ref": "#/components/schemas/LimitWindow"
+            "$ref": "#/components/schemas/LimitWindow",
+            "description": "Search usage over the current subscription period."
           },
           "daily": {
-            "$ref": "#/components/schemas/LimitWindow"
+            "$ref": "#/components/schemas/LimitWindow",
+            "description": "Search usage for the current day (UTC)."
           }
         }
       },
@@ -1869,7 +1895,8 @@
         "required": ["allowed", "limits"],
         "properties": {
           "allowed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the API key can start a new search right now. False once a window reaches its `max`."
           },
           "limits": {
             "anyOf": [
@@ -1879,7 +1906,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Usage per window, or null when no limit data is available."
           }
         }
       },
@@ -1888,10 +1916,12 @@
         "required": ["path", "message"],
         "properties": {
           "path": {
-            "type": "string"
+            "type": "string",
+            "description": "Location of the invalid field in the request, with segments joined by dots, for example `query.value`."
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "description": "Why the field was rejected."
           }
         }
       },
@@ -1905,22 +1935,27 @@
             "properties": {
               "code": {
                 "type": "string",
-                "enum": ["VALIDATION_ERROR"]
+                "enum": ["VALIDATION_ERROR"],
+                "description": "Always `VALIDATION_ERROR` for invalid request bodies or parameters."
               },
               "message": {
                 "type": "string",
-                "enum": ["Invalid request parameters"]
+                "enum": ["Invalid request parameters"],
+                "description": "Short summary of the error."
               },
               "details": {
                 "type": "array",
                 "items": {
                   "$ref": "#/components/schemas/ValidationIssue"
-                }
+                },
+                "description": "One entry per invalid field."
               }
-            }
+            },
+            "description": "Details about the rejected request."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -1930,10 +1965,12 @@
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [false]
+            "enum": [false],
+            "description": "Always false for error responses."
           },
           "message": {
-            "type": "string"
+            "type": "string",
+            "description": "Human-readable error message."
           }
         },
         "additionalProperties": true
@@ -1948,7 +1985,8 @@
             "properties": {
               "message": {
                 "type": "string",
-                "enum": ["Internal server error"]
+                "enum": ["Internal server error"],
+                "description": "Generic message returned for unexpected server errors."
               }
             }
           }
@@ -1980,10 +2018,12 @@
         "required": ["type", "value"],
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/SearchType"
+            "$ref": "#/components/schemas/SearchType",
+            "description": "Kind of value to search for. Determines which modules, leak sources and account checks can run."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Value to search for, such as an email address or a username. Converted to lowercase before the search starts."
           }
         },
         "additionalProperties": false
@@ -1994,14 +2034,16 @@
           "mode": {
             "type": "string",
             "enum": ["all", "selected"],
-            "default": "all"
+            "default": "all",
+            "description": "`all` runs every module compatible with the query type. `selected` runs only the modules listed in `ids`."
           },
           "ids": {
             "type": "array",
             "items": {
               "type": "string",
               "format": "uuid"
-            }
+            },
+            "description": "IDs of the modules to run, taken from `GET /modules`. Required when `mode` is `selected`."
           }
         },
         "additionalProperties": false
@@ -2012,7 +2054,8 @@
           "mode": {
             "type": "string",
             "enum": ["default", "selected", "none"],
-            "default": "default"
+            "default": "default",
+            "description": "`default` queries the default leak sources for the query type, `selected` queries only the sources listed in `sources`, and `none` skips leak sources."
           },
           "custom_mapping": {
             "type": "boolean",
@@ -2023,7 +2066,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/LeakSourceValue"
-            }
+            },
+            "description": "Leak sources to query. Required when `mode` is `selected`."
           }
         },
         "additionalProperties": false
@@ -2038,12 +2082,14 @@
           },
           "breached_accounts": {
             "type": "boolean",
-            "default": false
+            "default": true,
+            "description": "Look up known data breaches for the searched value: Have I Been Pwned for Email Address, LeakCheck for Pseudonym and Domain Name. Enabled by default; set features.breached_accounts to false to skip it. Not run when features.registered_accounts is \"only\"."
           },
           "registered_accounts": {
             "type": "string",
             "enum": ["exclude", "include", "only"],
-            "default": "include"
+            "default": "include",
+            "description": "Checks which online services have an account registered with the searched email address. `include` runs the check with the rest of the search, `exclude` skips it, and `only` runs this check alone, without modules, leak sources or breach lookups. Email Address only; for other query types, omit the field or set it to `exclude`."
           }
         },
         "additionalProperties": false
@@ -2054,7 +2100,8 @@
           "mode": {
             "type": "string",
             "enum": ["prefer", "bypass"],
-            "default": "prefer"
+            "default": "prefer",
+            "description": "`prefer` reuses a recent cached result for the same query when one exists. `bypass` always runs a fresh search."
           }
         },
         "additionalProperties": false
@@ -2065,12 +2112,14 @@
         "properties": {
           "url": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "Endpoint that receives a POST request when the search finishes."
           },
           "secret": {
             "type": "string",
             "minLength": 8,
-            "maxLength": 256
+            "maxLength": 256,
+            "description": "Optional shared secret. When set, each webhook request carries an `x-osintly-signature` header (HMAC SHA-256) that you can use to verify the request comes from Osintly."
           }
         },
         "additionalProperties": false
@@ -2079,7 +2128,8 @@
         "type": "object",
         "properties": {
           "webhook": {
-            "$ref": "#/components/schemas/WebhookConfig"
+            "$ref": "#/components/schemas/WebhookConfig",
+            "description": "Webhook to call when the search finishes."
           }
         },
         "additionalProperties": false
@@ -2159,10 +2209,12 @@
             "description": "Use BYOK providers in addition to the standard pipeline, or exclusively when set to only."
           },
           "osint_industries": {
-            "$ref": "#/components/schemas/SearchByokOsintIndustriesProvider"
+            "$ref": "#/components/schemas/SearchByokOsintIndustriesProvider",
+            "description": "Run OSINT Industries with your own API key."
           },
           "sherlockeye": {
-            "$ref": "#/components/schemas/SearchByokSherlockeyeProvider"
+            "$ref": "#/components/schemas/SearchByokSherlockeyeProvider",
+            "description": "Run Sherlockeye with your own API key."
           }
         },
         "description": "Bring your own external OSINT provider API keys for this search.",
@@ -2174,25 +2226,32 @@
         "required": ["query"],
         "properties": {
           "query": {
-            "$ref": "#/components/schemas/SearchQuery"
+            "$ref": "#/components/schemas/SearchQuery",
+            "description": "What to search for. Required."
           },
           "modules": {
-            "$ref": "#/components/schemas/SearchModules"
+            "$ref": "#/components/schemas/SearchModules",
+            "description": "Which modules to run. Defaults to every module compatible with the query type."
           },
           "leaks": {
-            "$ref": "#/components/schemas/SearchLeaks"
+            "$ref": "#/components/schemas/SearchLeaks",
+            "description": "Which leak sources to query. Defaults to the default sources for the query type."
           },
           "features": {
-            "$ref": "#/components/schemas/SearchFeatures"
+            "$ref": "#/components/schemas/SearchFeatures",
+            "description": "Optional checks: breach lookups (`breached_accounts`, on by default) and registered account checks (`registered_accounts`, email only)."
           },
           "cache": {
-            "$ref": "#/components/schemas/SearchCache"
+            "$ref": "#/components/schemas/SearchCache",
+            "description": "Whether a recent cached result can be reused. Defaults to `prefer`."
           },
           "delivery": {
-            "$ref": "#/components/schemas/SearchDelivery"
+            "$ref": "#/components/schemas/SearchDelivery",
+            "description": "How to be notified when the search finishes."
           },
           "byok": {
-            "$ref": "#/components/schemas/SearchByok"
+            "$ref": "#/components/schemas/SearchByok",
+            "description": "External providers to run with your own API keys."
           }
         },
         "additionalProperties": false
@@ -2202,7 +2261,8 @@
         "required": ["query", "module_id"],
         "properties": {
           "query": {
-            "$ref": "#/components/schemas/SearchQuery"
+            "$ref": "#/components/schemas/SearchQuery",
+            "description": "What to search for."
           },
           "module_id": {
             "type": "string",
@@ -2210,7 +2270,8 @@
             "description": "ID of the module to execute. Exactly one module is executed per request."
           },
           "cache": {
-            "$ref": "#/components/schemas/SearchCache"
+            "$ref": "#/components/schemas/SearchCache",
+            "description": "Whether a recent cached result can be reused. Defaults to `prefer`."
           }
         },
         "additionalProperties": false
@@ -2229,45 +2290,56 @@
                 "properties": {
                   "id": {
                     "type": "string",
-                    "format": "uuid"
+                    "format": "uuid",
+                    "description": "Search ID."
                   },
                   "status": {
                     "type": "string",
-                    "enum": ["pending", "processing", "finished", "failed"]
+                    "enum": ["pending", "processing", "finished", "failed"],
+                    "description": "Lifecycle status of the search."
                   },
                   "created_at": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "When the search was created."
                   },
                   "completed_at": {
                     "type": ["string", "null"],
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "When the search finished, or null if it has not finished."
                   }
-                }
+                },
+                "description": "Search record created for this module run."
               },
               "module": {
                 "type": "object",
                 "required": ["id", "name"],
                 "properties": {
                   "id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Module ID."
                   },
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Module display name."
                   }
-                }
+                },
+                "description": "Module that was executed."
               },
               "cards": {
                 "type": "array",
                 "items": {
                   "type": "object",
                   "additionalProperties": true
-                }
+                },
+                "description": "Result cards returned by the module. The fields of each card depend on the module."
               }
-            }
+            },
+            "description": "Result of the module run."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2293,11 +2365,13 @@
         "required": ["timestamp"],
         "properties": {
           "environment": {
-            "type": "string"
+            "type": "string",
+            "description": "API environment that served the request: `production` or `development`."
           },
           "timestamp": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Server time when the response was generated (ISO 8601, UTC)."
           }
         }
       },
@@ -2307,23 +2381,28 @@
         "properties": {
           "self": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "URL of this search (`GET /search/{id}`)."
           },
           "stream": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "URL of the Server-Sent Events stream for this search."
           },
           "results": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "URL of the module, BYOK and account results."
           },
           "byok": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "URL of the BYOK provider results."
           },
           "leaks": {
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "URL of the leak sources overview."
           }
         }
       },
@@ -2341,41 +2420,52 @@
                 "properties": {
                   "id": {
                     "type": "string",
-                    "format": "uuid"
+                    "format": "uuid",
+                    "description": "Search ID. Use it in every follow-up request."
                   },
                   "status": {
                     "type": "string",
-                    "enum": ["pending", "processing", "finished", "failed"]
+                    "enum": ["pending", "processing", "finished", "failed"],
+                    "description": "Lifecycle status right after creation."
                   },
                   "query": {
-                    "$ref": "#/components/schemas/SearchQuery"
+                    "$ref": "#/components/schemas/SearchQuery",
+                    "description": "Query as it will be searched, with the value converted to lowercase."
                   },
                   "created_at": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "When the search was created."
                   }
-                }
+                },
+                "description": "Search record."
               },
               "execution": {
                 "type": "object",
                 "required": ["run_id", "cache_mode"],
                 "properties": {
                   "run_id": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Identifier of the execution run started for this search."
                   },
                   "cache_mode": {
                     "type": "string",
-                    "enum": ["prefer", "bypass"]
+                    "enum": ["prefer", "bypass"],
+                    "description": "Cache mode applied to this search."
                   }
-                }
+                },
+                "description": "Execution details."
               },
               "links": {
-                "$ref": "#/components/schemas/SearchLinks"
+                "$ref": "#/components/schemas/SearchLinks",
+                "description": "URLs to follow the search and read its results."
               }
-            }
+            },
+            "description": "The created search."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2400,28 +2490,35 @@
                 "properties": {
                   "id": {
                     "type": "string",
-                    "format": "uuid"
+                    "format": "uuid",
+                    "description": "Search ID."
                   },
                   "status": {
                     "type": "string",
-                    "enum": ["pending", "processing", "finished", "failed"]
+                    "enum": ["pending", "processing", "finished", "failed"],
+                    "description": "Lifecycle status. `finished` and `failed` are final."
                   },
                   "query": {
-                    "$ref": "#/components/schemas/SearchQuery"
+                    "$ref": "#/components/schemas/SearchQuery",
+                    "description": "Query that was searched."
                   },
                   "created_at": {
                     "type": "string",
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "When the search was created."
                   },
                   "started_at": {
                     "type": ["string", "null"],
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "When execution started, or null if it has not started."
                   },
                   "completed_at": {
                     "type": ["string", "null"],
-                    "format": "date-time"
+                    "format": "date-time",
+                    "description": "When the search finished, or null if it has not finished."
                   }
-                }
+                },
+                "description": "Search record."
               },
               "summary": {
                 "type": "object",
@@ -2433,18 +2530,23 @@
                 ],
                 "properties": {
                   "module_results": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Number of module results."
                   },
                   "breached_accounts": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Number of breaches found by the breach lookup. 0 when the lookup was disabled or did not run for this query type."
                   },
                   "registered_accounts": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Number of registered account verdicts returned. 0 when the check was excluded or the query is not an email address."
                   },
                   "leak_sources": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Number of leak sources that finished with results."
                   }
-                }
+                },
+                "description": "Result counters."
               },
               "delivery": {
                 "type": "object",
@@ -2455,22 +2557,28 @@
                     "required": ["status", "attempts", "sent_at", "last_attempt_at"],
                     "properties": {
                       "status": {
-                        "type": ["string", "null"]
+                        "type": ["string", "null"],
+                        "description": "`pending` until the webhook is sent, then `delivered` or `failed`. Null when no webhook was configured."
                       },
                       "attempts": {
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "Number of delivery attempts."
                       },
                       "sent_at": {
                         "type": ["string", "null"],
-                        "format": "date-time"
+                        "format": "date-time",
+                        "description": "When the webhook was delivered, or null."
                       },
                       "last_attempt_at": {
                         "type": ["string", "null"],
-                        "format": "date-time"
+                        "format": "date-time",
+                        "description": "When the latest delivery attempt happened, or null."
                       }
-                    }
+                    },
+                    "description": "Webhook delivery state."
                   }
-                }
+                },
+                "description": "Delivery state."
               },
               "links": {
                 "type": "object",
@@ -2478,26 +2586,33 @@
                 "properties": {
                   "stream": {
                     "type": "string",
-                    "format": "uri"
+                    "format": "uri",
+                    "description": "URL of the Server-Sent Events stream for this search."
                   },
                   "results": {
                     "type": "string",
-                    "format": "uri"
+                    "format": "uri",
+                    "description": "URL of the module, BYOK and account results."
                   },
                   "byok": {
                     "type": "string",
-                    "format": "uri"
+                    "format": "uri",
+                    "description": "URL of the BYOK provider results."
                   },
                   "leaks": {
                     "type": "string",
-                    "format": "uri"
+                    "format": "uri",
+                    "description": "URL of the leak sources overview."
                   }
-                }
+                },
+                "description": "URLs to follow the search and read its results."
               }
-            }
+            },
+            "description": "Current state of the search."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2511,28 +2626,34 @@
             "properties": {
               "accepted": {
                 "type": "boolean",
-                "enum": [true]
+                "enum": [true],
+                "description": "Always true when the deletion request is accepted."
               },
               "deletion": {
                 "type": "object",
                 "required": ["requested_count", "queued_ids"],
                 "properties": {
                   "requested_count": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Number of search IDs in the request."
                   },
                   "queued_ids": {
                     "type": "array",
                     "items": {
                       "type": "string",
                       "format": "uuid"
-                    }
+                    },
+                    "description": "Search IDs queued for deletion. Deletion runs asynchronously."
                   }
-                }
+                },
+                "description": "Deletion details."
               }
-            }
+            },
+            "description": "Deletion request result."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2555,22 +2676,27 @@
                       "required": ["id", "name"],
                       "properties": {
                         "id": {
-                          "type": ["string", "null"]
+                          "type": ["string", "null"],
+                          "description": "Module ID, or null when it is unavailable."
                         },
                         "name": {
-                          "type": "string"
+                          "type": "string",
+                          "description": "Module display name."
                         }
-                      }
+                      },
+                      "description": "Module that produced the cards."
                     },
                     "cards": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "additionalProperties": true
-                      }
+                      },
+                      "description": "Result cards from this module. The fields of each card depend on the module."
                     }
                   }
-                }
+                },
+                "description": "Module results, grouped by module."
               },
               "byok": {
                 "type": "array",
@@ -2580,21 +2706,25 @@
                   "properties": {
                     "provider": {
                       "type": "string",
-                      "enum": ["osint_industries", "sherlockeye"]
+                      "enum": ["osint_industries", "sherlockeye"],
+                      "description": "BYOK provider that produced the cards."
                     },
                     "cards": {
                       "type": "array",
                       "items": {
                         "type": "object",
                         "additionalProperties": true
-                      }
+                      },
+                      "description": "Result cards from this provider."
                     }
                   }
-                }
+                },
+                "description": "Results from BYOK providers, grouped by provider."
               },
               "breached_accounts": {
                 "type": "array",
-                "items": {}
+                "items": {},
+                "description": "Breaches found for the searched value: Have I Been Pwned for Email Address, LeakCheck for Pseudonym and Domain Name. Each entry contains `source` (breach name), `breach_date` and `logo`. Empty when the lookup was disabled, did not run for this query type, or found nothing."
               },
               "registered_accounts": {
                 "type": "array",
@@ -2672,12 +2802,15 @@
                       }
                     }
                   }
-                }
+                },
+                "description": "Registered account verdicts for the searched email address. Empty for other query types or when the check was excluded."
               }
-            }
+            },
+            "description": "Search results."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2700,13 +2833,16 @@
                       "description": "Leak source identifier."
                     },
                     "name": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Leak source display name."
                     },
                     "key": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Leak source identifier used in the source results URL. Same value as `id`."
                     },
                     "status": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Source state: `pending`, `processing`, `success`, `no_results`, `error` or `skipped`."
                     },
                     "count": {
                       "type": "integer",
@@ -2725,30 +2861,38 @@
                       "type": "object",
                       "properties": {
                         "page_size": {
-                          "type": "integer"
+                          "type": "integer",
+                          "description": "Number of record groups per page."
                         },
                         "total_pages": {
                           "type": "integer",
                           "description": "Published page count, provisional while an opted-in source is processing. Refresh after the terminal source event."
                         }
-                      }
+                      },
+                      "description": "Page information, present once the source has published pages."
                     },
                     "logo": {
-                      "type": ["string", "null"]
+                      "type": ["string", "null"],
+                      "description": "Leak source logo URL, or null."
                     },
                     "description": {
-                      "type": ["string", "null"]
+                      "type": ["string", "null"],
+                      "description": "Leak source description, or null."
                     },
                     "error": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Error message, present when the source failed."
                     }
                   }
-                }
+                },
+                "description": "One entry per leak source queried for this search."
               }
-            }
+            },
+            "description": "Leak sources overview."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2762,24 +2906,30 @@
             "properties": {
               "mode": {
                 "type": ["string", "null"],
-                "enum": ["default", "only", null]
+                "enum": ["default", "only", null],
+                "description": "BYOK mode requested for the search, or null when BYOK was not used."
               },
               "providers": {
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
                   "osint_industries": {
-                    "$ref": "#/components/schemas/SearchByokProviderResponse"
+                    "$ref": "#/components/schemas/SearchByokProviderResponse",
+                    "description": "OSINT Industries execution details."
                   },
                   "sherlockeye": {
-                    "$ref": "#/components/schemas/SearchByokProviderResponse"
+                    "$ref": "#/components/schemas/SearchByokProviderResponse",
+                    "description": "Sherlockeye execution details."
                   }
-                }
+                },
+                "description": "Execution details per provider. Only providers configured on the search are present."
               }
-            }
+            },
+            "description": "BYOK execution details."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2796,24 +2946,30 @@
         ],
         "properties": {
           "status": {
-            "type": "string"
+            "type": "string",
+            "description": "Provider execution state, for example `success`, `no_results` or `failed`."
           },
           "result_count": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of result cards returned by the provider."
           },
           "started_at": {
             "type": ["string", "null"],
-            "format": "date-time"
+            "format": "date-time",
+            "description": "When the provider call started, or null."
           },
           "finished_at": {
             "type": ["string", "null"],
-            "format": "date-time"
+            "format": "date-time",
+            "description": "When the provider call finished, or null."
           },
           "mapping_version": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "description": "Version of the mapping used to convert the provider response into cards, or null."
           },
           "error": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "description": "Error message when the provider failed, or null."
           },
           "raw": {
             "oneOf": [
@@ -2828,7 +2984,8 @@
                 "type": "array",
                 "items": {}
               }
-            ]
+            ],
+            "description": "Raw provider response as stored by Osintly, or null."
           }
         }
       },
@@ -2845,43 +3002,55 @@
                 "required": ["name", "key", "status"],
                 "properties": {
                   "name": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Leak source display name."
                   },
                   "key": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Leak source identifier."
                   },
                   "status": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Source state: `pending`, `processing`, `success`, `no_results`, `error` or `skipped`."
                   },
                   "logo": {
-                    "type": ["string", "null"]
+                    "type": ["string", "null"],
+                    "description": "Leak source logo URL, or null."
                   },
                   "description": {
-                    "type": ["string", "null"]
+                    "type": ["string", "null"],
+                    "description": "Leak source description, or null."
                   }
-                }
+                },
+                "description": "Leak source details."
               },
               "pagination": {
                 "type": "object",
                 "required": ["page", "page_size", "total_pages", "has_next_page"],
                 "properties": {
                   "page": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Current page number, starting at 1."
                   },
                   "page_size": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Number of record groups per page."
                   },
                   "total_pages": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Number of pages available for this source."
                   },
                   "has_next_page": {
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "Whether another page exists after this one."
                   }
-                }
+                },
+                "description": "Page information."
               },
               "template": {
                 "type": "object",
-                "additionalProperties": true
+                "additionalProperties": true,
+                "description": "Display template describing how to render the fields of this source's records."
               },
               "results": {
                 "type": "array",
@@ -2890,30 +3059,38 @@
                   "required": ["key", "items"],
                   "properties": {
                     "key": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Unique identifier of the leak entry within the source, for example `leakcheck-result-1`."
                     },
                     "items": {
                       "type": "array",
-                      "items": {}
+                      "items": {},
+                      "description": "Fields of the leak entry."
                     },
                     "stats": {
                       "type": "array",
-                      "items": {}
+                      "items": {},
+                      "description": "Optional summary values for the leak entry."
                     },
                     "additional": {
                       "type": "array",
-                      "items": {}
+                      "items": {},
+                      "description": "Optional extra fields for the leak entry."
                     }
                   }
-                }
+                },
+                "description": "Records on this page, grouped by leak entry."
               },
               "count": {
-                "type": "integer"
+                "type": "integer",
+                "description": "Number of records stored for this source."
               }
-            }
+            },
+            "description": "Records for one leak source."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
@@ -2937,33 +3114,42 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Radar breach ID."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique breach name. Use it with `GET /radar/breaches/{name}`."
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "Breach display title."
           },
           "domain": {
-            "type": "string"
+            "type": "string",
+            "description": "Domain of the breached service."
           },
           "breachDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Date the breach happened."
           },
           "addedDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Date the breach was added to Radar."
           },
           "pwnCount": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of exposed accounts."
           },
           "severity": {
-            "$ref": "#/components/schemas/RadarSeverity"
+            "$ref": "#/components/schemas/RadarSeverity",
+            "description": "Severity level of the breach."
           },
           "shortDescription": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "description": "One-line summary of the breach, or null."
           }
         }
       },
@@ -2979,22 +3165,28 @@
         ],
         "properties": {
           "page": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Current page number, starting at 1."
           },
           "limit": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Maximum number of breaches returned per page."
           },
           "total": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of breaches that match the filters, across all pages."
           },
           "totalPages": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of pages available with the current `limit`."
           },
           "hasNext": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether another page exists after this one."
           },
           "hasPrev": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether a page exists before this one."
           }
         }
       },
@@ -3006,10 +3198,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/RadarBreachListItem"
-            }
+            },
+            "description": "Breaches on the requested page."
           },
           "pagination": {
-            "$ref": "#/components/schemas/RadarPagination"
+            "$ref": "#/components/schemas/RadarPagination",
+            "description": "Pagination details for `breaches`."
           }
         }
       },
@@ -3044,79 +3238,102 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Radar breach ID."
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Unique breach name."
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "Breach display title."
           },
           "domain": {
-            "type": "string"
+            "type": "string",
+            "description": "Domain of the breached service."
           },
           "breachDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Date the breach happened."
           },
           "addedDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Date the breach was added to Radar."
           },
           "modifiedDate": {
             "type": "string",
-            "format": "date"
+            "format": "date",
+            "description": "Date the breach record was last updated."
           },
           "pwnCount": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Number of exposed accounts."
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "Full description of the breach."
           },
           "shortDescription": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "description": "One-line summary of the breach, or null."
           },
           "severity": {
-            "$ref": "#/components/schemas/RadarSeverity"
+            "$ref": "#/components/schemas/RadarSeverity",
+            "description": "Severity level of the breach."
           },
           "dataClasses": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "Types of data exposed, for example `Email addresses` or `Passwords`."
           },
           "isVerified": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the breach is confirmed as legitimate."
           },
           "isFabricated": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the breach is believed to contain fabricated data."
           },
           "isSensitive": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the breach is flagged as sensitive, for example because membership in the service could harm the people exposed."
           },
           "isRetired": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the breach has been retired and is no longer searchable."
           },
           "isSpamList": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the data comes from a spam list rather than a breach of the service."
           },
           "isMalware": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the data was collected by malware."
           },
           "isSubscriptionFree": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether Have I Been Pwned flags this breach as subscription free."
           },
           "isStealerLog": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the data comes from infostealer logs."
           },
           "logoPath": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "description": "Breach logo URL, or null."
           },
           "attribution": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "description": "Credit for the breach data source, or null."
           },
           "disclosureUrl": {
-            "type": ["string", "null"]
+            "type": ["string", "null"],
+            "description": "URL of the public disclosure, or null."
           },
           "aiEnrichments": {
             "oneOf": [
@@ -3127,7 +3344,8 @@
                 "type": "object",
                 "additionalProperties": true
               }
-            ]
+            ],
+            "description": "Additional analysis of the breach generated by AI, or null."
           }
         }
       },
@@ -3136,7 +3354,8 @@
         "required": ["breach"],
         "properties": {
           "breach": {
-            "$ref": "#/components/schemas/RadarBreach"
+            "$ref": "#/components/schemas/RadarBreach",
+            "description": "Full breach record."
           }
         }
       },
@@ -3149,10 +3368,12 @@
             "required": ["code", "message"],
             "properties": {
               "code": {
-                "type": "string"
+                "type": "string",
+                "description": "Machine-readable error code, for example `RATE_LIMIT_EXCEEDED`."
               },
               "message": {
-                "type": "string"
+                "type": "string",
+                "description": "Short summary of the error."
               },
               "details": {
                 "oneOf": [
@@ -3165,33 +3386,40 @@
                       "$ref": "#/components/schemas/ValidationIssue"
                     }
                   }
-                ]
+                ],
+                "description": "More information: a text explanation, or one entry per invalid field for validation errors."
               }
-            }
+            },
+            "description": "Details about the error."
           },
           "meta": {
-            "$ref": "#/components/schemas/ResponseMeta"
+            "$ref": "#/components/schemas/ResponseMeta",
+            "description": "Response metadata."
           }
         }
       },
       "UsageSuccessResponse": {
         "type": "object",
-        "required": ["success", "message", "limits", "code"],
+        "required": ["success", "message", "data", "code"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [true],
+            "description": "Always true when the usage lookup succeeds."
           },
           "message": {
             "type": "string",
-            "enum": ["Usage limits fetched"]
+            "enum": ["Usage limits fetched"],
+            "description": "Fixed confirmation message."
           },
-          "limits": {
-            "$ref": "#/components/schemas/CheckLimitsResult"
+          "data": {
+            "$ref": "#/components/schemas/CheckLimitsResult",
+            "description": "Whether a new search is allowed, and current usage per window."
           },
           "code": {
             "type": "integer",
-            "enum": [200]
+            "enum": [200],
+            "description": "HTTP status code. Always 200."
           }
         }
       },
@@ -3201,20 +3429,24 @@
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [false]
+            "enum": [false],
+            "description": "Always false when the usage lookup fails."
           },
           "message": {
             "type": "string",
-            "enum": ["An error occurred while fetching usage limits"]
+            "enum": ["An error occurred while fetching usage limits"],
+            "description": "Fixed error message."
           },
           "error": {
             "type": "object",
             "required": ["message"],
             "properties": {
               "message": {
-                "type": "string"
+                "type": "string",
+                "description": "Reason the usage lookup failed."
               }
-            }
+            },
+            "description": "Error details."
           }
         }
       },
@@ -3224,7 +3456,8 @@
         "properties": {
           "searchId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "ID of the search whose webhook should be sent."
           }
         },
         "additionalProperties": false
@@ -3234,13 +3467,16 @@
         "required": ["success", "status", "body"],
         "properties": {
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether the webhook endpoint answered with a success status."
           },
           "status": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "description": "HTTP status returned by the webhook endpoint, or null when no response was received."
           },
           "body": {
-            "type": "string"
+            "type": "string",
+            "description": "Response body returned by the webhook endpoint, or an error message when delivery failed."
           }
         }
       }
