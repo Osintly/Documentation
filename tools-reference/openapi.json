@@ -2097,6 +2097,29 @@
         }
       }
     },
+    "/tools/playstation/friends": {
+      "post": {
+        "tags": [
+          "PlayStation Network"
+        ],
+        "summary": "Get PlayStation Network friends",
+        "operationId": "runPlayStationFriends",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PlayStationRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
     "/tools/roblox": {
       "get": {
         "tags": [
