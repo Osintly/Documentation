@@ -38,11 +38,12 @@ The API also normalizes `my.playstation.com` and `psnprofiles.com` profile URLs 
 | Search | `POST /tools/playstation/search` | Free | Validates and normalizes only. |
 | Suggestions | `POST /tools/playstation/suggestions` | Free | Cached universal search suggestions. |
 | Resolve | `POST /tools/playstation/resolve` | 1 | Resolves online ID or account ID. |
-| Profile | `POST /tools/playstation/profile` | 1 | Avatar, PS Plus, verified flag, about me, languages, and privacy. |
+| Profile | `POST /tools/playstation/profile` | 1 | Avatar, PS Plus, verified flag, about me, languages, region, and privacy. |
 | Presence | `POST /tools/playstation/presence` | 1 | Online state, current game, platform, and last online date. |
 | Trophy Summary | `POST /tools/playstation/trophy-summary` | 1 | Trophy level, progress, tier, and earned trophy totals. |
 | Games | `POST /tools/playstation/games` | 1 | Trophy title list, progress, icons, and last played date. |
-| All | `POST /tools/playstation/all` | 2 | Runs the main collectors and charges once. |
+| Friends | `POST /tools/playstation/friends` | 1 | Friend count and a sample of friend account IDs. Empty when the list is private. |
+| All | `POST /tools/playstation/all` | 2 | Runs the main collectors (including friends) and charges once. |
 
 ---
 
@@ -71,6 +72,8 @@ curl -X POST "https://api.osint.ly/tools/playstation/all" \
 ## Availability
 
 Provider-backed routes require PlayStation provider authentication configured server-side. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+
+`profile.region` is derived from the account's PSN region when available. Friend lists and game history are often private; when a target hides them, the collector adds an entry to `data.partialErrors` instead of failing the whole request.
 
 ---
 
