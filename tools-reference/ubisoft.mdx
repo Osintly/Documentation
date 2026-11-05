@@ -64,7 +64,7 @@ When one part of `/all` fails, the response keeps the other parts and lists the 
 - `stats`: the per-game stats Ubisoft Connect shows on a profile, such as play time, kills, medals, progression, or Siege roles. Each stat has its `format` (`Integer`, `Decimal`, `Percentage` from 0 to 1, `LongTimespan` in seconds), its `unit`, and the date it last changed. Stats the player never touched are left out.
 - `economy`: the Units balance, the Ubisoft Connect currency earned by playing.
 - `trackmania`: the Trackmania account with the same name, when one exists, from the official Trackmania and Nadeo services. It gives the zone the player chose (region, country, continent) with their rank in each, the world rank, trophy points, counts and echelon, and when the zone was set (`zoneSetAt`). Trackmania accounts have their own ID, so this link rests on the name (`matchedBy: "name"`).
-- `namesakes`: other Ubisoft accounts whose Ubisoft, PlayStation, or Xbox name equals one of this account's names, with the platform that carries it. The match is exact and ignores case. It often reveals a second account of the same person.
+- `namesakes`: other Ubisoft accounts whose Ubisoft, PlayStation, or Xbox name equals one of this account's names, with the platform that carries it. The match is exact and ignores case. These are leads, not proof of shared ownership: confirm ownership with other evidence before linking the accounts.
 
 Ubisoft does not expose the country, age, creation date, friends, or achievements of other accounts. A region is only available through `trackmania`, for players who set a zone in Trackmania.
 
