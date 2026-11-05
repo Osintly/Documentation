@@ -42,6 +42,10 @@
       "description": "Direct Xbox Live account validation and enrichment endpoints."
     },
     {
+      "name": "Ubisoft",
+      "description": "Direct Ubisoft Connect account lookup and enrichment endpoints."
+    },
+    {
       "name": "PlayStation Network",
       "description": "Direct PlayStation Network account validation and enrichment endpoints."
     },
@@ -1715,6 +1719,178 @@
         "operationId": "runXboxAll",
         "requestBody": {
           "$ref": "#/components/requestBodies/XboxRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft": {
+      "get": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "List Ubisoft routes",
+        "operationId": "listUbisoftRoutes",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ToolRouteIndex"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft/search": {
+      "post": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "Validate Ubisoft search input",
+        "operationId": "runUbisoftSearch",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UbisoftRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft/resolve": {
+      "post": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "Resolve a Ubisoft account",
+        "operationId": "runUbisoftResolve",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UbisoftRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft/profile": {
+      "post": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "Get Ubisoft profile",
+        "operationId": "runUbisoftProfile",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UbisoftRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft/linked-accounts": {
+      "post": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "Get Ubisoft linked accounts",
+        "operationId": "runUbisoftLinkedAccounts",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UbisoftRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft/games": {
+      "post": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "Get Ubisoft game activity",
+        "operationId": "runUbisoftGames",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UbisoftRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft/r6": {
+      "post": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "Get Rainbow Six Siege data",
+        "operationId": "runUbisoftR6",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UbisoftRequest"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/GamingToolResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "503": {
+            "$ref": "#/components/responses/ProviderUnavailable"
+          }
+        }
+      }
+    },
+    "/tools/ubisoft/all": {
+      "post": {
+        "tags": [
+          "Ubisoft"
+        ],
+        "summary": "Run all Ubisoft collectors",
+        "operationId": "runUbisoftAll",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UbisoftRequest"
         },
         "responses": {
           "200": {
@@ -4239,7 +4415,8 @@
             "roblox",
             "steam",
             "socialclub",
-            "reddit"
+            "reddit",
+            "ubisoft"
           ]
         }
       },
@@ -4307,6 +4484,20 @@
               "value": "SomeGamertag",
               "type": "gamertag",
               "titleId": "12345"
+            }
+          }
+        }
+      },
+      "UbisoftRequest": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UbisoftRequest"
+            },
+            "example": {
+              "value": "SomeUbisoftName",
+              "type": "username"
             }
           }
         }
@@ -5098,7 +5289,8 @@
               "playstation",
               "roblox",
               "steam",
-              "socialclub"
+              "socialclub",
+              "ubisoft"
             ]
           }
         },
@@ -5557,6 +5749,55 @@
             "type": "string",
             "pattern": "^\\d+$",
             "description": "Numeric Xbox title ID."
+          }
+        },
+        "additionalProperties": false
+      },
+      "UbisoftRequest": {
+        "type": "object",
+        "required": [
+          "value",
+          "type"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Ubisoft name, Ubisoft ID, or linked platform identifier to look up.",
+            "examples": [
+              "SomeUbisoftName",
+              "0ab3ec03-b309-4f46-a89a-f53b6cfe3073",
+              "76561198000000000"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "description": "Canonical Ubisoft search type or accepted alias. A UUID sent as `username` is searched as `user_id`.",
+            "enum": [
+              "username",
+              "user_id",
+              "psn",
+              "xbl",
+              "steam",
+              "discord",
+              "epic",
+              "ubisoft",
+              "uplay",
+              "nickname",
+              "id",
+              "uuid",
+              "ubisoft_id",
+              "playstation",
+              "xbox",
+              "gamertag",
+              "xuid",
+              "epic_games"
+            ],
+            "example": "username"
+          },
+          "save": {
+            "type": "boolean",
+            "description": "Only used on `/all`. When true, saves the synchronous result for later retrieval.",
+            "default": false
           }
         },
         "additionalProperties": false

@@ -1,0 +1,100 @@
+---
+title: Ubisoft
+description: Ubisoft Connect account lookup and enrichment endpoints for linked accounts, level, played games, and Rainbow Six Siege data.
+icon: user
+---
+
+Ubisoft endpoints find a Ubisoft Connect account from its name, its Ubisoft ID, or an account linked to it on PlayStation, Xbox, Steam, Discord, or Epic Games. `POST /search` is validation-only: it normalizes the identifier type and does not call Ubisoft or consume credits.
+
+```json
+{
+  "value": "SomeUbisoftName",
+  "type": "username"
+}
+```
+
+---
+
+## Search types
+
+| Type | Value |
+| --- | --- |
+| `username` | Ubisoft Connect name |
+| `user_id` | Ubisoft account ID, or the profile ID of a linked platform |
+| `psn` | PlayStation Online ID, or the numeric account ID |
+| `xbl` | Xbox gamertag, or the 16-digit XUID |
+| `steam` | SteamID64, or a `steamcommunity.com/profiles/<id>` link |
+| `discord` | Discord username, `name#1234`, or the numeric user ID |
+| `epic` | Epic Games account ID (32 hexadecimal characters) |
+
+Aliases:
+
+- `ubisoft`, `uplay`, and `nickname` -> `username`
+- `id`, `uuid`, and `ubisoft_id` -> `user_id`
+- `playstation` -> `psn`
+- `xbox`, `gamertag`, and `xuid` -> `xbl`
+- `epic_games` -> `epic`
+
+A Ubisoft ID sent with `type: "username"` is searched as `user_id`.
+
+---
+
+## Endpoint groups
+
+| Operation       | Endpoint                              | Cost | Notes                                                                       |
+| --------------- | ------------------------------------- | ---: | --------------------------------------------------------------------------- |
+| Search          | `POST /tools/ubisoft/search`          | Free | Validates and normalizes only.                                              |
+| Resolve         | `POST /tools/ubisoft/resolve`         |    1 | Ubisoft ID, Ubisoft name, and every linked platform profile.                |
+| Profile         | `POST /tools/ubisoft/profile`         |    1 | Name, avatar, level, XP, online status, owned games, and last played game.  |
+| Linked Accounts | `POST /tools/ubisoft/linked-accounts` |    1 | PlayStation, Xbox, Steam, Discord, Epic, Amazon, Twitch, and other links.   |
+| Games           | `POST /tools/ubisoft/games`           |    1 | Every played application with first and last session dates and sessions.   |
+| R6              | `POST /tools/ubisoft/r6`              |    1 | Rainbow Six Siege persona, clearance level, time played, and season ranks. |
+| All             | `POST /tools/ubisoft/all`             |    3 | Runs every collector and charges once, plus library, stats, saves, and more. |
+
+Each game entry has a `kind`: `game` for titles, `service` for launchers, overlays, sign-in flows, and websites that Ubisoft records as applications. `summary.firstSeen` is the oldest recorded session, which approximates when the account started playing.
+
+When one part of `/all` fails, the response keeps the other parts and lists the failed parts in `data.partialErrors`.
+
+`/all` also returns eight parts that have no route of their own:
+
+- `library`: owned games with platform, release date, and play time in seconds, plus the declared platforms, the Ubisoft+ subscription state, and the XP needed for the next level.
+- `avatar`: avatar variations and whether the player uploaded their own picture (`isCustom`).
+- `presence`: live Ubisoft Connect sessions with the client used, when it connected, and its last activity.
+- `saves`: game saves and settings stored on the profile, with the game, the last update date, and readable values such as levels or scores.
+- `stats`: the per-game stats Ubisoft Connect shows on a profile, such as play time, kills, medals, progression, or Siege roles. Each stat has its `format` (`Integer`, `Decimal`, `Percentage` from 0 to 1, `LongTimespan` in seconds), its `unit`, and the date it last changed. Stats the player never touched are left out.
+- `economy`: the Units balance, the Ubisoft Connect currency earned by playing.
+- `trackmania`: the Trackmania account with the same name, when one exists, from the official Trackmania and Nadeo services. It gives the zone the player chose (region, country, continent) with their rank in each, the world rank, trophy points, counts and echelon, and when the zone was set (`zoneSetAt`). Trackmania accounts have their own ID, so this link rests on the name (`matchedBy: "name"`).
+- `namesakes`: other Ubisoft accounts whose Ubisoft, PlayStation, or Xbox name equals one of this account's names, with the platform that carries it. The match is exact and ignores case. These are leads, not proof of shared ownership: confirm ownership with other evidence before linking the accounts.
+
+Ubisoft does not expose the country, age, creation date, friends, or achievements of other accounts. A region is only available through `trackmania`, for players who set a zone in Trackmania.
+
+---
+
+## Fast path
+
+Validate an input before launching enrichment.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/ubisoft/search" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "SomeUbisoftName", "type": "ubisoft" }'
+```
+
+Find the Ubisoft account behind a PlayStation Online ID and load everything at once.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/ubisoft/all" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "SomeOnlineId", "type": "psn" }'
+```
+
+Load only the Rainbow Six Siege data.
+
+```bash
+curl -X POST "https://api.osint.ly/tools/ubisoft/r6" \
+  -H "Authorization: Bearer $OSINTLY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "value": "0ab3ec03-b309-4f46-a89a-f53b6cfe3073", "type": "user_id" }'
+```
