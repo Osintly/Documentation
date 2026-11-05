@@ -42,7 +42,7 @@ The API also normalizes `my.playstation.com` and `psnprofiles.com` profile URLs 
 | Presence | `POST /tools/playstation/presence` | 1 | Online state, current game, platform, and last online date. |
 | Trophy Summary | `POST /tools/playstation/trophy-summary` | 1 | Trophy level, progress, tier, and earned trophy totals. |
 | Games | `POST /tools/playstation/games` | 1 | Trophy title list, progress, icons, and last played date. |
-| Friends | `POST /tools/playstation/friends` | 1 | Friend count and a sample of friend account IDs. Empty when the list is private. |
+| Friends | `POST /tools/playstation/friends` | 1 | Friend count and a sample of friend account IDs. Reports `private: true` when the list is hidden. |
 | All | `POST /tools/playstation/all` | 2 | Runs the main collectors (including friends) and charges once. |
 
 ---
@@ -73,7 +73,7 @@ curl -X POST "https://api.osint.ly/tools/playstation/all" \
 
 Provider-backed routes require PlayStation provider authentication configured server-side. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
 
-`profile.region` is derived from the account's PSN region when available. Friend lists and game history are often private; when a target hides them, the collector adds an entry to `data.partialErrors` instead of failing the whole request.
+`profile.region` is derived from the account's PSN region when available. A hidden friends list is reported as `data.friends.private: true` rather than an error. Other hidden data (game history, presence, trophies) surfaces as an entry in `data.partialErrors` instead of failing the whole request.
 
 ---
 
