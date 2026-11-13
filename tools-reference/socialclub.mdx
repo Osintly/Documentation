@@ -77,7 +77,7 @@ requested resource is linked to the resolved account.
 curl -X POST "https://api.osint.ly/tools/socialclub/crew-detail" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "some-player", "type": "nickname", "crewId": 76479976, "memberQuery": "some" }'
+  -d '{ "value": "some-player", "type": "nickname", "crewId": 12345678, "memberQuery": "some" }'
 ```
 
 `memberQuery` is optional and must contain at least three characters when set.
@@ -125,11 +125,516 @@ The route fails when the primary resolver cannot identify an account. Secondary 
 
 ---
 
-## Authentication
+## Response example
 
-Provider-backed routes use a Worker-compatible Rockstar session managed by `RockstarAuthDO`. The Durable Object persists refreshed launcher tokens and coalesces concurrent refreshes. The achievements route uses a separate Social Club API bearer, also persisted and refreshed by the Durable Object. Tokens are never stored in the Cache API or returned to clients.
+An anonymized `POST /tools/socialclub/all` response. Lists are shortened to one item; counts such as `total` show the full size.
 
-If Rockstar credentials are unavailable or cannot be refreshed, provider-backed routes return `503 PROVIDER_UNAVAILABLE` without recording usage.
+<Accordion title="Social Club /all response" icon="code">
+
+```json
+{
+  "data": {
+    "crews": {
+      "crews": [],
+      "rockstarId": 2249333
+    },
+    "friends": {
+      "hidden": true,
+      "rockstarId": 2249333,
+      "sample": [],
+      "totalCollected": 0,
+      "totalReported": 0
+    },
+    "games": {
+      "games": [],
+      "rockstarId": 2249333
+    },
+    "linkedAccounts": {
+      "platforms": [],
+      "rockstarId": 2249333
+    },
+    "partialErrors": [],
+    "profile": {
+      "avatarUrl": "https://prod-avatars.akamaized.net/example/avatarurl.png",
+      "countryCode": "RU",
+      "createdDate": "2025-01-01T00:00:00.000Z",
+      "displayName": "ExamplePlayer",
+      "friendCount": 0,
+      "friendsHidden": true,
+      "gamertag": null,
+      "gamertagHidden": false,
+      "isOnline": false,
+      "languageCode": "en",
+      "lastActivePlatform": "Unknown",
+      "nickname": "ExamplePlayer",
+      "primaryCrew": null,
+      "profileHidden": false,
+      "rockstarId": 2249333,
+      "status": null
+    },
+    "resolve": {
+      "avatarUrl": "https://prod-avatars.akamaized.net/example/avatarurl.png",
+      "nickname": "ExamplePlayer",
+      "rockstarId": 2249333,
+      "source": "nickname"
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/socialclub/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/suggestions" icon="code">
+
+```json
+{
+  "data": {
+    "suggestions": [
+      {
+        "avatarUrl": "https://prod-avatars.akamaized.net/example/avatarurl.png",
+        "nickname": "ExamplePlayer",
+        "relationship": "None",
+        "rockstarId": 2249333,
+        "services": []
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "suggestions",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "avatarUrl": "https://prod-avatars.akamaized.net/example/avatarurl.png",
+    "nickname": "ExamplePlayer",
+    "rockstarId": 2249333,
+    "source": "nickname"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/profile" icon="code">
+
+```json
+{
+  "data": {
+    "avatarUrl": "https://prod-avatars.akamaized.net/example/avatarurl.png",
+    "countryCode": "RU",
+    "createdDate": "2025-01-01T00:00:00.000Z",
+    "displayName": "ExamplePlayer",
+    "friendCount": 0,
+    "friendsHidden": true,
+    "gamertag": null,
+    "gamertagHidden": false,
+    "isOnline": false,
+    "languageCode": "en",
+    "lastActivePlatform": "Unknown",
+    "nickname": "ExamplePlayer",
+    "primaryCrew": null,
+    "profileHidden": false,
+    "rockstarId": 2249333,
+    "status": null
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/linked-accounts" icon="code">
+
+```json
+{
+  "data": {
+    "platforms": [],
+    "rockstarId": 2249333
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "linked-accounts",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/crews" icon="code">
+
+```json
+{
+  "data": {
+    "crews": [
+      {
+        "createdAt": "2025-01-01T00:00:00Z",
+        "crewType": "example",
+        "division": "example",
+        "emblemUrl": "https://prod.cloud.rockstargames.com/example/emblemurl.png",
+        "id": 63714721,
+        "isFounder": false,
+        "isPrimary": true,
+        "isPrivate": true,
+        "isSystem": false,
+        "memberCount": 3,
+        "motto": "Example text.",
+        "name": "Example Group",
+        "tag": "EXMP"
+      }
+    ],
+    "rockstarId": 76909365
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "crews",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/crew-detail" icon="code">
+
+```json
+{
+  "data": {
+    "crew": {
+      "createdAt": "2025-01-01T00:00:00Z",
+      "crewType": "example",
+      "division": "example",
+      "emblemUrl": "https://prod.cloud.rockstargames.com/example/emblemurl.png",
+      "id": 63714721,
+      "isFounder": false,
+      "isPrimary": false,
+      "isPrivate": true,
+      "isSystem": false,
+      "memberCount": 3,
+      "motto": "Example text.",
+      "name": "Example Group",
+      "tag": "EXMP",
+      "isOpen": false,
+      "isSystemPrivate": false,
+      "rankOrder": 0
+    },
+    "memberSearch": {
+      "collected": 3,
+      "members": [
+        {
+          "avatarUrl": "https://prod-avatars.akamaized.net/example/avatarurl.png",
+          "dateJoined": "2025-01-01T00:00:00Z",
+          "isOnline": false,
+          "nickname": "ExamplePlayer",
+          "onlineGames": [],
+          "rank": "Leader",
+          "rankOrder": 0,
+          "relationship": "None",
+          "rockstarId": 24071086
+        }
+      ],
+      "query": "example",
+      "totalReported": 3
+    },
+    "partialErrors": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "crew-detail",
+  "query": {
+    "crewId": 63714721,
+    "memberQuery": "example",
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/games" icon="code">
+
+```json
+{
+  "data": {
+    "games": [
+      {
+        "defaultPlatform": "example",
+        "defaultPlatformId": 11,
+        "friendCode": 0,
+        "id": 11,
+        "imageUrl": "https://media-rockstargames-com.akamaized.net/example/imageurl.jpg",
+        "lastSeen": null,
+        "name": "GTAV",
+        "platform": "Unknown",
+        "platformId": 11,
+        "registeredDate": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "rockstarId": 76909365
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "games",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/game-detail" icon="code">
+
+```json
+{
+  "data": {
+    "catalog": {
+      "appDataFolder": "example",
+      "cloudSaveCompression": false,
+      "cloudSaveFiles": [
+        "SGTA50000"
+      ],
+      "downloadAndSwap": false,
+      "executable": "example",
+      "friendlyName": "example",
+      "installFolder": "example",
+      "languages": [
+        "en-US"
+      ],
+      "minGameVersion": "example",
+      "minLauncherVersion": "example",
+      "modScan": true,
+      "modWhitelist": [
+        "example"
+      ],
+      "platforms": [
+        {
+          "capabilities": {
+            "cloud": true,
+            "soundCardReq": true,
+            "crashpadEnabled": true
+          },
+          "name": "default"
+        }
+      ],
+      "prerequisites": [
+        "example"
+      ],
+      "rosTitleId": 11,
+      "safeMode": true,
+      "titleId": "gta5"
+    },
+    "game": {
+      "defaultPlatform": "example",
+      "defaultPlatformId": 11,
+      "friendCode": 0,
+      "id": 11,
+      "imageUrl": "https://media-rockstargames-com.akamaized.net/example/imageurl.jpg",
+      "lastSeen": null,
+      "name": "GTAV",
+      "platform": "Unknown",
+      "platformId": 11,
+      "registeredDate": "2025-01-01T00:00:00.000Z"
+    },
+    "partialErrors": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "game-detail",
+  "query": {
+    "gameId": 11,
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/achievements" icon="code">
+
+```json
+{
+  "data": {
+    "achievements": [
+      {
+        "description": null,
+        "iconUrl": null,
+        "id": "1",
+        "isAchieved": true,
+        "isVisible": true,
+        "lockedDescription": null,
+        "name": "1",
+        "points": 0,
+        "unlockedAt": "2025-03-14T18:00:00.000Z"
+      }
+    ],
+    "available": true,
+    "game": {
+      "defaultPlatform": "example",
+      "defaultPlatformId": 11,
+      "friendCode": 0,
+      "id": 11,
+      "imageUrl": "https://media-rockstargames-com.akamaized.net/example/imageurl.jpg",
+      "lastSeen": null,
+      "name": "GTAV",
+      "platform": "Unknown",
+      "platformId": 11,
+      "registeredDate": "2025-01-01T00:00:00.000Z"
+    },
+    "hidden": false,
+    "rockstarId": 76909365,
+    "summary": {
+      "earned": 1,
+      "pointsEarned": null,
+      "progress": null,
+      "total": null,
+      "totalPoints": null
+    },
+    "titleId": "gta5"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "achievements",
+  "query": {
+    "gameId": 11,
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/socialclub/friends" icon="code">
+
+```json
+{
+  "data": {
+    "hidden": true,
+    "rockstarId": 2249333,
+    "sample": [],
+    "totalCollected": 0,
+    "totalReported": 0
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "friends",
+  "query": {
+    "normalizedType": "nickname",
+    "type": "nickname",
+    "value": "ExamplePlayer"
+  },
+  "tool": "socialclub"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## Availability
+
+When Rockstar services are unavailable, provider-backed routes return `503 PROVIDER_UNAVAILABLE` without recording usage.
 
 ---
 
@@ -139,8 +644,9 @@ Provider responses are cached by collector and normalized identifier. Cache entr
 
 | Collector | TTL |
 |---|---:|
-| Suggestions / account search | 10 minutes |
-| Resolve | 30 minutes |
+| Suggestions / account search | 1 hour |
+| Resolve | 24 hours |
+| "Not found" answers | 6 hours |
 | Profile | 30 minutes |
 | Linked accounts | 1 hour |
 | Crews | 1 hour |

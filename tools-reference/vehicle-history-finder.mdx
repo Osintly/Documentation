@@ -36,7 +36,7 @@ VIN inputs must be valid 17-character VINs. French plates support modern SIV for
 |---|---|---:|---|
 | Search | `POST /tools/vehicle-history-finder/search` | Free | Validates and normalizes only. |
 | VIN | `POST /tools/vehicle-history-finder/vin` | 1 | NHTSA vPIC decode, recalls, complaints, safety ratings, and deterministic attention score. |
-| Plate FR | `POST /tools/vehicle-history-finder/plate-fr` | 1 | French plate parsing, vehicle candidates, Castrol details, fluids, capacities, and official links. |
+| Plate FR | `POST /tools/vehicle-history-finder/plate-fr` | 1 | French plate parsing, vehicle candidates, technical details, fluids, capacities, and official links. |
 | All | `POST /tools/vehicle-history-finder/all` | 2 | Dispatches by `type` and charges once. |
 
 `save: true` is only supported on `/all`.
@@ -92,7 +92,7 @@ For `plate_fr`, the response includes:
 - official links for HistoVec, ANTS, SIV, and technical inspection
 - provider vehicle candidates
 - a mapped `vehicle.presentation` object in English for vehicle identity, engine, transmission, steering, model year, fluids, and capacities
-- Castrol details and imagin.studio metadata when available
+- technical details (`castrol` field) and vehicle image metadata when available
 
 A valid plate can still return `vehicle.found: false` if no vehicle candidate is returned by the provider.
 
@@ -104,11 +104,290 @@ For `vin`, the response includes:
 
 ---
 
+## Response example
+
+A `POST /tools/vehicle-history-finder/all` response for a sample VIN. Lists are shortened to one item; counts show the full size.
+
+<Accordion title="Vehicle History Finder /all response" icon="code">
+
+```json
+{
+  "data": {
+    "partialErrors": [],
+    "vin": {
+      "dimensions": {
+        "gcwr": null,
+        "gvwr": "Class 1C: 4,001 - 5,000 lb (1,814 - 2,268 kg)",
+        "wheelBaseLong": null,
+        "wheelBaseShort": null
+      },
+      "drivetrain": {
+        "driveType": null,
+        "transmission": "Automatic",
+        "transmissionSpeeds": "5"
+      },
+      "electric": null,
+      "engine": {
+        "cylinders": "6",
+        "displacementCC": "2998.832712",
+        "displacementCI": "183",
+        "displacementL": "2.998832712",
+        "fuelPrimary": "Gasoline",
+        "fuelSecondary": null,
+        "hpMax": null,
+        "hpMin": "240",
+        "manufacturer": null,
+        "model": "J30A4",
+        "turbo": null
+      },
+      "errorCode": "0",
+      "errorText": "0 - VIN decoded clean. Check Digit (9th position) is correct",
+      "identity": {
+        "bodyClass": "Coupe",
+        "doors": "2",
+        "make": "HONDA",
+        "makeId": "474",
+        "manufacturer": "AMERICAN HONDA MOTOR CO., INC.",
+        "manufacturerCommon": null,
+        "model": "Accord",
+        "series": null,
+        "trim": "EX-V6",
+        "vehicleType": "PASSENGER CAR",
+        "year": "2003"
+      },
+      "plant": {
+        "city": "MARYSVILLE",
+        "company": null,
+        "country": "UNITED STATES (USA)",
+        "state": "OHIO"
+      },
+      "safety": {
+        "abs": null,
+        "airBagCurtain": "1st and 2nd Rows",
+        "airBagFront": "1st Row (Driver and Passenger)",
+        "airBagKnee": null,
+        "airBagSide": "1st Row (Driver and Passenger)",
+        "autoReverse": null,
+        "blindSpotMon": null,
+        "dynamicBrakeSupport": null,
+        "esc": null,
+        "forwardCollisionWarning": null,
+        "laneDepartureWarning": null,
+        "laneKeepSystem": null,
+        "notes": null,
+        "pedestrianAEB": null,
+        "pretensioner": null,
+        "safeAutomationLevel": null,
+        "seatBelts": "Manual",
+        "tcs": null,
+        "tpms": null
+      },
+      "suggestedVIN": null,
+      "vin": "1HGCM82633A004352"
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "vin",
+    "type": "vin",
+    "value": "1HGCM82633A004352"
+  },
+  "tool": "vehicle-history-finder"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/vehicle-history-finder/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "vin",
+    "type": "vin",
+    "value": "1HGCM82633A004352"
+  },
+  "tool": "vehicle-history-finder"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/vehicle-history-finder/vin" icon="code">
+
+```json
+{
+  "data": {
+    "dimensions": {
+      "gcwr": null,
+      "gvwr": "Class 1C: 4,001 - 5,000 lb (1,814 - 2,268 kg)",
+      "wheelBaseLong": null,
+      "wheelBaseShort": null
+    },
+    "drivetrain": {
+      "driveType": null,
+      "transmission": "Automatic",
+      "transmissionSpeeds": "5"
+    },
+    "electric": null,
+    "engine": {
+      "cylinders": "6",
+      "displacementCC": "2998.832712",
+      "displacementCI": "183",
+      "displacementL": "2.998832712",
+      "fuelPrimary": "Gasoline",
+      "fuelSecondary": null,
+      "hpMax": null,
+      "hpMin": "240",
+      "manufacturer": null,
+      "model": "J30A4",
+      "turbo": null
+    },
+    "errorCode": "0",
+    "errorText": "0 - VIN decoded clean. Check Digit (9th position) is correct",
+    "identity": {
+      "bodyClass": "Coupe",
+      "doors": "2",
+      "make": "HONDA",
+      "makeId": "474",
+      "manufacturer": "AMERICAN HONDA MOTOR CO., INC.",
+      "manufacturerCommon": null,
+      "model": "Accord",
+      "series": null,
+      "trim": "EX-V6",
+      "vehicleType": "PASSENGER CAR",
+      "year": "2003"
+    },
+    "plant": {
+      "city": "MARYSVILLE",
+      "company": null,
+      "country": "UNITED STATES (USA)",
+      "state": "OHIO"
+    },
+    "safety": {
+      "abs": null,
+      "airBagCurtain": "1st and 2nd Rows",
+      "airBagFront": "1st Row (Driver and Passenger)",
+      "airBagKnee": null,
+      "airBagSide": "1st Row (Driver and Passenger)",
+      "autoReverse": null,
+      "blindSpotMon": null,
+      "dynamicBrakeSupport": null,
+      "esc": null,
+      "forwardCollisionWarning": null,
+      "laneDepartureWarning": null,
+      "laneKeepSystem": null,
+      "notes": null,
+      "pedestrianAEB": null,
+      "pretensioner": null,
+      "safeAutomationLevel": null,
+      "seatBelts": "Manual",
+      "tcs": null,
+      "tpms": null
+    },
+    "suggestedVIN": null,
+    "vin": "1HGCM82633A004352"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "vin",
+  "query": {
+    "normalizedType": "vin",
+    "type": "vin",
+    "value": "1HGCM82633A004352"
+  },
+  "tool": "vehicle-history-finder"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/vehicle-history-finder/plate-fr" icon="code">
+
+```json
+{
+  "data": {
+    "engineSpecs": null,
+    "error": null,
+    "format": "SIV",
+    "formatLabel": "Immatriculation nationale SIV (depuis le 15 avril 2009)",
+    "input": "AB-123-CD",
+    "normalized": "AB-123-CD",
+    "note": "Personal owner data and full official history require access through HistoVec or ANTS services.",
+    "oldInfo": null,
+    "sivInfo": {
+      "forbiddenLetters": "I, O and U are excluded. SS and WW are reserved.",
+      "note": "Since SIV (2009), plates are assigned sequentially at national level without geographic meaning.",
+      "sequence": {
+        "digits": "123",
+        "letters1": "AB",
+        "letters2": "CD"
+      }
+    },
+    "valid": true,
+    "vehicle": {
+      "candidates": [],
+      "found": false,
+      "lookup": {
+        "searchedPlate": "AB123CD"
+      },
+      "presentation": {
+        "bodyLabel": null,
+        "fuelTypeLabel": null,
+        "modelYearLabel": null,
+        "powerTrainLabel": null,
+        "specs": [],
+        "steeringLabel": null,
+        "transmissionLabel": null
+      },
+      "primary": null,
+      "reason": "The plate format is valid, but no vehicle candidate was returned by the provider."
+    },
+    "vehicleDetails": null,
+    "vehicles": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "plate-fr",
+  "query": {
+    "normalizedType": "plate_fr",
+    "type": "plate_fr",
+    "value": "AB-123-CD"
+  },
+  "tool": "vehicle-history-finder"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
 ## Availability
 
-No provider secret is required in V1. French plate data uses public parsing plus provider lookups; personal owner data and full official vehicle history remain available only through official French services such as HistoVec or ANTS.
+Personal owner data and full official vehicle history remain available only through official French services such as HistoVec or ANTS.
 
-Provider failures are normalized as API errors on focused routes when the main provider fails. Secondary metadata such as imagin.studio can be omitted without failing the whole plate response.
+Provider failures are normalized as API errors on focused routes when the main provider fails. Secondary metadata such as vehicle images can be omitted without failing the whole plate response.
 
 ---
 
@@ -116,8 +395,8 @@ Provider failures are normalized as API errors on focused routes when the main p
 
 Provider responses are cached by normalized input and provider:
 
-- Castrol vehicle/details: 12 hours
-- imagin.studio metadata: 24 hours
+- vehicle technical details: 12 hours
+- vehicle image metadata: 24 hours
 - NHTSA VIN decode: 24 hours
 - NHTSA recalls and complaints: 6 hours
 - NHTSA safety ratings: 24 hours

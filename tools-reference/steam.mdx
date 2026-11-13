@@ -8,7 +8,7 @@ Steam endpoints accept a vanity name, SteamID2, Steam AccountID/SteamID32, Steam
 
 ```json
 {
-  "value": "gaben",
+  "value": "example-player",
   "type": "vanity"
 }
 ```
@@ -29,7 +29,7 @@ Aliases:
 
 Steam Community URLs are normalized automatically:
 
-- `https://steamcommunity.com/id/gaben` -> `vanity`
+- `https://steamcommunity.com/id/example-player` -> `vanity`
 - `https://steamcommunity.com/profiles/76561197960287930` -> `steam_id`
 
 Numeric identifiers are converted to a canonical SteamID64 before provider calls:
@@ -73,7 +73,7 @@ Validate an identifier before launching enrichment.
 curl -X POST "https://api.osint.ly/tools/steam/search" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "gaben", "type": "steam" }'
+  -d '{ "value": "example-player", "type": "steam" }'
 ```
 
 Use `/all` for a complete synchronous Steam result.
@@ -82,7 +82,7 @@ Use `/all` for a complete synchronous Steam result.
 curl -X POST "https://api.osint.ly/tools/steam/all" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "gaben", "type": "vanity" }'
+  -d '{ "value": "example-player", "type": "vanity" }'
 ```
 
 Save the result for later retrieval:
@@ -104,7 +104,7 @@ Load the details for a game returned by `/games` or `/all`:
 curl -X POST "https://api.osint.ly/tools/steam/game-detail" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "gaben", "type": "vanity", "appId": 730 }'
+  -d '{ "value": "example-player", "type": "vanity", "appId": 730 }'
 ```
 
 The response combines Steam Store metadata, screenshots and movies, the
@@ -118,7 +118,7 @@ Load one page of members for a group returned by `/groups` or `/all`:
 curl -X POST "https://api.osint.ly/tools/steam/group-detail" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "gaben", "type": "vanity", "groupId": "103582791429521412", "memberPage": 1 }'
+  -d '{ "value": "example-player", "type": "vanity", "groupId": "103582791400000001", "memberPage": 1 }'
 ```
 
 The response includes group identity, avatar, description, online/in-game/chat
@@ -131,7 +131,7 @@ Paginate a public inventory:
 curl -X POST "https://api.osint.ly/tools/steam/inventory" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "gaben", "type": "vanity", "appId": 753, "contextId": "6", "count": 100, "cursor": "123456" }'
+  -d '{ "value": "example-player", "type": "vanity", "appId": 753, "contextId": "6", "count": 100, "cursor": "123456" }'
 ```
 
 Use the returned item's `assetId` and pass its `pageCursor` value as the
@@ -141,7 +141,7 @@ request's `cursor` field for the free detail route:
 curl -X POST "https://api.osint.ly/tools/steam/inventory-detail" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "gaben", "type": "vanity", "appId": 753, "contextId": "6", "assetId": "987654", "cursor": "123456" }'
+  -d '{ "value": "example-player", "type": "vanity", "appId": 753, "contextId": "6", "assetId": "987654", "cursor": "123456" }'
 ```
 
 Inventory items include class/instance IDs, quantities, descriptions, tags,
@@ -170,9 +170,917 @@ If the account resolver fails, `/all` returns a non-2xx error. Private profile s
 
 ---
 
+## Response example
+
+An anonymized `POST /tools/steam/all` response. Lists are shortened to one item; counts such as `total` show the full size.
+
+<Accordion title="Steam /all response" icon="code">
+
+```json
+{
+  "data": {
+    "badges": {
+      "badges": [
+        {
+          "appId": null,
+          "badgeId": 35,
+          "borderColor": 0,
+          "completionTime": 1800000000,
+          "image": "https://community.cloudflare.steamstatic.com/example/image.png",
+          "level": 1516,
+          "name": "Years of Service",
+          "scarcity": 180000,
+          "xp": 1766
+        }
+      ],
+      "currentXp": 7000,
+      "level": 32,
+      "steamId": "76561195204730585",
+      "total": 17,
+      "xpNeededToLevelUp": 200
+    },
+    "bans": {
+      "communityBanned": false,
+      "daysSinceLastBan": 0,
+      "economyBan": "none",
+      "gameBanCount": 0,
+      "steamId": "76561195204730585",
+      "vacBanCount": 0,
+      "vacBanned": false
+    },
+    "content": {
+      "profile": {
+        "background": "https://shared.cloudflare.steamstatic.com/example/background.jpg",
+        "badgeImages": [],
+        "counts": {
+          "guides": 5,
+          "inventory": 0,
+          "reviews": 4,
+          "screenshots": 88,
+          "workshopItems": 0
+        },
+        "socialLinks": [
+          {
+            "platform": "YouTube",
+            "url": "http://youtu.be/example"
+          }
+        ]
+      },
+      "steamId": "76561195204730585",
+      "wishlist": []
+    },
+    "friends": {
+      "friends": [
+        {
+          "avatar": "https://avatars.steamstatic.com/example/avatar.jpg",
+          "friendsSince": null,
+          "name": "ExamplePlayer",
+          "personaState": 0,
+          "profileUrl": "https://steamcommunity.com/example",
+          "steamId": "76561196089547099"
+        }
+      ],
+      "steamId": "76561195204730585",
+      "total": 294
+    },
+    "games": {
+      "games": [],
+      "recent": [],
+      "steamId": "76561195204730585",
+      "total": 0,
+      "totalPlaytimeMinutes": 0
+    },
+    "groups": {
+      "groups": [
+        {
+          "avatar": "https://avatars.cloudflare.steamstatic.com/example/avatar.jpg",
+          "groupId": "4",
+          "headline": "Example text.",
+          "isPrimary": false,
+          "members": 151,
+          "name": "Example Group",
+          "summary": "Example text.",
+          "url": "https://steamcommunity.com/example",
+          "vanity": "example-group"
+        }
+      ],
+      "steamId": "76561195204730585",
+      "total": 60
+    },
+    "inventory": {
+      "available": true,
+      "context": {
+        "appId": 82,
+        "contextId": "4",
+        "count": 100,
+        "cursor": null
+      },
+      "items": [
+        {
+          "actions": [],
+          "amount": "1",
+          "appId": 82,
+          "assetId": "39834431620",
+          "backgroundColor": null,
+          "classId": "264612229",
+          "commodity": true,
+          "contextId": "4",
+          "descriptions": [
+            {
+              "type": null,
+              "value": null
+            }
+          ],
+          "fraudWarnings": [],
+          "icon": "https://community.akamai.steamstatic.com/example",
+          "iconLarge": "https://community.akamai.steamstatic.com/example",
+          "instanceId": "461654230",
+          "marketActions": [],
+          "marketHashName": "example",
+          "marketName": "example",
+          "marketable": true,
+          "name": "Team Fortress 2 Booster Pack",
+          "nameColor": null,
+          "ownerActions": [],
+          "ownerDescriptions": [],
+          "tags": [
+            {
+              "category": "droprate",
+              "categoryName": null,
+              "internalName": "example",
+              "name": "Common"
+            }
+          ],
+          "tradable": true,
+          "type": "Booster Pack",
+          "pageCursor": null
+        }
+      ],
+      "pagination": {
+        "lastAssetId": "8081767754",
+        "moreItems": true,
+        "nextCursor": "8081767754"
+      },
+      "reason": null,
+      "steamId": "76561195204730585",
+      "total": 1700
+    },
+    "partialErrors": [],
+    "profile": {
+      "aliases": [
+        {
+          "changedAt": "1 Jan, 2025 @ 9:00am",
+          "name": "ExamplePlayer"
+        }
+      ],
+      "avatar": "https://avatars.steamstatic.com/example/avatar.jpg",
+      "avatarMedium": "https://avatars.steamstatic.com/example/avatarmedium.jpg",
+      "avatarSmall": "https://avatars.steamstatic.com/example/avatarsmall.jpg",
+      "communityVisibilityState": 3,
+      "countryCode": "US",
+      "createdAt": 1100000000,
+      "currentlyPlaying": null,
+      "headline": null,
+      "ids": {
+        "accountId": "212280",
+        "steamId": "STEAM_0:0:50326",
+        "steamId3": "[U:1:343955]",
+        "steamId64": "76561195204730585"
+      },
+      "isLimited": false,
+      "isPrivate": false,
+      "lastLogoff": null,
+      "level": 32,
+      "personaName": "ExamplePlayer",
+      "personaState": 0,
+      "primaryClanId": "122200773002168631",
+      "profileState": 1,
+      "profileUrl": "https://steamcommunity.com/example",
+      "realName": "ExamplePlayer",
+      "stateCode": null,
+      "steamId": "76561195204730585",
+      "summary": "Example text.",
+      "vanity": "ExamplePlayer"
+    },
+    "resolve": {
+      "avatar": "https://avatars.steamstatic.com/example/avatar.jpg",
+      "personaName": "ExamplePlayer",
+      "profileUrl": "https://steamcommunity.com/example",
+      "source": "vanity",
+      "steamId": "76561195204730585",
+      "vanity": "ExamplePlayer"
+    },
+    "stats": {
+      "cs2": null,
+      "dota2": null,
+      "rust": null,
+      "steamId": "76561195204730585",
+      "tf2": null
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/steam/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/suggestions" icon="code">
+
+```json
+{
+  "data": {
+    "suggestions": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "suggestions",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "avatar": "https://avatars.steamstatic.com/example/avatar.jpg",
+    "personaName": "ExamplePlayer",
+    "profileUrl": "https://steamcommunity.com/example",
+    "source": "vanity",
+    "steamId": "76561195204730585",
+    "vanity": "ExamplePlayer"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/profile" icon="code">
+
+```json
+{
+  "data": {
+    "aliases": [
+      {
+        "changedAt": "1 Jan, 2025 @ 9:00am",
+        "name": "ExamplePlayer"
+      }
+    ],
+    "avatar": "https://avatars.steamstatic.com/example/avatar.jpg",
+    "avatarMedium": "https://avatars.steamstatic.com/example/avatarmedium.jpg",
+    "avatarSmall": "https://avatars.steamstatic.com/example/avatarsmall.jpg",
+    "communityVisibilityState": 3,
+    "countryCode": "US",
+    "createdAt": 1100000000,
+    "currentlyPlaying": null,
+    "headline": null,
+    "ids": {
+      "accountId": "212280",
+      "steamId": "STEAM_0:0:50326",
+      "steamId3": "[U:1:343955]",
+      "steamId64": "76561195204730585"
+    },
+    "isLimited": false,
+    "isPrivate": false,
+    "lastLogoff": null,
+    "level": 32,
+    "personaName": "ExamplePlayer",
+    "personaState": 0,
+    "primaryClanId": "122200773002168631",
+    "profileState": 1,
+    "profileUrl": "https://steamcommunity.com/example",
+    "realName": "ExamplePlayer",
+    "stateCode": null,
+    "steamId": "76561195204730585",
+    "summary": "Example text.",
+    "vanity": "ExamplePlayer"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/bans" icon="code">
+
+```json
+{
+  "data": {
+    "communityBanned": false,
+    "daysSinceLastBan": 0,
+    "economyBan": "none",
+    "gameBanCount": 0,
+    "steamId": "76561195204730585",
+    "vacBanCount": 0,
+    "vacBanned": false
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "bans",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/games" icon="code">
+
+```json
+{
+  "data": {
+    "games": [],
+    "recent": [],
+    "steamId": "76561195204730585",
+    "total": 0,
+    "totalPlaytimeMinutes": 0
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "games",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/game-detail" icon="code">
+
+```json
+{
+  "data": {
+    "achievements": {
+      "available": false,
+      "completionPercentage": null,
+      "entries": [
+        {
+          "achieved": null,
+          "apiName": "PLAY_CS2",
+          "description": null,
+          "globalPercentage": 0,
+          "hidden": true,
+          "icon": "https://steamcdn-a.akamaihd.net/example/icon.jpg",
+          "iconGray": "https://steamcdn-a.akamaihd.net/example/icongray.jpg",
+          "name": "A New Beginning",
+          "unlockTime": null
+        }
+      ],
+      "total": 1,
+      "unlocked": 0
+    },
+    "game": {
+      "appId": 730,
+      "background": "https://store.akamai.steamstatic.com/example",
+      "backgroundRaw": "https://shared.akamai.steamstatic.com/example/backgroundraw.jpg",
+      "categories": [
+        {
+          "id": 6,
+          "name": "Multi-player"
+        }
+      ],
+      "capsuleImage": "https://shared.akamai.steamstatic.com/example/capsuleimage.jpg",
+      "controllerSupport": null,
+      "developers": [
+        "example"
+      ],
+      "detailedDescription": "example",
+      "genres": [
+        {
+          "id": null,
+          "name": "Action"
+        }
+      ],
+      "headerImage": "https://shared.akamai.steamstatic.com/example/headerimage.jpg",
+      "isFree": true,
+      "metacritic": null,
+      "movies": [
+        {
+          "highlight": true,
+          "id": 175972271,
+          "name": "Launch Trailer",
+          "thumbnail": "https://shared.akamai.steamstatic.com/example/thumbnail.jpg",
+          "video": null
+        }
+      ],
+      "name": "Counter-Strike 2",
+      "platforms": {
+        "linux": true,
+        "mac": false,
+        "windows": true
+      },
+      "price": null,
+      "publishers": [
+        "example"
+      ],
+      "recommendations": 5300000,
+      "releaseDate": {
+        "comingSoon": false,
+        "date": "example"
+      },
+      "requiredAge": 0,
+      "screenshots": [
+        {
+          "full": "https://shared.akamai.steamstatic.com/example/full.jpg",
+          "id": null,
+          "thumbnail": "https://shared.akamai.steamstatic.com/example/thumbnail.jpg"
+        }
+      ],
+      "shortDescription": "example",
+      "supportedLanguages": "example",
+      "type": "game",
+      "website": "http://counter-strike.net/example"
+    },
+    "partialErrors": [],
+    "playtime": null,
+    "stats": [],
+    "steamId": "76561195204730585"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "game-detail",
+  "query": {
+    "appId": 730,
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/friends" icon="code">
+
+```json
+{
+  "data": {
+    "friends": [
+      {
+        "avatar": "https://avatars.steamstatic.com/example/avatar.jpg",
+        "friendsSince": null,
+        "name": "ExamplePlayer",
+        "personaState": 0,
+        "profileUrl": "https://steamcommunity.com/example",
+        "steamId": "76561196089547099"
+      }
+    ],
+    "steamId": "76561195204730585",
+    "total": 294
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "friends",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/badges" icon="code">
+
+```json
+{
+  "data": {
+    "badges": [
+      {
+        "appId": null,
+        "badgeId": 35,
+        "borderColor": 0,
+        "completionTime": 1800000000,
+        "image": "https://community.cloudflare.steamstatic.com/example/image.png",
+        "level": 1516,
+        "name": "Years of Service",
+        "scarcity": 180000,
+        "xp": 1766
+      }
+    ],
+    "currentXp": 7000,
+    "level": 32,
+    "steamId": "76561195204730585",
+    "total": 17,
+    "xpNeededToLevelUp": 200
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "badges",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/groups" icon="code">
+
+```json
+{
+  "data": {
+    "groups": [
+      {
+        "avatar": "https://avatars.cloudflare.steamstatic.com/example/avatar.jpg",
+        "groupId": "4",
+        "headline": "Example text.",
+        "isPrimary": false,
+        "members": 151,
+        "name": "Example Group",
+        "summary": "Example text.",
+        "url": "https://steamcommunity.com/example",
+        "vanity": "example-group"
+      }
+    ],
+    "steamId": "76561195204730585",
+    "total": 60
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "groups",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/group-detail" icon="code">
+
+```json
+{
+  "data": {
+    "group": {
+      "avatar": "https://avatars.cloudflare.steamstatic.com/example/avatar.jpg",
+      "counts": {
+        "inChat": 53,
+        "inGame": 1,
+        "members": 151,
+        "online": 52
+      },
+      "groupId": "122200773002168631",
+      "headline": "Example text.",
+      "name": "Example Group",
+      "summary": "Example text.",
+      "url": "https://steamcommunity.com/example",
+      "vanity": "example-group"
+    },
+    "members": [
+      {
+        "avatar": "https://avatars.steamstatic.com/example/avatar.jpg",
+        "lastLogoff": null,
+        "name": "ExamplePlayer",
+        "personaState": 0,
+        "profileUrl": "https://steamcommunity.com/example",
+        "steamId": "76561190445516725"
+      }
+    ],
+    "pagination": {
+      "currentPage": 1,
+      "nextPage": null,
+      "previousPage": null,
+      "totalPages": 1
+    },
+    "steamId": "76561195204730585"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "group-detail",
+  "query": {
+    "groupId": "4",
+    "memberPage": 1,
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/content" icon="code">
+
+```json
+{
+  "data": {
+    "profile": {
+      "background": "https://shared.cloudflare.steamstatic.com/example/background.jpg",
+      "badgeImages": [],
+      "counts": {
+        "guides": 5,
+        "inventory": 0,
+        "reviews": 4,
+        "screenshots": 88,
+        "workshopItems": 0
+      },
+      "socialLinks": [
+        {
+          "platform": "YouTube",
+          "url": "http://youtu.be/example"
+        }
+      ]
+    },
+    "steamId": "76561195204730585",
+    "wishlist": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "content",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/stats" icon="code">
+
+```json
+{
+  "data": {
+    "cs2": null,
+    "dota2": null,
+    "rust": null,
+    "steamId": "76561195204730585",
+    "tf2": null
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "stats",
+  "query": {
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/inventory" icon="code">
+
+```json
+{
+  "data": {
+    "available": true,
+    "context": {
+      "appId": 753,
+      "contextId": "6",
+      "count": 100,
+      "cursor": null
+    },
+    "items": [
+      {
+        "actions": [],
+        "amount": "1",
+        "appId": 753,
+        "assetId": "39834431620",
+        "backgroundColor": null,
+        "classId": "162750262",
+        "commodity": true,
+        "contextId": "6",
+        "descriptions": [
+          {
+            "type": null,
+            "value": null
+          }
+        ],
+        "fraudWarnings": [],
+        "icon": "https://community.akamai.steamstatic.com/example",
+        "iconLarge": "https://community.akamai.steamstatic.com/example",
+        "instanceId": "246376172",
+        "marketActions": [],
+        "marketHashName": "example",
+        "marketName": "example",
+        "marketable": true,
+        "name": "Team Fortress 2 Booster Pack",
+        "nameColor": null,
+        "ownerActions": [],
+        "ownerDescriptions": [],
+        "tags": [
+          {
+            "category": "droprate",
+            "categoryName": null,
+            "internalName": "example",
+            "name": "Common"
+          }
+        ],
+        "tradable": true,
+        "type": "Booster Pack",
+        "pageCursor": null
+      }
+    ],
+    "pagination": {
+      "lastAssetId": "8081767754",
+      "moreItems": true,
+      "nextCursor": "8081767754"
+    },
+    "reason": null,
+    "steamId": "76561195204730585",
+    "total": 5320
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "inventory",
+  "query": {
+    "appId": 753,
+    "contextId": "6",
+    "count": 100,
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/steam/inventory-detail" icon="code">
+
+```json
+{
+  "data": {
+    "context": {
+      "appId": 753,
+      "contextId": "6",
+      "count": 100,
+      "cursor": null
+    },
+    "item": {
+      "actions": [],
+      "amount": "1",
+      "appId": 753,
+      "assetId": "39834431620",
+      "backgroundColor": null,
+      "classId": "162750262",
+      "commodity": true,
+      "contextId": "6",
+      "descriptions": [
+        {
+          "type": null,
+          "value": null
+        }
+      ],
+      "fraudWarnings": [],
+      "icon": "https://community.akamai.steamstatic.com/example",
+      "iconLarge": "https://community.akamai.steamstatic.com/example",
+      "instanceId": "246376172",
+      "marketActions": [],
+      "marketHashName": "example",
+      "marketName": "example",
+      "marketable": true,
+      "name": "Team Fortress 2 Booster Pack",
+      "nameColor": null,
+      "ownerActions": [],
+      "ownerDescriptions": [],
+      "tags": [
+        {
+          "category": "droprate",
+          "categoryName": null,
+          "internalName": "example",
+          "name": "Common"
+        }
+      ],
+      "tradable": true,
+      "type": "Booster Pack",
+      "pageCursor": null
+    },
+    "price": {
+      "available": true,
+      "currency": "USD",
+      "lowestPrice": "example",
+      "medianPrice": "example",
+      "volume": "23"
+    },
+    "steamId": "76561195204730585"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "inventory-detail",
+  "query": {
+    "appId": 753,
+    "assetId": "39834431620",
+    "contextId": "6",
+    "count": 100,
+    "normalizedType": "vanity",
+    "type": "vanity",
+    "value": "example-player"
+  },
+  "tool": "steam"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
 ## Availability
 
-Provider-backed routes require a Steam Web API key configured server-side. Missing credentials return `503 PROVIDER_UNAVAILABLE` without consuming usage. Public-profile visibility controls whether games, friends, badges, wishlist, statistics, and inventory are exposed.
+When Steam is unavailable, provider-backed routes return `503 PROVIDER_UNAVAILABLE` without consuming usage. Public-profile visibility controls whether games, friends, badges, wishlist, statistics, and inventory are exposed.
 
 ---
 
@@ -180,7 +1088,9 @@ Provider-backed routes require a Steam Web API key configured server-side. Missi
 
 Provider responses are cached by collector and SteamID64:
 
-- resolve, profile, bans, and friends: 30 minutes
+- resolve (vanity name or ID to SteamID64): 24 hours
+- "not found" answers for an unknown vanity name or ID: 6 hours
+- profile, bans, and friends: 30 minutes
 - games, badges, and public content: 1 hour
 - groups: 6 hours
 - game statistics and inventory: 30 minutes

@@ -142,6 +142,25 @@ The `data` object changes by operation. Endpoint schemas are documented in the g
 
 ---
 
+## Caching and provider limits
+
+Tools cache provider answers per collector, so repeating a lookup is faster and does not change route pricing. How long an answer is reused depends on how quickly it can change:
+
+| Data | Reused for up to |
+|---|---|
+| Identity resolution (name or handle to account ID) | 24 hours |
+| "Not found" answers for a name or ID | 6 hours |
+| Search results and suggestions | 1 hour |
+| Profiles, presence, last seen, game lists with last-played dates, trophies, achievements, and statistics | Minutes to a few hours, listed on each tool page |
+
+A newly created account can therefore take up to 6 hours to appear, and a renamed account can resolve to its previous name for up to 24 hours. Deleting a search or a saved result stops cached answers for its values from being served.
+
+Identical requests made at the same time receive the same answer.
+
+When a provider is temporarily rate limiting requests, the route answers `429 PROVIDER_RATE_LIMITED` with a `Retry-After` header and a `retryAfter` field in seconds. Retry after that delay. In `/all`, a collector that stays rate limited is listed in `data.partialErrors` with its `code` and `retryAfter` while the other sections are returned. This is separate from your own Osintly limits, described in [Tool usage limits](/tools-reference/usage-limits).
+
+---
+
 ## Saving `/all` results
 
 `POST /tools/<tool>/all` can synchronously save the returned payload when you add `save: true` to the request body. This does not change the route cost.

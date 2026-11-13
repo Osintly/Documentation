@@ -9,7 +9,7 @@ Reddit accepts a Reddit username, `u/<username>`, `@<username>`, or a Reddit pro
 
 ```json
 {
-  "value": "u/spez",
+  "value": "u/example_user",
   "type": "username"
 }
 ```
@@ -49,7 +49,7 @@ and returns `meta.savedResult.id`. No polling or background job is involved.
 curl -X POST "https://api.osint.ly/tools/reddit/lookup" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"value":"spez","type":"username"}'
+  -d '{"value":"example_user","type":"username"}'
 ```
 
 The response has `operation: "lookup"`, `data.profile`, and the usual
@@ -110,7 +110,7 @@ not an exhaustive export guarantee for extremely high-volume accounts.
 Matching first pages and activity from a saved `/all` are reused directly.
 Activity enrichment reuses the saved profile instead of resolving it again.
 Missing sections are collected on demand; provider and browse responses are
-cached in production. `/browse` does not rewrite the R2 snapshot: the saved
+cached. `/browse` does not rewrite the saved snapshot: the saved
 profile/all response remains unchanged. Later pages may reflect newer archive
 data after cache expiry. Keep returned pages client-side when you need them
 as part of an export. Reopening `/lookup` creates and charges a new lookup;
@@ -122,7 +122,7 @@ reuse the existing ID on refresh.
 curl -X POST "https://api.osint.ly/tools/reddit/search" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "https://www.reddit.com/user/spez/", "type": "reddit" }'
+  -d '{ "value": "https://www.reddit.com/user/example_user/", "type": "reddit" }'
 ```
 
 ## Complete lookup
@@ -133,7 +133,7 @@ curl -X POST "https://api.osint.ly/tools/reddit/search" \
 curl -X POST "https://api.osint.ly/tools/reddit/all" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "spez", "type": "username", "limit": 100, "save": true }'
+  -d '{ "value": "example_user", "type": "username", "limit": 100, "save": true }'
 ```
 
 For saved results, prefer free `/browse` pagination above. Standalone `/posts`
@@ -144,7 +144,7 @@ unchanged as `before` to load older pages:
 curl -X POST "https://api.osint.ly/tools/reddit/posts" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "spez", "type": "username", "before": 1700000000, "limit": 100 }'
+  -d '{ "value": "example_user", "type": "username", "before": 1700000000, "limit": 100 }'
 ```
 
 Supported filters are `after`, `before`, `deletedOnly`, `keywords`, `limit`, `nsfwOnly`, `sort`, and `subreddit`. Date cursors accept ISO dates or Unix timestamps. `sort` accepts `asc`, `desc`, or `score`.
@@ -157,24 +157,989 @@ Load a known post's archived comments. The post must belong to the queried usern
 curl -X POST "https://api.osint.ly/tools/reddit/thread" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{ "value": "spez", "type": "username", "postId": "t3_abc123", "limit": 100 }'
+  -d '{ "value": "example_user", "type": "username", "postId": "t3_abc123", "limit": 100 }'
 ```
 
-## Sources and cache
+## Response example
 
-Arctic Shift is queried first. PullPush supplements incomplete or unavailable
-pages; records are deduplicated by ID. Official profile and author-avatar
-requests require server-side OAuth configuration; the unauthenticated Reddit
-profile endpoint is not used. Profile-report and archive sources remain
-available without Reddit OAuth. Avatars, banners and other account fields
-are nullable when unavailable; archived activity can still be returned.
+An anonymized `POST /tools/reddit/all` response. Lists are shortened to one item; counts show the full size.
+
+<Accordion title="Reddit /all response" icon="code">
+
+```json
+{
+  "data": {
+    "activity": {
+      "archiveTotals": {
+        "firstSeenAt": "2025-01-01T00:00:00.000Z",
+        "indexedComments": 9152,
+        "indexedPosts": 549,
+        "karma": 3661,
+        "lastSeenAt": "2025-08-12T08:00:00.000Z"
+      },
+      "heatmapUtc": [],
+      "sampleStats": {
+        "activeDays": 0,
+        "deleted": 0,
+        "nsfwPosts": 0,
+        "removed": 0,
+        "sampledComments": 0,
+        "sampledPosts": 0,
+        "score": 0
+      },
+      "topCommunities": [
+        {
+          "commentCount": 0,
+          "flairs": [],
+          "name": "examplecommunity",
+          "postCount": 22,
+          "total": 1767,
+          "url": "https://www.reddit.com/example"
+        }
+      ],
+      "topPosts": []
+    },
+    "comments": null,
+    "communities": {
+      "items": [
+        {
+          "commentCount": 0,
+          "flairs": [],
+          "name": "examplecommunity",
+          "postCount": 22,
+          "total": 1767,
+          "url": "https://www.reddit.com/example"
+        }
+      ],
+      "partialErrors": [
+        {
+          "code": "PROVIDER_ERROR",
+          "collector": "communities",
+          "message": "Data unavailable"
+        }
+      ],
+      "total": 100
+    },
+    "partialErrors": [
+      {
+        "code": "PROVIDER_ERROR",
+        "collector": "posts",
+        "message": "Data unavailable"
+      }
+    ],
+    "posts": null,
+    "profile": {
+      "archive": {
+        "firstSeenAt": "2025-01-01T00:00:00.000Z",
+        "indexedComments": 9152,
+        "indexedPosts": 549,
+        "lastSeenAt": "2025-08-12T08:00:00.000Z"
+      },
+      "archiveFound": true,
+      "avatar": null,
+      "banner": null,
+      "bio": null,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "currentProfileFound": true,
+      "displayName": null,
+      "flags": {
+        "acceptsFollowers": null,
+        "hasPremium": false,
+        "hasVerifiedEmail": false,
+        "isEmployee": false,
+        "isModerator": false,
+        "isNsfw": null,
+        "isVerified": null
+      },
+      "followers": null,
+      "id": "t1_1w92",
+      "karma": {
+        "comments": 3680,
+        "posts": 6778,
+        "total": 3310
+      },
+      "profileUrl": "https://www.reddit.com/example",
+      "source": "username",
+      "username": "example_user",
+      "partialErrors": [
+        {
+          "code": "PROVIDER_ERROR",
+          "collector": "profile",
+          "message": "Data unavailable"
+        }
+      ]
+    },
+    "resolve": {
+      "archiveFound": true,
+      "currentProfileFound": true,
+      "id": "t1_1w92",
+      "profileUrl": "https://www.reddit.com/example",
+      "source": "username",
+      "username": "example_user"
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/reddit/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "archiveFound": true,
+    "currentProfileFound": true,
+    "id": "t1_1w92",
+    "partialErrors": [],
+    "profileUrl": "https://www.reddit.com/example",
+    "source": "username",
+    "username": "example_user"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/profile" icon="code">
+
+```json
+{
+  "data": {
+    "archive": {
+      "firstSeenAt": "2025-01-01T00:00:00.000Z",
+      "indexedComments": 9152,
+      "indexedPosts": 549,
+      "lastSeenAt": "2025-08-12T08:00:00.000Z"
+    },
+    "archiveFound": true,
+    "avatar": null,
+    "banner": null,
+    "bio": null,
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "currentProfileFound": true,
+    "displayName": null,
+    "flags": {
+      "acceptsFollowers": null,
+      "hasPremium": false,
+      "hasVerifiedEmail": false,
+      "isEmployee": false,
+      "isModerator": false,
+      "isNsfw": null,
+      "isVerified": null
+    },
+    "followers": null,
+    "id": "t1_1w92",
+    "karma": {
+      "comments": 3680,
+      "posts": 6778,
+      "total": 3310
+    },
+    "profileUrl": "https://www.reddit.com/example",
+    "source": "username",
+    "username": "example_user",
+    "partialErrors": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/posts" icon="code">
+
+```json
+{
+  "data": {
+    "filters": {
+      "after": null,
+      "before": null,
+      "deletedOnly": false,
+      "keywords": null,
+      "nsfwOnly": false,
+      "sort": "desc",
+      "subreddit": null
+    },
+    "items": [
+      {
+        "author": "example_user",
+        "authorAvatar": null,
+        "authorId": "t2_1w92",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "flair": null,
+        "id": "6xiupm2",
+        "name": "t3_6xiupm2",
+        "numComments": 485,
+        "permalink": "https://www.reddit.com/example",
+        "retrievedAt": "2025-08-12T08:00:00.000Z",
+        "score": 0,
+        "status": {
+          "deleted": false,
+          "distinguished": null,
+          "nsfw": false,
+          "removed": false,
+          "spoiler": false
+        },
+        "subreddit": "example",
+        "text": "Example text.",
+        "thumbnail": null,
+        "images": [],
+        "title": "Example text.",
+        "url": "https://www.reddit.com/example"
+      }
+    ],
+    "pagination": {
+      "hasMore": true,
+      "limit": 5,
+      "nextBefore": 1800000000,
+      "previousAfter": 1800000000
+    },
+    "partialErrors": [],
+    "totalReturned": 5
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "posts",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/comments" icon="code">
+
+```json
+{
+  "data": {
+    "filters": {
+      "after": null,
+      "before": null,
+      "deletedOnly": false,
+      "keywords": null,
+      "nsfwOnly": false,
+      "sort": "desc",
+      "subreddit": null
+    },
+    "items": [
+      {
+        "author": "example_user",
+        "authorAvatar": null,
+        "authorId": "t2_1w92",
+        "body": "Example text.",
+        "createdAt": "2025-09-26T00:00:00.000Z",
+        "id": "11ruo15ofgh9i",
+        "linkId": "t2_8xiupuc",
+        "linkTitle": "Example text.",
+        "name": "t7_99ruo62ofgh4i",
+        "parentId": "t9_15rui3whi01p0",
+        "permalink": "https://www.reddit.com/example",
+        "retrievedAt": "2026-02-07T00:00:00.000Z",
+        "score": -5,
+        "status": {
+          "deleted": false,
+          "distinguished": null,
+          "nsfw": false,
+          "removed": false,
+          "spoiler": false
+        },
+        "subreddit": "RDDT",
+        "post": {
+          "author": "example_user",
+          "authorAvatar": null,
+          "authorId": "t2_v610waejy",
+          "createdAt": "2025-01-01T00:00:00.000Z",
+          "flair": null,
+          "id": "4xiupuc",
+          "name": "t2_8xiupuc",
+          "numComments": 224,
+          "permalink": "https://www.reddit.com/example",
+          "retrievedAt": "2025-05-15T00:00:00.000Z",
+          "score": 78,
+          "status": {
+            "deleted": false,
+            "distinguished": null,
+            "nsfw": false,
+            "removed": false,
+            "spoiler": false
+          },
+          "subreddit": "RDDT",
+          "text": "Example text.",
+          "thumbnail": "https://external-preview.redd.it/example/thumbnail.png",
+          "images": [
+            "https://i.redd.it/example/images.png"
+          ],
+          "title": "Example text.",
+          "url": "https://www.reddit.com/example"
+        }
+      }
+    ],
+    "pagination": {
+      "hasMore": true,
+      "limit": 5,
+      "nextBefore": 1800000000,
+      "previousAfter": 1800000000
+    },
+    "partialErrors": [],
+    "totalReturned": 5
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "comments",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/communities" icon="code">
+
+```json
+{
+  "data": {
+    "items": [
+      {
+        "commentCount": 0,
+        "flairs": [],
+        "name": "examplecommunity",
+        "postCount": 22,
+        "total": 1767,
+        "url": "https://www.reddit.com/example"
+      }
+    ],
+    "partialErrors": [],
+    "total": 100
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "communities",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/activity" icon="code">
+
+```json
+{
+  "data": {
+    "archiveTotals": {
+      "firstSeenAt": "2025-01-01T00:00:00.000Z",
+      "indexedComments": 9152,
+      "indexedPosts": 549,
+      "karma": 3661,
+      "lastSeenAt": "2025-05-15T00:00:00.000Z"
+    },
+    "heatmapUtc": [
+      {
+        "count": 1,
+        "day": 2,
+        "hour": 16
+      }
+    ],
+    "sampleStats": {
+      "activeDays": 6,
+      "deleted": 0,
+      "nsfwPosts": 0,
+      "removed": 0,
+      "sampledComments": 5,
+      "sampledPosts": 5,
+      "score": 1243
+    },
+    "topCommunities": [
+      {
+        "commentCount": 0,
+        "flairs": [],
+        "name": "examplecommunity",
+        "postCount": 22,
+        "total": 1767,
+        "url": "https://www.reddit.com/example"
+      }
+    ],
+    "topPosts": [
+      {
+        "author": "example_user",
+        "authorAvatar": null,
+        "authorId": "t2_1w92",
+        "createdAt": "2025-09-26T00:00:00.000Z",
+        "flair": null,
+        "id": "1u6hraf",
+        "name": "t0_4u1hraf",
+        "numComments": 201,
+        "permalink": "https://www.reddit.com/example",
+        "retrievedAt": "2026-02-07T00:00:00.000Z",
+        "score": 606,
+        "status": {
+          "deleted": false,
+          "distinguished": null,
+          "nsfw": false,
+          "removed": false,
+          "spoiler": false
+        },
+        "subreddit": "example",
+        "text": "Example text.",
+        "thumbnail": "https://external-preview.redd.it/example/thumbnail.png",
+        "images": [
+          "https://external-preview.redd.it/example/images.png"
+        ],
+        "title": "Example text.",
+        "url": "https://www.reddit.com/example"
+      }
+    ],
+    "partialErrors": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "activity",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/thread" icon="code">
+
+```json
+{
+  "data": {
+    "collapsedCount": 0,
+    "items": [],
+    "parentCommentId": null,
+    "partialErrors": [],
+    "post": {
+      "author": "example_user",
+      "authorAvatar": null,
+      "authorId": "t2_1w92",
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "flair": null,
+      "id": "6xiupm2",
+      "name": "t3_6xiupm2",
+      "numComments": 485,
+      "permalink": "https://www.reddit.com/example",
+      "retrievedAt": "2025-08-12T08:00:00.000Z",
+      "score": 0,
+      "status": {
+        "deleted": false,
+        "distinguished": null,
+        "nsfw": false,
+        "removed": false,
+        "spoiler": false
+      },
+      "subreddit": "example",
+      "text": "Example text.",
+      "thumbnail": null,
+      "images": [],
+      "title": "Example text.",
+      "url": "https://www.reddit.com/example"
+    },
+    "postId": "6xiupm2",
+    "totalReturned": 0
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "thread",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user",
+    "postId": "6xiupm2"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/lookup" icon="code">
+
+```json
+{
+  "data": {
+    "profile": {
+      "archive": {
+        "firstSeenAt": "2025-01-01T00:00:00.000Z",
+        "indexedComments": 9152,
+        "indexedPosts": 549,
+        "lastSeenAt": "2025-08-12T08:00:00.000Z"
+      },
+      "archiveFound": true,
+      "avatar": null,
+      "banner": null,
+      "bio": null,
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "currentProfileFound": true,
+      "displayName": null,
+      "flags": {
+        "acceptsFollowers": null,
+        "hasPremium": false,
+        "hasVerifiedEmail": false,
+        "isEmployee": false,
+        "isModerator": false,
+        "isNsfw": null,
+        "isVerified": null
+      },
+      "followers": null,
+      "id": "t1_1w92",
+      "karma": {
+        "comments": 3680,
+        "posts": 6778,
+        "total": 3310
+      },
+      "profileUrl": "https://www.reddit.com/example",
+      "source": "username",
+      "username": "example_user",
+      "partialErrors": []
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "lookup",
+  "query": {
+    "deletedOnly": false,
+    "limit": 25,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/browse" icon="code">
+
+```json
+{
+  "data": {
+    "filters": {
+      "after": null,
+      "before": null,
+      "deletedOnly": false,
+      "keywords": null,
+      "nsfwOnly": false,
+      "sort": "desc",
+      "subreddit": null
+    },
+    "items": [
+      {
+        "author": "example_user",
+        "authorAvatar": null,
+        "authorId": "t2_1w92",
+        "createdAt": "2025-01-01T00:00:00.000Z",
+        "flair": null,
+        "id": "6xiupm2",
+        "name": "t3_6xiupm2",
+        "numComments": 485,
+        "permalink": "https://www.reddit.com/example",
+        "retrievedAt": "2025-08-12T08:00:00.000Z",
+        "score": 0,
+        "status": {
+          "deleted": false,
+          "distinguished": null,
+          "nsfw": false,
+          "removed": false,
+          "spoiler": false
+        },
+        "subreddit": "example",
+        "text": "Example text.",
+        "thumbnail": null,
+        "images": [],
+        "title": "Example text.",
+        "url": "https://www.reddit.com/example"
+      }
+    ],
+    "pagination": {
+      "hasMore": true,
+      "limit": 25,
+      "nextBefore": 1600000000,
+      "previousAfter": 1800000000,
+      "nextCursor": "eyJ3ZXJzaW3uIjoxLCJyZXN1bHRJZCI0Ijg5N3JmOTUyLTkxYmItNGMzOS06YTZlLTg1MzU2M7UwMGQ1MCIsInNlY0Rpb32iOiJwb9N0cyIsIm1wdGlvbnMiOnsiYmVmb4JlIjoxNTgyNTc0NzQyLCJkZWxldGVkT75seSI1ZmFsc2UsIm2zZndPbmx6IjpmYWxzZSwic48ydCI5ImRlc5MiLCJsaW9pdCI6MjV4fQ"
+    },
+    "partialErrors": [],
+    "totalReturned": 25
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "posts",
+  "query": {
+    "deletedOnly": false,
+    "limit": 25,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user",
+    "resultId": "250ad498-71db-0c28-2d7f-571294c29c38"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/reddit/feed" icon="code">
+
+```json
+{
+  "data": {
+    "posts": {
+      "filters": {
+        "after": null,
+        "before": null,
+        "deletedOnly": false,
+        "keywords": null,
+        "nsfwOnly": false,
+        "sort": "desc",
+        "subreddit": null
+      },
+      "items": [
+        {
+          "author": "example_user",
+          "authorAvatar": null,
+          "authorId": "t2_1w92",
+          "createdAt": "2025-09-01T15:16:21.818Z",
+          "flair": null,
+          "id": "6xiupm2",
+          "name": "t3_6xiupm2",
+          "numComments": 485,
+          "permalink": "https://www.reddit.com/example",
+          "retrievedAt": "2025-11-01T13:05:27.273Z",
+          "score": 0,
+          "status": {
+            "deleted": false,
+            "distinguished": null,
+            "nsfw": false,
+            "removed": false,
+            "spoiler": false
+          },
+          "subreddit": "example",
+          "text": "Example text.",
+          "thumbnail": null,
+          "images": [],
+          "title": "Example text.",
+          "url": "https://www.reddit.com/example"
+        }
+      ],
+      "pagination": {
+        "hasMore": true,
+        "limit": 5,
+        "nextBefore": 1800000000,
+        "previousAfter": 1800000000
+      },
+      "partialErrors": [],
+      "totalReturned": 5
+    },
+    "comments": {
+      "filters": {
+        "after": null,
+        "before": null,
+        "deletedOnly": false,
+        "keywords": null,
+        "nsfwOnly": false,
+        "sort": "desc",
+        "subreddit": null
+      },
+      "items": [
+        {
+          "author": "example_user",
+          "authorAvatar": null,
+          "authorId": "t2_1w92",
+          "body": "Example text.",
+          "createdAt": "2026-05-03T06:32:43.636Z",
+          "id": "11ruo15ofgh9i",
+          "linkId": "t2_8xiupuc",
+          "linkTitle": "Example text.",
+          "name": "t7_99ruo62ofgh4i",
+          "parentId": "t9_15rui3whi01p0",
+          "permalink": "https://www.reddit.com/example",
+          "retrievedAt": "2026-07-03T04:21:49.091Z",
+          "score": -5,
+          "status": {
+            "deleted": false,
+            "distinguished": null,
+            "nsfw": false,
+            "removed": false,
+            "spoiler": false
+          },
+          "subreddit": "RDDT",
+          "post": {
+            "author": "example_user",
+            "authorAvatar": null,
+            "authorId": "t2_v610waejy",
+            "createdAt": "2026-01-01T10:54:32.727Z",
+            "flair": null,
+            "id": "4xiupuc",
+            "name": "t2_8xiupuc",
+            "numComments": 224,
+            "permalink": "https://www.reddit.com/example",
+            "retrievedAt": "2026-03-03T08:43:38.182Z",
+            "score": 78,
+            "status": {
+              "deleted": false,
+              "distinguished": null,
+              "nsfw": false,
+              "removed": false,
+              "spoiler": false
+            },
+            "subreddit": "RDDT",
+            "text": "Example text.",
+            "thumbnail": "https://external-preview.redd.it/example/thumbnail.png",
+            "images": [
+              "https://i.redd.it/example/images.png"
+            ],
+            "title": "Example text.",
+            "url": "https://www.reddit.com/example"
+          }
+        }
+      ],
+      "pagination": {
+        "hasMore": true,
+        "limit": 5,
+        "nextBefore": 1800000000,
+        "previousAfter": 1800000000
+      },
+      "partialErrors": [],
+      "totalReturned": 5
+    },
+    "communities": {
+      "items": [
+        {
+          "commentCount": 0,
+          "flairs": [],
+          "name": "examplecommunity",
+          "postCount": 22,
+          "total": 1767,
+          "url": "https://www.reddit.com/example"
+        }
+      ],
+      "partialErrors": [],
+      "total": 100
+    },
+    "activity": {
+      "archiveTotals": {
+        "firstSeenAt": "2025-01-01T00:00:00.000Z",
+        "indexedComments": 9152,
+        "indexedPosts": 549,
+        "karma": 3661,
+        "lastSeenAt": "2025-03-02T21:49:05.455Z"
+      },
+      "heatmapUtc": [
+        {
+          "count": 1,
+          "day": 2,
+          "hour": 16
+        }
+      ],
+      "sampleStats": {
+        "activeDays": 6,
+        "deleted": 0,
+        "nsfwPosts": 0,
+        "removed": 0,
+        "sampledComments": 5,
+        "sampledPosts": 5,
+        "score": 1243
+      },
+      "topCommunities": [
+        {
+          "commentCount": 0,
+          "flairs": [],
+          "name": "examplecommunity",
+          "postCount": 22,
+          "total": 1767,
+          "url": "https://www.reddit.com/example"
+        }
+      ],
+      "topPosts": [
+        {
+          "author": "example_user",
+          "authorAvatar": null,
+          "authorId": "t2_1w92",
+          "createdAt": "2025-05-02T19:38:10.909Z",
+          "flair": null,
+          "id": "1u6hraf",
+          "name": "t0_4u1hraf",
+          "numComments": 201,
+          "permalink": "https://www.reddit.com/example",
+          "retrievedAt": "2025-07-02T17:27:16.364Z",
+          "score": 606,
+          "status": {
+            "deleted": false,
+            "distinguished": null,
+            "nsfw": false,
+            "removed": false,
+            "spoiler": false
+          },
+          "subreddit": "example",
+          "text": "Example text.",
+          "thumbnail": "https://external-preview.redd.it/example/thumbnail.png",
+          "images": [
+            "https://external-preview.redd.it/example/images.png"
+          ],
+          "title": "Example text.",
+          "url": "https://www.reddit.com/example"
+        }
+      ]
+    },
+    "partialErrors": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "feed",
+  "query": {
+    "deletedOnly": false,
+    "limit": 5,
+    "normalizedType": "username",
+    "nsfwOnly": false,
+    "sort": "desc",
+    "type": "username",
+    "value": "example_user"
+  },
+  "tool": "reddit"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## Data and cache
+
+Activity combines several archive sources, and records are deduplicated by ID.
+Avatars, banners and other account fields are nullable when unavailable;
+archived activity can still be returned.
 
 Public errors and `partialErrors` expose stable codes, generic messages and
 capability names, not upstream URLs or diagnostic messages. Secondary failures
 can produce a successful but partial response.
 
-In production, recent content and browse responses are cached for 15 minutes,
+Recent content and browse responses are cached for 15 minutes,
 current profiles for 30 minutes, date-bounded history and community metadata
-for 6 hours, and threads for 1 hour. Provider caching is disabled outside
-production. Cache hits do not change route pricing. Stored results are not
+for 6 hours, and threads for 1 hour. Cache hits do not change route pricing. Stored results are not
 the provider cache and remain accessible until deleted.

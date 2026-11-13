@@ -41,7 +41,9 @@ Roblox profile URLs such as `https://www.roblox.com/users/123/profile` are norma
 | Social | `POST /tools/roblox/social` | 1 | Friends, followers, following, and friendship counts. |
 | Friends | `POST /tools/roblox/friends` | 1 | Public friends sample. |
 | Groups | `POST /tools/roblox/groups` | 1 | Group memberships and roles. |
+| Group Detail | `POST /tools/roblox/group-detail` | Free | Group details, owner, and paginated members for one `groupId`. |
 | Games | `POST /tools/roblox/games` | 1 | Public user games and thumbnails. |
+| Game Detail | `POST /tools/roblox/game-detail` | Free | Experience details and badges for one `universeId`. |
 | Badges | `POST /tools/roblox/badges` | 1 | Public badges and metadata. |
 | Collectibles | `POST /tools/roblox/collectibles` | 1 | Public limited collectibles. |
 | All | `POST /tools/roblox/all` | 2 | Runs the main collectors and charges once. |
@@ -70,12 +72,612 @@ curl -X POST "https://api.osint.ly/tools/roblox/all" \
 
 ---
 
+## Response data
+
+`/all` returns one object per section in `data`. A section is `null` when it could not be collected, and the reason is listed in `data.partialErrors`.
+
+- `resolve` and `profile`: user ID, username, display name, description, creation date, verified and banned flags, avatar, and headshot.
+- `social`: follower, following, and friend counts.
+- `friends`: friend list sample.
+- `groups`: group memberships with the player's role and member counts.
+- `games`: experiences created by the player with visits, favorites, and current players.
+- `collectibles`: limited items with recent average price, and `totalRap`.
+- `badges`: earned badges when exposed.
+
+---
+
+## Response example
+
+An anonymized `POST /tools/roblox/all` response. Lists are shortened to one item; counts such as `total` show the full size.
+
+<Accordion title="Roblox /all response" icon="code">
+
+```json
+{
+  "data": {
+    "badges": null,
+    "collectibles": {
+      "items": [
+        {
+          "assetId": 49436318,
+          "name": "Clockwork's Shades",
+          "originalPrice": 5590,
+          "recentAveragePrice": 7001,
+          "serialNumber": null,
+          "thumbnail": "https://tr.rbxcdn.com/example",
+          "userAssetId": 945214155129
+        }
+      ],
+      "totalCollected": 100,
+      "totalRap": 6161,
+      "userId": 6
+    },
+    "friends": {
+      "friends": [],
+      "totalCollected": 0,
+      "userId": 6
+    },
+    "games": {
+      "games": [
+        {
+          "created": "2025-06-17T12:00:00.000Z",
+          "description": "Example text.",
+          "favorites": 9908,
+          "genre": "Fighting",
+          "maxPlayers": 10,
+          "name": "Chaos Canyon",
+          "playing": 0,
+          "rootPlaceId": 67940,
+          "thumbnail": "https://tr.rbxcdn.com/example",
+          "universeId": 341430,
+          "updated": "2025-12-02T00:00:00.000Z",
+          "visits": 7312
+        }
+      ],
+      "total": 3,
+      "userId": 6
+    },
+    "groups": {
+      "groups": [
+        {
+          "description": "Example text.",
+          "id": 497925,
+          "memberCount": 5284,
+          "name": "Example Group",
+          "owner": {
+            "displayName": "ExamplePlayer",
+            "userId": 7008014,
+            "username": "ExamplePlayer"
+          },
+          "publicEntryAllowed": true,
+          "role": {
+            "id": 824302,
+            "name": "Member",
+            "rank": 254
+          },
+          "thumbnail": "https://tr.rbxcdn.com/example"
+        }
+      ],
+      "total": 3,
+      "userId": 6
+    },
+    "partialErrors": [
+      {
+        "code": "UNAVAILABLE",
+        "collector": "badges",
+        "message": "Badges not exposed"
+      }
+    ],
+    "profile": {
+      "avatar": "https://tr.rbxcdn.com/example",
+      "created": "2025-01-01T00:00:00Z",
+      "description": "Example text.",
+      "displayName": "ExamplePlayer",
+      "externalAppDisplayName": null,
+      "hasVerifiedBadge": true,
+      "headshot": "https://tr.rbxcdn.com/example",
+      "isBanned": false,
+      "userId": 6,
+      "username": "ExamplePlayer"
+    },
+    "resolve": {
+      "avatar": "https://tr.rbxcdn.com/example",
+      "displayName": "ExamplePlayer",
+      "headshot": "https://tr.rbxcdn.com/example",
+      "source": "username",
+      "userId": 6,
+      "username": "ExamplePlayer"
+    },
+    "social": {
+      "followersCount": 6308,
+      "followingCount": 0,
+      "friendsCount": 0,
+      "userId": 6
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/roblox/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "avatar": "https://tr.rbxcdn.com/example",
+    "displayName": "ExamplePlayer",
+    "headshot": "https://tr.rbxcdn.com/example",
+    "source": "username",
+    "userId": 6,
+    "username": "ExamplePlayer"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/profile" icon="code">
+
+```json
+{
+  "data": {
+    "avatar": "https://tr.rbxcdn.com/example",
+    "created": "2025-01-01T00:00:00Z",
+    "description": "Example text.",
+    "displayName": "ExamplePlayer",
+    "externalAppDisplayName": null,
+    "hasVerifiedBadge": true,
+    "headshot": "https://tr.rbxcdn.com/example",
+    "isBanned": false,
+    "userId": 6,
+    "username": "ExamplePlayer"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/social" icon="code">
+
+```json
+{
+  "data": {
+    "followersCount": 6308,
+    "followingCount": 0,
+    "friendsCount": 0,
+    "userId": 6
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "social",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/friends" icon="code">
+
+```json
+{
+  "data": {
+    "friends": [],
+    "totalCollected": 0,
+    "userId": 6
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "friends",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/groups" icon="code">
+
+```json
+{
+  "data": {
+    "groups": [
+      {
+        "description": "Example text.",
+        "id": 497925,
+        "memberCount": 5284,
+        "name": "Example Group",
+        "owner": {
+          "displayName": "ExamplePlayer",
+          "userId": 7008014,
+          "username": "ExamplePlayer"
+        },
+        "publicEntryAllowed": true,
+        "role": {
+          "id": 824302,
+          "name": "Member",
+          "rank": 254
+        },
+        "thumbnail": "https://tr.rbxcdn.com/example"
+      }
+    ],
+    "total": 3,
+    "userId": 6
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "groups",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/group-detail" icon="code">
+
+```json
+{
+  "data": {
+    "group": {
+      "created": "2025-01-01T00:00:00.000Z",
+      "description": "Example text.",
+      "hasSocialModules": true,
+      "hasVerifiedBadge": false,
+      "id": 497925,
+      "memberCount": 9532,
+      "name": "Example Group",
+      "owner": {
+        "displayName": "ExamplePlayer",
+        "hasVerifiedBadge": false,
+        "userId": 7008014,
+        "username": "ExamplePlayer"
+      },
+      "publicEntryAllowed": true,
+      "shout": null,
+      "thumbnail": "https://tr.rbxcdn.com/example"
+    },
+    "members": [
+      {
+        "displayName": "ExamplePlayer",
+        "hasVerifiedBadge": false,
+        "headshot": "https://tr.rbxcdn.com/example",
+        "role": {
+          "id": 510810,
+          "name": "Member",
+          "rank": 1
+        },
+        "userId": 2203522957,
+        "username": "ExamplePlayer"
+      }
+    ],
+    "nextPageCursor": "example-cursor",
+    "partialErrors": [],
+    "previousPageCursor": "example-cursor",
+    "roles": [
+      {
+        "id": 64534,
+        "isBase": false,
+        "memberCount": 0,
+        "name": "Member",
+        "rank": 0
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "group-detail",
+  "query": {
+    "groupId": "497925",
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/games" icon="code">
+
+```json
+{
+  "data": {
+    "games": [
+      {
+        "created": "2025-01-01T00:00:00.000Z",
+        "description": "Example text.",
+        "favorites": 9908,
+        "genre": "Fighting",
+        "maxPlayers": 10,
+        "name": "Chaos Canyon",
+        "playing": 0,
+        "rootPlaceId": 67940,
+        "thumbnail": "https://tr.rbxcdn.com/example",
+        "universeId": 341430,
+        "updated": "2025-08-12T08:00:00.000Z",
+        "visits": 7312
+      }
+    ],
+    "total": 3,
+    "userId": 6
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "games",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/game-detail" icon="code">
+
+```json
+{
+  "data": {
+    "badges": [
+      {
+        "awardedCount": 260000,
+        "created": "2025-05-15T00:00:00.000Z",
+        "description": "Example text.",
+        "enabled": true,
+        "icon": "https://tr.rbxcdn.com/example",
+        "id": 4836364231059525,
+        "name": "Years of Service",
+        "updated": "2025-09-26T00:00:00.000Z",
+        "winRatePercentage": 0
+      }
+    ],
+    "game": {
+      "avatarType": "example",
+      "canonicalUrlPath": "example",
+      "copyingAllowed": false,
+      "created": "2025-01-01T00:00:00.000Z",
+      "creator": {
+        "hasVerifiedBadge": true,
+        "id": 1234567,
+        "name": "ExamplePlayer",
+        "type": "User"
+      },
+      "description": "Example text.",
+      "favorites": 4419,
+      "genre": "Fighting",
+      "genrePrimary": "example",
+      "genreSecondary": "example",
+      "id": 341430,
+      "isContentRestricted": false,
+      "maxPlayers": 10,
+      "name": "Chaos Canyon",
+      "playing": 5,
+      "price": null,
+      "privateServersAllowed": false,
+      "rootPlaceId": 67940,
+      "thumbnail": "https://tr.rbxcdn.com/example",
+      "updated": "2026-02-07T00:00:00.000Z",
+      "visits": 4170
+    },
+    "media": [
+      {
+        "altText": null,
+        "approved": true,
+        "assetType": "example",
+        "imageId": 62011774353552,
+        "thumbnail": "https://tr.rbxcdn.com/example",
+        "videoHash": null,
+        "videoTitle": null
+      }
+    ],
+    "nextPageCursor": null,
+    "partialErrors": [],
+    "previousPageCursor": null,
+    "servers": [
+      {
+        "fps": 59.953682,
+        "id": "ad51ea2d-e4c0-15de-4da5-cfa435e00a34",
+        "maxPlayers": 10,
+        "ping": 115,
+        "playing": 5
+      }
+    ],
+    "votes": {
+      "down": 780,
+      "likeRatio": 68,
+      "up": 1700
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "game-detail",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "universeId": "341430",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/badges" icon="code">
+
+```json
+{
+  "data": {
+    "badges": [
+      {
+        "awardedCount": 180000,
+        "description": "Example text.",
+        "icon": "https://tr.rbxcdn.com/example",
+        "id": 85302232,
+        "name": "Years of Service",
+        "universe": {
+          "id": 52609216,
+          "name": "Years of Service"
+        }
+      }
+    ],
+    "totalCollected": 100,
+    "userId": 5144165
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "badges",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/roblox/collectibles" icon="code">
+
+```json
+{
+  "data": {
+    "items": [
+      {
+        "assetId": 49436318,
+        "name": "Clockwork's Shades",
+        "originalPrice": 5590,
+        "recentAveragePrice": 7001,
+        "serialNumber": null,
+        "thumbnail": "https://tr.rbxcdn.com/example",
+        "userAssetId": 945214155129
+      }
+    ],
+    "totalCollected": 100,
+    "totalRap": 6161,
+    "userId": 6
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "collectibles",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "roblox"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
 ## Availability
 
-Roblox routes use public provider APIs and do not require a provider secret in V1. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
 
 ---
 
 ## Caching
 
-Provider responses are cached by collector and normalized identifier or user ID. Cache entries reduce repeated provider calls and do not change route pricing.
+Provider responses are cached by collector and normalized identifier or user ID:
+
+| Collector | Cached for |
+|---|---|
+| Username to user ID | 24 hours |
+| "Not found" answers | 6 hours |
+| Resolved account, profile, and social data | 30 minutes |
+| Collections | 1 hour |
+| Thumbnails | 6 hours |
+| Group members | 10 minutes |
+| Game servers | 1 minute |
+
+Cache entries reduce repeated provider calls and do not change route pricing.

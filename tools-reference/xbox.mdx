@@ -34,7 +34,7 @@ Aliases:
 | Operation       | Endpoint                           | Cost | Notes                                                               |
 | --------------- | ---------------------------------- | ---: | ------------------------------------------------------------------- |
 | Search          | `POST /tools/xbox/search`          | Free | Validates and normalizes only.                                      |
-| Suggestions     | `POST /tools/xbox/suggestions`     | Free | PeopleHub search suggestions.                                       |
+| Suggestions     | `POST /tools/xbox/suggestions`     | Free | Gamertag search suggestions.                                        |
 | Resolve         | `POST /tools/xbox/resolve`         |    1 | Resolves gamertag or XUID.                                          |
 | Profile         | `POST /tools/xbox/profile`         |    1 | Identity, avatar, gamerscore, reputation, and profile fields.       |
 | Presence        | `POST /tools/xbox/presence`        |    1 | Online state, current device, current game, and last seen.          |
@@ -78,3 +78,857 @@ curl -X POST "https://api.osint.ly/tools/xbox/title-detail" \
   -H "Content-Type: application/json" \
   -d '{ "value": "SomeGamertag", "type": "gamertag", "titleId": "12345" }'
 ```
+
+---
+
+## Response data
+
+`/all` returns one object per section in `data`. A section is `null` when it could not be collected, and the reason is listed in `data.partialErrors`.
+
+- `resolve`: gamertag, unique gamertag, XUID, avatar, and up to 10 search matches.
+- `profile`: display name, gamerscore, account tier, reputation, tenure level, bio, location, and preferred platforms.
+- `presence`: online state, current device, last game, and last seen time.
+- `social`: follower, following, and friend counts, verification and relationship flags, and party summary.
+- `linkedAccounts`: external networks the player shows on the profile.
+- `games`: title history with last played date, devices, Game Pass flag, and achievement progress.
+- `media`: recent game clips and screenshots with dates, views, and media URLs.
+- `clubs`: club memberships with the player's roles, member counts, and club metadata.
+
+---
+
+## Response example
+
+An anonymized `POST /tools/xbox/all` response. Lists are shortened to one item; counts such as `total` show the full size.
+
+<Accordion title="Xbox /all response" icon="code">
+
+```json
+{
+  "data": {
+    "clubs": {
+      "clubs": [
+        {
+          "associatedTitles": [],
+          "backgroundImageUrl": null,
+          "clubPresenceCount": 0,
+          "creationDateUtc": "2025-01-01T00:00:00Z",
+          "description": "",
+          "displayImageUrl": "http://images-eds.xboxlive.com/example",
+          "followersCount": 1,
+          "founderXuid": "3353163391368199",
+          "id": "1089393391260151",
+          "membersCount": 1,
+          "moderatorsCount": 1,
+          "name": "Example Group",
+          "ownerXuid": "3353163391368199",
+          "preferredLocale": "en-US",
+          "recommendedCount": 0,
+          "requestedToJoinCount": 8384,
+          "roles": [
+            "Follower"
+          ],
+          "shortName": null,
+          "state": "None",
+          "suspendedUntilUtc": null,
+          "tags": [],
+          "type": "closed"
+        }
+      ],
+      "error": null,
+      "total": 39,
+      "unavailable": false,
+      "xuid": "3353163391368199"
+    },
+    "games": {
+      "gameCount": 1000,
+      "games": [
+        {
+          "achievement": {
+            "earned": 29,
+            "gsEarned": 585,
+            "gsTotal": 1200,
+            "progress": 49,
+            "sourceVersion": 2,
+            "total": 0
+          },
+          "backgroundImage": "http://store-images.s-microsoft.com/example",
+          "devices": [
+            "XboxSeries"
+          ],
+          "image": "http://store-images.s-microsoft.com/example",
+          "isBundle": false,
+          "isGamePass": false,
+          "lastPlayed": "2025-12-02T00:00:00Z",
+          "mediaItemType": "Application",
+          "name": "Battlefield™",
+          "pfn": "ElectronicArtsMobile.21061BAB013E_q7ha0ztykcgvj",
+          "statsSourceVersion": 2,
+          "titleId": "6062400401",
+          "visible": true,
+          "xboxLiveTier": "Full"
+        }
+      ],
+      "xuid": "3353163391368199"
+    },
+    "linkedAccounts": {
+      "accounts": [
+        {
+          "networkName": "Reddit",
+          "displayName": "ExamplePlayer",
+          "showOnProfile": true,
+          "isFamilyFriendly": false,
+          "deeplink": "https://www.reddit.com/example"
+        }
+      ],
+      "xuid": "3353163391368199"
+    },
+    "media": {
+      "gameClips": [
+        {
+          "achievementId": null,
+          "caption": null,
+          "comments": 0,
+          "datePublished": "2025-09-09T06:00:00Z",
+          "dateRecorded": "2025-06-17T12:00:00Z",
+          "deviceType": "Scarlett",
+          "durationInSeconds": 3,
+          "expiration": "2026-08-10T06:00:00Z",
+          "id": "014ae0b8-5d5d-91a3-b41f-46c4dd0f4244",
+          "kind": "clip",
+          "likes": 0,
+          "name": "Dune: Awakening",
+          "rating": 0,
+          "ratingCount": 0,
+          "savedByUser": true,
+          "scid": "b6dfd9ef-8b39-4109-61f4-4c2c25b8357f",
+          "shares": 0,
+          "thumbnail": "https://gameclipscontent-t2009.media.xboxlive.com/example/thumbnail.png",
+          "titleId": "4225033330",
+          "titleName": "Dune: Awakening",
+          "url": "https://gameclipscontent-d2009.media.xboxlive.com/example/url.mp4",
+          "views": 0
+        }
+      ],
+      "recent": [
+        {
+          "achievementId": null,
+          "caption": null,
+          "comments": 0,
+          "datePublished": "2025-09-09T06:00:00Z",
+          "dateRecorded": "2025-06-17T12:00:00Z",
+          "deviceType": "Scarlett",
+          "durationInSeconds": 3,
+          "expiration": "2026-08-10T06:00:00Z",
+          "id": "014ae0b8-5d5d-91a3-b41f-46c4dd0f4244",
+          "kind": "clip",
+          "likes": 0,
+          "name": "Dune: Awakening",
+          "rating": 0,
+          "ratingCount": 0,
+          "savedByUser": true,
+          "scid": "b6dfd9ef-8b39-4109-61f4-4c2c25b8357f",
+          "shares": 0,
+          "thumbnail": "https://gameclipscontent-t2009.media.xboxlive.com/example/thumbnail.png",
+          "titleId": "4225033330",
+          "titleName": "Dune: Awakening",
+          "url": "https://gameclipscontent-d2009.media.xboxlive.com/example/url.mp4",
+          "views": 0
+        }
+      ],
+      "screenshots": [],
+      "xuid": "3353163391368199"
+    },
+    "partialErrors": [],
+    "presence": {
+      "currentDevice": "Scarlett",
+      "isBroadcasting": false,
+      "isCloaked": null,
+      "isOnline": false,
+      "lastGame": "Battlefield™ 6",
+      "lastSeen": "2026-02-23T18:00:00.000Z",
+      "presence": "Last seen 19h ago: Battlefield™ 6",
+      "state": "Offline",
+      "xuid": "3353163391368199"
+    },
+    "profile": {
+      "avatar": "https://images-eds-ssl.xboxlive.com/example",
+      "bio": null,
+      "colorTheme": "flow",
+      "countryCode": null,
+      "displayName": "ExamplePlayer",
+      "flags": {
+        "isQuarantined": false,
+        "isXbox360Gamerpic": false
+      },
+      "gamertag": "ExamplePlayer",
+      "gamerscore": 3342,
+      "location": null,
+      "preferredFlag": null,
+      "preferredPlatforms": [
+        "pc"
+      ],
+      "realName": null,
+      "rep": "GoodPlayer",
+      "suffix": "",
+      "tenureLevel": 22,
+      "tier": "Gold",
+      "uniqueGamertag": "ExamplePlayer",
+      "watermarks": [],
+      "xuid": "3353163391368199"
+    },
+    "resolve": {
+      "avatar": "https://images-eds-ssl.xboxlive.com/example",
+      "gamertag": "ExamplePlayer",
+      "matches": [
+        {
+          "avatar": "https://images-eds-ssl.xboxlive.com/example",
+          "gamertag": "ExamplePlayer",
+          "uniqueGamertag": "ExamplePlayer",
+          "xuid": "3353163391368199"
+        }
+      ],
+      "source": "gamertag",
+      "total": 10,
+      "uniqueGamertag": "ExamplePlayer",
+      "xuid": "3353163391368199"
+    },
+    "social": {
+      "blocked": false,
+      "canBeFollowed": true,
+      "canBeFriended": true,
+      "followerCount": 5109,
+      "followingCount": 6,
+      "friendCount": 96,
+      "hasGamePass": false,
+      "isFavorite": false,
+      "isFollowedByCaller": false,
+      "isFollowingCaller": false,
+      "isFriend": false,
+      "isFriendListShared": true,
+      "isIdentityShared": false,
+      "isVerified": false,
+      "multiplayer": {
+        "inParty": 0,
+        "joinableActivities": [],
+        "partyDetails": []
+      },
+      "mute": false,
+      "xuid": "3353163391368199"
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/xbox/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/suggestions" icon="code">
+
+```json
+{
+  "data": {
+    "suggestions": [
+      {
+        "avatar": "https://images-eds-ssl.xboxlive.com/example",
+        "gamertag": "ExamplePlayer",
+        "uniqueGamertag": "ExamplePlayer",
+        "xuid": "3353163391368199"
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "suggestions",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "avatar": "https://images-eds-ssl.xboxlive.com/example",
+    "gamertag": "ExamplePlayer",
+    "matches": [
+      {
+        "avatar": "https://images-eds-ssl.xboxlive.com/example",
+        "gamertag": "ExamplePlayer",
+        "uniqueGamertag": "ExamplePlayer",
+        "xuid": "3353163391368199"
+      }
+    ],
+    "source": "gamertag",
+    "total": 10,
+    "uniqueGamertag": "ExamplePlayer",
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/profile" icon="code">
+
+```json
+{
+  "data": {
+    "avatar": "https://images-eds-ssl.xboxlive.com/example",
+    "bio": null,
+    "colorTheme": "flow",
+    "countryCode": null,
+    "displayName": "ExamplePlayer",
+    "flags": {
+      "isQuarantined": false,
+      "isXbox360Gamerpic": false
+    },
+    "gamertag": "ExamplePlayer",
+    "gamerscore": 3342,
+    "location": null,
+    "preferredFlag": null,
+    "preferredPlatforms": [
+      "pc"
+    ],
+    "realName": null,
+    "rep": "GoodPlayer",
+    "suffix": "",
+    "tenureLevel": 22,
+    "tier": "Gold",
+    "uniqueGamertag": "ExamplePlayer",
+    "watermarks": [],
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/presence" icon="code">
+
+```json
+{
+  "data": {
+    "currentDevice": "Scarlett",
+    "isBroadcasting": false,
+    "isCloaked": null,
+    "isOnline": false,
+    "lastGame": "Battlefield™ 6",
+    "lastSeen": "2025-01-01T00:00:00.000Z",
+    "presence": "Last seen 19h ago: Battlefield™ 6",
+    "state": "Offline",
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "presence",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/social" icon="code">
+
+```json
+{
+  "data": {
+    "blocked": false,
+    "canBeFollowed": true,
+    "canBeFriended": true,
+    "followerCount": 5109,
+    "followingCount": 6,
+    "friendCount": 96,
+    "hasGamePass": false,
+    "isFavorite": false,
+    "isFollowedByCaller": false,
+    "isFollowingCaller": false,
+    "isFriend": false,
+    "isFriendListShared": true,
+    "isIdentityShared": false,
+    "isVerified": false,
+    "multiplayer": {
+      "inParty": 0,
+      "joinableActivities": [],
+      "partyDetails": []
+    },
+    "mute": false,
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "social",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/linked-accounts" icon="code">
+
+```json
+{
+  "data": {
+    "accounts": [
+      {
+        "networkName": "Reddit",
+        "displayName": "ExamplePlayer",
+        "showOnProfile": true,
+        "isFamilyFriendly": false,
+        "deeplink": "https://www.reddit.com/example"
+      }
+    ],
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "linked-accounts",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/games" icon="code">
+
+```json
+{
+  "data": {
+    "gameCount": 1000,
+    "games": [
+      {
+        "achievement": {
+          "earned": 29,
+          "gsEarned": 585,
+          "gsTotal": 1200,
+          "progress": 49,
+          "sourceVersion": 2,
+          "total": 0
+        },
+        "backgroundImage": "http://store-images.s-microsoft.com/example",
+        "devices": [
+          "XboxSeries"
+        ],
+        "image": "http://store-images.s-microsoft.com/example",
+        "isBundle": false,
+        "isGamePass": false,
+        "lastPlayed": "2025-01-01T00:00:00Z",
+        "mediaItemType": "Application",
+        "name": "Battlefield™",
+        "pfn": "ElectronicArtsMobile.21061BAB013E_q7ha0ztykcgvj",
+        "statsSourceVersion": 2,
+        "titleId": "1840884885",
+        "visible": true,
+        "xboxLiveTier": "Full"
+      }
+    ],
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "games",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/media" icon="code">
+
+```json
+{
+  "data": {
+    "gameClips": [
+      {
+        "achievementId": null,
+        "caption": null,
+        "comments": 0,
+        "datePublished": "2025-06-17T12:00:00Z",
+        "dateRecorded": "2025-01-01T00:00:00Z",
+        "deviceType": "Scarlett",
+        "durationInSeconds": 3,
+        "expiration": "2026-05-18T12:00:00Z",
+        "id": "014ae0b8-5d5d-91a3-b41f-46c4dd0f4244",
+        "kind": "clip",
+        "likes": 0,
+        "name": "Dune: Awakening",
+        "rating": 0,
+        "ratingCount": 0,
+        "savedByUser": true,
+        "scid": "b6dfd9ef-8b39-4109-61f4-4c2c25b8357f",
+        "shares": 0,
+        "thumbnail": "https://gameclipscontent-t2009.media.xboxlive.com/example/thumbnail.png",
+        "titleId": "1780788060",
+        "titleName": "Dune: Awakening",
+        "url": "https://gameclipscontent-d2009.media.xboxlive.com/example/url.mp4",
+        "views": 0
+      }
+    ],
+    "recent": [
+      {
+        "achievementId": null,
+        "caption": null,
+        "comments": 0,
+        "datePublished": "2025-06-17T12:00:00Z",
+        "dateRecorded": "2025-01-01T00:00:00Z",
+        "deviceType": "Scarlett",
+        "durationInSeconds": 3,
+        "expiration": "2026-05-18T12:00:00Z",
+        "id": "014ae0b8-5d5d-91a3-b41f-46c4dd0f4244",
+        "kind": "clip",
+        "likes": 0,
+        "name": "Dune: Awakening",
+        "rating": 0,
+        "ratingCount": 0,
+        "savedByUser": true,
+        "scid": "b6dfd9ef-8b39-4109-61f4-4c2c25b8357f",
+        "shares": 0,
+        "thumbnail": "https://gameclipscontent-t2009.media.xboxlive.com/example/thumbnail.png",
+        "titleId": "1780788060",
+        "titleName": "Dune: Awakening",
+        "url": "https://gameclipscontent-d2009.media.xboxlive.com/example/url.mp4",
+        "views": 0
+      }
+    ],
+    "screenshots": [],
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "media",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/clubs" icon="code">
+
+```json
+{
+  "data": {
+    "clubs": [
+      {
+        "associatedTitles": [],
+        "backgroundImageUrl": null,
+        "clubPresenceCount": 0,
+        "creationDateUtc": "2025-01-01T00:00:00Z",
+        "description": "",
+        "displayImageUrl": "http://images-eds.xboxlive.com/example",
+        "followersCount": 1,
+        "founderXuid": "3353163391368199",
+        "id": "1089393391260151",
+        "membersCount": 1,
+        "moderatorsCount": 1,
+        "name": "Example Group",
+        "ownerXuid": "3353163391368199",
+        "preferredLocale": "en-US",
+        "recommendedCount": 0,
+        "requestedToJoinCount": 8384,
+        "roles": [
+          "Follower"
+        ],
+        "shortName": null,
+        "state": "None",
+        "suspendedUntilUtc": null,
+        "tags": [],
+        "type": "closed"
+      }
+    ],
+    "error": null,
+    "total": 39,
+    "unavailable": false,
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "clubs",
+  "query": {
+    "normalizedType": "gamertag",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/xbox/title-detail" icon="code">
+
+```json
+{
+  "data": {
+    "achievementSummary": {
+      "earned": 29,
+      "earnedGamerscore": 585,
+      "progress": 55,
+      "revoked": 0,
+      "secret": 0,
+      "serviceConfigIds": [
+        "example"
+      ],
+      "total": 53,
+      "totalGamerscore": 2990,
+      "totalRecords": 53
+    },
+    "achievements": [
+      {
+        "achievementType": "example",
+        "deeplink": null,
+        "description": "Example text.",
+        "estimatedTime": "example",
+        "gamerscore": 15,
+        "icon": "https://images-eds-ssl.xboxlive.com/example",
+        "id": "6",
+        "isAchieved": true,
+        "isRevoked": false,
+        "isSecret": false,
+        "lockedDescription": "example",
+        "name": "Stand Alone",
+        "participationType": "example",
+        "platforms": [
+          "XboxOne"
+        ],
+        "progressState": "example",
+        "requirements": [],
+        "rewards": [
+          {
+            "name": null,
+            "description": null,
+            "value": "ExamplePlayer",
+            "type": "Gamerscore",
+            "mediaAsset": null,
+            "valueType": "example"
+          }
+        ],
+        "serviceConfigId": "97832450-8732-3234-3846-15090ff3fc31",
+        "timeUnlocked": "2025-01-01T00:00:00Z"
+      }
+    ],
+    "title": {
+      "achievement": {
+        "currentAchievements": 29,
+        "totalAchievements": 0,
+        "currentGamerscore": 585,
+        "totalGamerscore": 2990,
+        "progressPercentage": 49,
+        "sourceVersion": 2,
+        "baseGameCount": 1,
+        "baseGameCompleted": 0,
+        "isMythic": false
+      },
+      "alternateTitleIds": null,
+      "backgroundImage": "http://store-images.s-microsoft.com/example",
+      "contentBoards": null,
+      "detail": {
+        "attributes": [
+          {
+            "applicablePlatforms": null,
+            "maximum": 64,
+            "minimum": 16,
+            "name": "XblOnlineMultiPlayer"
+          }
+        ],
+        "availabilities": [
+          {
+            "Actions": [
+              "example"
+            ],
+            "AvailabilityId": "6S3L9G282Z5F",
+            "Platforms": [
+              "example"
+            ],
+            "SkuId": "0108",
+            "ProductId": "3P9CFMZ22Q8R"
+          }
+        ],
+        "capabilities": [],
+        "description": "Example text.",
+        "developerName": "example",
+        "genres": [
+          "example"
+        ],
+        "minAge": 16,
+        "publisherName": "example",
+        "releaseDate": "2026-05-18T12:00:00Z",
+        "shortDescription": "example",
+        "vuiDisplayName": null,
+        "xboxLiveGoldRequired": false
+      },
+      "devices": [
+        "XboxSeries"
+      ],
+      "friendsWhoPlayed": {
+        "people": [],
+        "currentlyPlayingCount": 0,
+        "havePlayedCount": 0
+      },
+      "image": "http://store-images.s-microsoft.com/example",
+      "images": null,
+      "isBundle": false,
+      "isGamePass": false,
+      "isStreamable": true,
+      "mediaItemType": "Application",
+      "name": "Battlefield™",
+      "pfn": "ElectronicArtsMobile.21061BAB013E_q7ha0ztykcgvj",
+      "stats": {
+        "sourceVersion": 2
+      },
+      "titleHistory": {
+        "lastTimePlayed": "2025-06-17T12:00:00Z",
+        "visible": true,
+        "canHide": true
+      },
+      "titleId": "1840884885",
+      "titleRecord": null,
+      "type": "Game",
+      "xboxLiveTier": "Full"
+    },
+    "titleId": "1840884885",
+    "xuid": "3353163391368199"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "title-detail",
+  "query": {
+    "normalizedType": "gamertag",
+    "titleId": "1840884885",
+    "type": "gamertag",
+    "value": "ExamplePlayer"
+  },
+  "tool": "xbox"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## Rate limits
+
+When Xbox Live is busy, a request waits briefly instead of failing right away.
+
+- If Xbox stays busy for about 15 seconds, the route answers `429 PROVIDER_RATE_LIMITED` with a `Retry-After` header and `retryAfter` in seconds.
+- In `/all`, a collector that stays throttled is listed in `data.partialErrors` with `code: "PROVIDER_RATE_LIMITED"` and `retryAfter`; the other sections are still returned. A collector is never returned empty because of a rate limit.
+- `/suggestions` is best effort and waits at most a few seconds, so it can answer `429` during busy periods while full lookups still succeed.
+- Hidden or missing clips and screenshots are a real empty result: `media.gameClips` or `media.screenshots` is an empty list. If only one of the two cannot be loaded, the other is returned and the failure is listed in `partialErrors` (`media.clips` or `media.screenshots`).
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized gamertag or XUID:
+
+| Collector | Cached for |
+|---|---|
+| Gamertag or XUID resolution | 24 hours |
+| "Not found" answers | 6 hours, or the collector's own duration when shorter |
+| Search and suggestions | 1 hour |
+| Profile, presence, social, and linked accounts | 30 minutes |
+| Clubs | 1 hour |
+| Games (title history) | 6 hours |
+| Title detail | 12 hours |
+| Title achievements | 6 hours |
+| Media | Not cached |
+
+Cache hits do not change route pricing.

@@ -69,9 +69,432 @@ curl -X POST "https://api.osint.ly/tools/playstation/all" \
 
 ---
 
+## Response data
+
+`/all` returns one object per section in `data`. A section is `null` when it could not be collected, and the reason is listed in `data.partialErrors`.
+
+- `resolve`: Online ID, account ID, avatar, and search matches.
+- `profile`: about me, languages, region, PlayStation Plus and verification flags, and privacy.
+- `presence`: online state, current game and platform, and last online time when visible.
+- `trophySummary`: trophy level, progress, and trophy counts by grade.
+- `games`: trophy titles with progress and last trophy update, and `playedGames` with first and last played dates, play count, and play time.
+- `friends`: friend total and a sample of friend account IDs, or `private: true` when the list is hidden.
+
+---
+
+## Response example
+
+An anonymized `POST /tools/playstation/all` response. Lists are shortened to one item; counts such as `total` show the full size.
+
+<Accordion title="PlayStation /all response" icon="code">
+
+```json
+{
+  "data": {
+    "friends": {
+      "accountId": "3803117349668001821",
+      "private": false,
+      "sample": [],
+      "total": 0
+    },
+    "games": {
+      "accountId": "3803117349668001821",
+      "games": [
+        {
+          "defined": {
+            "bronze": 44,
+            "gold": 3,
+            "platinum": 1,
+            "silver": 4
+          },
+          "detail": "Red Dead Redemption 2",
+          "earned": {
+            "bronze": 6,
+            "gold": 0,
+            "platinum": 0,
+            "silver": 0
+          },
+          "hasPlatinum": false,
+          "iconUrl": "https://image.api.playstation.com/example/iconurl.png",
+          "lastPlayed": null,
+          "lastTrophyUpdate": "2025-06-17T12:00:00Z",
+          "name": "Red Dead Redemption 2",
+          "npCommunicationId": "NPWR13558_84",
+          "platform": "PS4",
+          "progress": 8
+        }
+      ],
+      "total": 2,
+      "playedGames": {
+        "games": [
+          {
+            "titleId": "PPSA74150_74",
+            "name": "Battlefield™ 6",
+            "platform": "ps5_native_game",
+            "iconUrl": "https://image.api.playstation.com/example/iconurl.png",
+            "firstPlayed": "2025-01-01T00:00:00Z",
+            "lastPlayed": "2025-12-02T00:00:00Z",
+            "playDuration": "PT37H5M28S",
+            "playCount": 20
+          }
+        ],
+        "total": 2,
+        "complete": true,
+        "lastPlayed": "2025-12-02T00:00:00Z",
+        "partialErrors": [],
+        "source": "psn:gamelist/v2"
+      },
+      "lastPlayed": "2025-12-02T00:00:00Z",
+      "partialErrors": []
+    },
+    "partialErrors": [],
+    "presence": {
+      "accountId": "3803117349668001821",
+      "currentGame": null,
+      "currentPlatform": null,
+      "currentTitleId": null,
+      "isOnline": false,
+      "lastOnline": null,
+      "onlineStatus": null,
+      "platform": null
+    },
+    "profile": {
+      "aboutMe": "",
+      "accountId": "3803117349668001821",
+      "avatar": "http://static-resource.np.community.playstation.net/example/avatar.png",
+      "isPlus": true,
+      "isVerified": false,
+      "languages": [
+        "es"
+      ],
+      "onlineId": "ExamplePlayer",
+      "personalDetail": null,
+      "primaryOnlineStatus": null,
+      "privacy": "no",
+      "region": "es"
+    },
+    "resolve": {
+      "accountId": "3803117349668001821",
+      "avatar": "http://static-resource.np.community.playstation.net/example/avatar.png",
+      "legacyStatus": 200,
+      "matches": [],
+      "onlineId": "ExamplePlayer",
+      "searchStatus": null,
+      "source": "online_id",
+      "total": 1
+    },
+    "trophySummary": {
+      "accountId": "3803117349668001821",
+      "level": 6,
+      "progress": 25,
+      "tier": 1,
+      "trophies": {
+        "bronze": 13,
+        "gold": 1,
+        "platinum": 0,
+        "silver": 1,
+        "total": 15
+      }
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/playstation/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/playstation/suggestions" icon="code">
+
+```json
+{
+  "data": {
+    "suggestions": [
+      {
+        "accountId": "3803117349668001821",
+        "avatar": "http://static-resource.np.community.playstation.net/example/avatar.png",
+        "isPlus": true,
+        "onlineId": "ExamplePlayer"
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "suggestions",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/playstation/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "3803117349668001821",
+    "avatar": "http://static-resource.np.community.playstation.net/example/avatar.png",
+    "legacyStatus": 200,
+    "matches": [],
+    "onlineId": "ExamplePlayer",
+    "searchStatus": null,
+    "source": "online_id",
+    "total": 1
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/playstation/profile" icon="code">
+
+```json
+{
+  "data": {
+    "aboutMe": "",
+    "accountId": "3803117349668001821",
+    "avatar": "http://static-resource.np.community.playstation.net/example/avatar.png",
+    "isPlus": true,
+    "isVerified": false,
+    "languages": [
+      "es"
+    ],
+    "onlineId": "ExamplePlayer",
+    "personalDetail": null,
+    "primaryOnlineStatus": null,
+    "privacy": "no",
+    "region": "es"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/playstation/presence" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "3803117349668001821",
+    "currentGame": null,
+    "currentPlatform": null,
+    "currentTitleId": null,
+    "isOnline": false,
+    "lastOnline": null,
+    "onlineStatus": null,
+    "platform": null
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "presence",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/playstation/trophy-summary" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "3803117349668001821",
+    "level": 6,
+    "progress": 25,
+    "tier": 1,
+    "trophies": {
+      "bronze": 13,
+      "gold": 1,
+      "platinum": 0,
+      "silver": 1,
+      "total": 15
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "trophy-summary",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/playstation/games" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "3803117349668001821",
+    "games": [
+      {
+        "defined": {
+          "bronze": 44,
+          "gold": 3,
+          "platinum": 1,
+          "silver": 4
+        },
+        "detail": "Red Dead Redemption 2",
+        "earned": {
+          "bronze": 6,
+          "gold": 0,
+          "platinum": 0,
+          "silver": 0
+        },
+        "hasPlatinum": false,
+        "iconUrl": "https://image.api.playstation.com/example/iconurl.png",
+        "lastPlayed": null,
+        "lastTrophyUpdate": "2025-06-17T12:00:00Z",
+        "name": "Red Dead Redemption 2",
+        "npCommunicationId": "NPWR13558_84",
+        "platform": "PS4",
+        "progress": 8
+      }
+    ],
+    "total": 2,
+    "playedGames": {
+      "games": [
+        {
+          "titleId": "PPSA19534_00",
+          "name": "Battlefield™ 6",
+          "platform": "ps5_native_game",
+          "iconUrl": "https://image.api.playstation.com/example/iconurl.png",
+          "firstPlayed": "2025-01-01T00:00:00Z",
+          "lastPlayed": "2025-12-02T00:00:00Z",
+          "playDuration": "PT37H5M28S",
+          "playCount": 20
+        }
+      ],
+      "total": 2,
+      "complete": true,
+      "lastPlayed": "2025-12-02T00:00:00Z",
+      "partialErrors": [],
+      "source": "psn:gamelist/v2"
+    },
+    "lastPlayed": "2025-12-02T00:00:00Z",
+    "partialErrors": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "games",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/playstation/friends" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "3803117349668001821",
+    "private": false,
+    "sample": [],
+    "total": 0
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "friends",
+  "query": {
+    "normalizedType": "online_id",
+    "type": "online_id",
+    "value": "ExamplePlayer"
+  },
+  "tool": "playstation"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
 ## Availability
 
-Provider-backed routes require PlayStation provider authentication configured server-side. If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
+If `resolve` fails, enriched routes return an error. In `/all`, secondary collector failures are returned in `data.partialErrors`.
 
 `profile.region` is derived from the account's PSN region when available. A hidden friends list is reported as `data.friends.private: true` rather than an error. Other hidden data (game history, presence, trophies) surfaces as an entry in `data.partialErrors` instead of failing the whole request.
 
@@ -79,4 +502,15 @@ Provider-backed routes require PlayStation provider authentication configured se
 
 ## Caching
 
-Provider responses are cached by collector and normalized identifier or account ID. Cache entries reduce repeated provider calls and do not change route pricing.
+Provider responses are cached by collector and normalized identifier or account ID:
+
+| Collector | Cached for |
+|---|---|
+| Resolve (Online ID or account ID) | 24 hours |
+| "Not found" answers | 6 hours |
+| Suggestions and universal search | 1 hour |
+| Profile, trophy summary, and friends | 30 minutes |
+| Presence | 2 minutes |
+| Played games and trophy titles | 6 hours |
+
+Cache entries reduce repeated provider calls and do not change route pricing.

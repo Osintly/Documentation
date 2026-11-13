@@ -45,7 +45,10 @@ Accepted aliases include `epic`, `epic_id`, `creator`, `psn`, `playstation`, `st
 | Regions              | `POST /tools/epic-games/regions`              |    1 | Region and language signals.                                   |
 | Friends Achievements | `POST /tools/epic-games/friends-achievements` |    2 | Friends, achievements, and social counters.                    |
 | Creator              | `POST /tools/epic-games/creator`              |    1 | Affiliate, creator profile, social links, and creator islands. |
-| Profile DB           | `POST /tools/epic-games/profile-db`           |    1 | profile metadata.                                              |
+| Profile DB           | `POST /tools/epic-games/profile-db`           |    1 | Profile metadata.                                              |
+| Fortnite Battle Royale | `POST /tools/epic-games/fortnite-battle-royale` | Free | Lifetime Battle Royale stats by input and mode, from `name`. |
+| Fortnite Save the World | `POST /tools/epic-games/fortnite-save-the-world` | Free | Save the World ownership and profile summary, from `name`. |
+| Fortnite Island | `POST /tools/epic-games/fortnite-island` | Free | Island title, creator code, and tags, from an island `code`. |
 | All                  | `POST /tools/epic-games/all`                  |    2 | Runs the main collectors and charges once.                     |
 
 ---
@@ -72,6 +75,670 @@ curl -X POST "https://api.osint.ly/tools/epic-games/all" \
 
 ---
 
+## Response data
+
+`/all` returns one object per section in `data`. A section is `null` when it could not be collected, and the reason is listed in `data.partialErrors`.
+
+- `resolve`: Epic account ID and display name.
+- `linkedAccounts`: external platforms linked to the Epic account.
+- `regions`: languages and play region.
+- `friendsAchievements`: friend counts and achievement totals that are publicly visible.
+- `creator`: Support-A-Creator code, published islands, and public creator profile (see below).
+- `profileDb` and `tags`: community profile data and tags when available.
+
+---
+
+## Response example
+
+An anonymized `POST /tools/epic-games/all` response. Lists are shortened to one item; counts such as `total` show the full size.
+
+<Accordion title="Epic Games /all response" icon="code">
+
+```json
+{
+  "data": {
+    "creator": {
+      "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+      "affiliate": {
+        "displayName": "ExamplePlayer",
+        "found": true,
+        "id": "0552aa5629452ddc0a6c01366f73f54a",
+        "slug": "ExamplePlayer",
+        "status": "ACTIVE",
+        "verified": false
+      },
+      "islands": {
+        "count": 0,
+        "hasMore": false,
+        "items": [],
+        "sample": []
+      },
+      "profile": {
+        "data": null,
+        "error": null,
+        "found": false,
+        "publishedIslands": [],
+        "social": {
+          "discord": null,
+          "instagram": null,
+          "tiktok": null,
+          "twitch": null,
+          "twitter": null,
+          "website": null,
+          "youtube": null
+        }
+      }
+    },
+    "friendsAchievements": {
+      "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+      "achievements": {
+        "entries": 0,
+        "items": [],
+        "namedProducts": 0,
+        "sample": [],
+        "totalXp": 0
+      },
+      "friends": {
+        "collected": 0,
+        "items": [],
+        "sample": [],
+        "totalPages": 0,
+        "totalReported": 0
+      },
+      "social": {
+        "blocklistCount": 0,
+        "outgoingRequestsCount": 2
+      }
+    },
+    "linkedAccounts": {
+      "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+      "platforms": []
+    },
+    "partialErrors": [],
+    "profileDb": null,
+    "regions": {
+      "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+      "languages": [
+        "en"
+      ],
+      "playRegion": "UNDEFINED_REGION",
+      "regionKeys": [
+        "playRegion"
+      ],
+      "regionValues": [
+        "UNDEFINED_REGION"
+      ]
+    },
+    "resolve": {
+      "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+      "displayName": "ExamplePlayer",
+      "source": "epic_display_name"
+    },
+    "tags": null
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/epic-games/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/suggestions" icon="code">
+
+```json
+{
+  "data": {
+    "suggestions": [
+      {
+        "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+        "matchType": "exact",
+        "platform": "epic",
+        "value": "ExamplePlayer"
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "suggestions",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+    "displayName": "ExamplePlayer",
+    "source": "epic_display_name"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/linked-accounts" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+    "platforms": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "linked-accounts",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/tags" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+    "tags": [
+      {
+        "id": "example-tag",
+        "locale": "en",
+        "name": "Example tag",
+        "types": [
+          "example"
+        ]
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "tags",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/regions" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+    "languages": [
+      "en"
+    ],
+    "playRegion": "UNDEFINED_REGION",
+    "regionKeys": [
+      "playRegion"
+    ],
+    "regionValues": [
+      "UNDEFINED_REGION"
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "regions",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/friends-achievements" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+    "achievements": {
+      "entries": 0,
+      "items": [],
+      "namedProducts": 0,
+      "sample": [],
+      "totalXp": 0
+    },
+    "friends": {
+      "collected": 0,
+      "items": [],
+      "sample": [],
+      "totalPages": 0,
+      "totalReported": 0
+    },
+    "social": {
+      "blocklistCount": 0,
+      "outgoingRequestsCount": 2
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "friends-achievements",
+  "query": {
+    "maxPages": 3,
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/creator" icon="code">
+
+```json
+{
+  "data": {
+    "accountId": "0552aa5629452ddc0a6c01366f73f54a",
+    "affiliate": {
+      "displayName": "ExamplePlayer",
+      "found": true,
+      "id": "0552aa5629452ddc0a6c01366f73f54a",
+      "slug": "ExamplePlayer",
+      "status": "ACTIVE",
+      "verified": false
+    },
+    "islands": {
+      "count": 0,
+      "hasMore": false,
+      "items": [],
+      "sample": []
+    },
+    "profile": {
+      "data": null,
+      "error": null,
+      "found": false,
+      "publishedIslands": [],
+      "social": {
+        "discord": null,
+        "instagram": null,
+        "tiktok": null,
+        "twitch": null,
+        "twitter": null,
+        "website": null,
+        "youtube": null
+      }
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "creator",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/profile-db" icon="code">
+
+```json
+{
+  "data": {
+    "createdAt": "2025-01-01T00:00:00.000Z",
+    "found": true,
+    "founderAccount": false,
+    "lastModified": "2025-06-01T00:00:00.000Z",
+    "matchedValue": "exampleplayer"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile-db",
+  "query": {
+    "normalizedType": "epic_display_name",
+    "type": "epic_display_name",
+    "value": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/fortnite-battle-royale" icon="code">
+
+```json
+{
+  "data": {
+    "game": "fortnite-battle-royale",
+    "name": "ExamplePlayer",
+    "ok": true,
+    "stats": {
+      "stats": {
+        "all": {
+          "overall": {
+            "matches": 120,
+            "wins": 12,
+            "kills": 300,
+            "kd": 2.78,
+            "winRate": 10,
+            "score": 45000,
+            "scorePerMin": 25.5,
+            "killsPerMatch": 2.5
+          },
+          "solo": {
+            "matches": 120,
+            "wins": 12,
+            "kills": 300,
+            "kd": 2.78,
+            "winRate": 10,
+            "score": 45000,
+            "scorePerMin": 25.5,
+            "killsPerMatch": 2.5
+          },
+          "duo": {
+            "matches": 120,
+            "wins": 12,
+            "kills": 300,
+            "kd": 2.78,
+            "winRate": 10,
+            "score": 45000,
+            "scorePerMin": 25.5,
+            "killsPerMatch": 2.5
+          },
+          "squad": {
+            "matches": 120,
+            "wins": 12,
+            "kills": 300,
+            "kd": 2.78,
+            "winRate": 10,
+            "score": 45000,
+            "scorePerMin": 25.5,
+            "killsPerMatch": 2.5
+          },
+          "ltm": {
+            "matches": 120,
+            "wins": 12,
+            "kills": 300,
+            "kd": 2.78,
+            "winRate": 10,
+            "score": 45000,
+            "scorePerMin": 25.5,
+            "killsPerMatch": 2.5
+          }
+        }
+      },
+      "gamepad": {
+        "overall": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "solo": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "duo": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "squad": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "ltm": null
+      },
+      "keyboardMouse": {
+        "overall": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "solo": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "duo": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "squad": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "ltm": null
+      },
+      "touch": {
+        "overall": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "solo": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "duo": null,
+        "squad": {
+          "matches": 120,
+          "wins": 12,
+          "kills": 300,
+          "kd": 2.78,
+          "winRate": 10,
+          "score": 45000,
+          "scorePerMin": 25.5,
+          "killsPerMatch": 2.5
+        },
+        "ltm": null
+      },
+      "ranked": null
+    },
+    "timeframe": "lifetime",
+    "updatedAt": "2025-06-01T00:00:00.000Z"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "fortnite-battle-royale",
+  "query": {
+    "name": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/fortnite-save-the-world" icon="code">
+
+```json
+{
+  "data": {
+    "alternateAccountNames": [],
+    "game": "fortnite-save-the-world",
+    "hasStw": true,
+    "name": "ExamplePlayer",
+    "ok": true,
+    "profileSummary": {
+      "display_name": "ExamplePlayer"
+    },
+    "resources": null,
+    "updatedAt": "2025-06-01T00:00:00.000Z",
+    "ventures": null
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "fortnite-save-the-world",
+  "query": {
+    "name": "ExamplePlayer"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/epic-games/fortnite-island" icon="code">
+
+```json
+{
+  "data": {
+    "code": "1234-5678-9012",
+    "creatorCode": "examplecreator",
+    "title": "Example island",
+    "createdIn": "UEFN",
+    "tags": [
+      "example"
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "fortnite-island",
+  "query": {
+    "code": "1234-5678-9012"
+  },
+  "tool": "epic-games"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
 ## Creator profile data
 
 `POST /tools/epic-games/creator` and the `creator` section of `/all` can include a public Fortnite Creator profile in `data.profile`.
@@ -82,3 +749,20 @@ curl -X POST "https://api.osint.ly/tools/epic-games/all" \
 - `profile.social` contains only recognized public social URLs.
 
 The public profile fields are `bio`, `creatorPageUrl`, `displayName`, `followerCount`, `images`, and `title`.
+
+---
+
+## Caching
+
+An Epic display name that no account uses returns `404 NOT_FOUND`. Provider responses are cached by collector and normalized identifier or account ID:
+
+| Collector | Cached for |
+|---|---|
+| Resolve (display name or linked ID to account ID) | 24 hours |
+| "Not found" answers | 6 hours |
+| Suggestions | 1 hour |
+| Linked accounts and regions | 1 hour |
+| Creator, friends and achievements, and Fortnite Battle Royale stats | 30 minutes |
+| Creator profile, profile database, affiliate, tags, islands, and Save the World stats | 6 hours |
+
+Cache entries reduce repeated provider calls and do not change route pricing.

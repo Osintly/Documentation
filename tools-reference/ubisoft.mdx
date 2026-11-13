@@ -98,3 +98,545 @@ curl -X POST "https://api.osint.ly/tools/ubisoft/r6" \
   -H "Content-Type: application/json" \
   -d '{ "value": "0ab3ec03-b309-4f46-a89a-f53b6cfe3073", "type": "user_id" }'
 ```
+
+---
+
+## Response data
+
+`/all` returns one object per section in `data`. A section is `null` when it could not be collected, and the reason is listed in `data.partialErrors`.
+
+- `resolve`: the Ubisoft account and every linked platform profile.
+- `profile`: username, level, XP, online status, and last played game.
+- `linkedAccounts`: Ubisoft, PlayStation, Xbox, Steam, and other platform accounts with profile links.
+- `games`: every played application with first and last session dates and session counts, plus a summary.
+- `library`: owned games with play time.
+- `r6`: Rainbow Six Siege clearance level, time played, and ranked boards per platform.
+- `stats`: stat cards per game; `saves`: cloud save metadata.
+- `presence`: live Ubisoft Connect sessions; `economy`: Ubisoft units; `avatar`: avatar images.
+- `namesakes`: other accounts using the same name on other platforms, as leads to verify.
+- `trackmania`: Trackmania data when the account plays it.
+
+---
+
+## Response example
+
+An anonymized `POST /tools/ubisoft/all` response. Lists are shortened to one item; counts such as `total` show the full size.
+
+<Accordion title="Ubisoft /all response" icon="code">
+
+```json
+{
+  "data": {
+    "avatar": {
+      "isCustom": true,
+      "largestUrl": "https://ubiservices.cdn.ubi.com/example",
+      "sourceSpaceId": "28204d14-414c-43ad-d506-83ed29480a43",
+      "type": "uploaded",
+      "variations": [
+        {
+          "url": "https://ubiservices.cdn.ubi.com/example",
+          "width": 500
+        }
+      ]
+    },
+    "economy": {
+      "units": 10,
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "games": {
+      "games": [
+        {
+          "applicationId": "e2d7de8b-59ed-13a6-42fe-38739b5e5c08",
+          "applicationName": "Rainbow Six 7 PC",
+          "artSource": "catalog",
+          "bannerUrl": "https://ubiservices.cdn.ubi.com/example/bannerurl.jpg",
+          "category": "pc",
+          "categoryLabel": "Ubisoft Connect (PC)",
+          "coverUrl": "https://ubiservices.cdn.ubi.com/example/coverurl.jpg",
+          "firstPlayed": "2025-06-17T12:00:00.000Z",
+          "kind": "game",
+          "lastPlayed": "2026-02-23T18:00:00.000Z",
+          "name": "Tom Clancy's Rainbow Six® Siege",
+          "platform": "PC",
+          "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+          "profilePlatformType": "uplay",
+          "sessions": 515,
+          "spaceId": "5966c052-40b0-6533-e2dd-c0b2a5c6558d"
+        }
+      ],
+      "partialErrors": [],
+      "summary": {
+        "categories": [
+          {
+            "count": 5,
+            "key": "pc",
+            "label": "Ubisoft Connect (PC)"
+          }
+        ],
+        "entries": 12,
+        "firstSeen": "2025-03-25T18:00:00.000Z",
+        "gamesPlayed": 1,
+        "lastSeen": "2026-02-23T18:00:00.000Z",
+        "totalSessions": 1300,
+        "truncated": false,
+        "uniqueApplications": 12,
+        "uniqueGames": 12
+      },
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "library": {
+      "games": [
+        {
+          "bannerUrl": "https://ubiservices.cdn.ubi.com/example/bannerurl.jpg",
+          "coverUrl": "https://ubiservices.cdn.ubi.com/example/coverurl.jpg",
+          "isOwned": true,
+          "name": "Tom Clancy's Rainbow Six® Siege",
+          "platform": "PC",
+          "platformType": "PC",
+          "playTimeSeconds": 1200000,
+          "releaseDate": "2025-01-01T00:00:00Z",
+          "spaceId": "0d7cb24b-5f25-9ac0-ad1a-6135403841cb"
+        }
+      ],
+      "nextLevelXp": 8500,
+      "platforms": [
+        "PC"
+      ],
+      "summary": {
+        "owned": 1,
+        "totalPlayTimeSeconds": 1200000,
+        "withPlayTime": 1
+      },
+      "ubisoftPlus": false,
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "linkedAccounts": {
+      "accounts": [
+        {
+          "idOnPlatform": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+          "nameOnPlatform": "ExamplePlayer",
+          "platform": "Ubisoft",
+          "platformType": "uplay",
+          "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+          "profileUrl": null,
+          "r6TrackerUrl": "https://r6.tracker.network/example",
+          "source": "profiles"
+        }
+      ],
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "namesakes": {
+      "accounts": [
+        {
+          "avatarUrl": "https://ubisoft-avatars.akamaized.net/example/avatarurl.png",
+          "matches": [
+            {
+              "nameOnPlatform": "ExamplePlayer",
+              "platform": "Xbox",
+              "platformType": "xbl"
+            }
+          ],
+          "name": "ExamplePlayer",
+          "userId": "e2d45dfe-4cf4-40d8-f33e-30c5505f23d0"
+        }
+      ],
+      "searchedNames": [
+        "ExamplePlayer"
+      ],
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "partialErrors": [],
+    "presence": {
+      "connections": [],
+      "isConnected": false,
+      "lastActivityAt": null,
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "profile": {
+      "avatarUrl": "https://ubiservices.cdn.ubi.com/example",
+      "avatarUrls": {
+        "large": "https://ubisoft-avatars.akamaized.net/example/large.png",
+        "medium": "https://ubisoft-avatars.akamaized.net/example/medium.png",
+        "small": "https://ubisoft-avatars.akamaized.net/example/small.png"
+      },
+      "gamesOwned": 1,
+      "isOnline": false,
+      "lastPlayedGame": {
+        "bannerUrl": "https://ubiservices.cdn.ubi.com/example/bannerurl.jpg",
+        "coverUrl": "https://ubiservices.cdn.ubi.com/example/coverurl.jpg",
+        "name": "Tom Clancy's Rainbow Six® Siege",
+        "platform": "PC",
+        "spaceId": "0d7cb24b-5f25-9ac0-ad1a-6135403841cb"
+      },
+      "level": 17,
+      "linkedPlatformCount": 1,
+      "onlineStatus": "OFFLINE",
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+      "username": "ExamplePlayer",
+      "xp": 8075
+    },
+    "r6": {
+      "clearanceLevel": 113,
+      "hasPlayed": true,
+      "lastStatUpdate": "2026-05-18T12:00:00.000Z",
+      "partialErrors": [],
+      "persona": null,
+      "platforms": [
+        {
+          "platformFamily": "pc"
+        }
+      ],
+      "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+      "timePlayedSeconds": 1200000,
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "resolve": {
+      "avatarUrl": "https://ubisoft-avatars.akamaized.net/example/avatarurl.png",
+      "matched": {
+        "idOnPlatform": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+        "nameOnPlatform": "ExamplePlayer",
+        "platformType": "uplay",
+        "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+        "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+      },
+      "profiles": [
+        {
+          "idOnPlatform": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+          "nameOnPlatform": "ExamplePlayer",
+          "platformType": "uplay",
+          "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+          "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+        }
+      ],
+      "searchType": "username",
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+      "username": "ExamplePlayer"
+    },
+    "saves": {
+      "saves": [
+        {
+          "coverUrl": null,
+          "gameName": "Ubisoft Connect",
+          "id": "13c0a663-b8b6-9d15-a2c0-48a80420cf95",
+          "name": "custom_preferences",
+          "profilePlatformType": "uplay",
+          "spaceId": "7bc7b36a-0432-4423-fc70-edd2a334c2d3",
+          "updatedAt": "2025-12-02T00:00:00.000Z"
+        }
+      ],
+      "summary": {
+        "games": 1,
+        "lastUpdatedAt": "2025-12-02T00:00:00.000Z",
+        "total": 1,
+        "truncated": false
+      },
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "stats": {
+      "games": [
+        {
+          "coverUrl": "https://ubiservices.cdn.ubi.com/example/coverurl.jpg",
+          "gameName": "Tom Clancy's Rainbow Six® Siege",
+          "lastUpdatedAt": "2026-05-18T12:00:00.000Z",
+          "platform": "crossplay",
+          "profilePlatformType": "uplay",
+          "spaceId": "0d7cb24b-5f25-9ac0-ad1a-6135403841cb",
+          "stats": [
+            {
+              "format": "Integer",
+              "label": "Clearance Level",
+              "name": "PClearanceLevel",
+              "semantic": "Tier",
+              "unit": null,
+              "updatedAt": "2025-09-09T06:00:00.000Z",
+              "value": "113"
+            }
+          ]
+        }
+      ],
+      "partialErrors": [],
+      "summary": {
+        "games": 1,
+        "lastUpdatedAt": "2026-05-18T12:00:00.000Z",
+        "stats": 16,
+        "truncated": false
+      },
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "trackmania": null
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "ubisoft"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/ubisoft/search" icon="code">
+
+```json
+{
+  "data": {
+    "status": "validated",
+    "valid": true
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "search",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "ubisoft"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ubisoft/resolve" icon="code">
+
+```json
+{
+  "data": {
+    "avatarUrl": "https://ubisoft-avatars.akamaized.net/example/avatarurl.png",
+    "matched": {
+      "idOnPlatform": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+      "nameOnPlatform": "ExamplePlayer",
+      "platformType": "uplay",
+      "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+      "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+    },
+    "profiles": [
+      {
+        "idOnPlatform": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+        "nameOnPlatform": "ExamplePlayer",
+        "platformType": "uplay",
+        "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+        "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+      }
+    ],
+    "searchType": "username",
+    "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+    "username": "ExamplePlayer"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "resolve",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "ubisoft"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ubisoft/profile" icon="code">
+
+```json
+{
+  "data": {
+    "avatarUrl": "https://ubiservices.cdn.ubi.com/example",
+    "avatarUrls": {
+      "large": "https://ubisoft-avatars.akamaized.net/example/large.png",
+      "medium": "https://ubisoft-avatars.akamaized.net/example/medium.png",
+      "small": "https://ubisoft-avatars.akamaized.net/example/small.png"
+    },
+    "gamesOwned": 1,
+    "isOnline": false,
+    "lastPlayedGame": {
+      "bannerUrl": "https://ubiservices.cdn.ubi.com/example/bannerurl.jpg",
+      "coverUrl": "https://ubiservices.cdn.ubi.com/example/coverurl.jpg",
+      "name": "Tom Clancy's Rainbow Six® Siege",
+      "platform": "PC",
+      "spaceId": "0d7cb24b-5f25-9ac0-ad1a-6135403841cb"
+    },
+    "level": 17,
+    "linkedPlatformCount": 1,
+    "onlineStatus": "OFFLINE",
+    "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+    "username": "ExamplePlayer",
+    "xp": 8075
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "profile",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "ubisoft"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ubisoft/linked-accounts" icon="code">
+
+```json
+{
+  "data": {
+    "accounts": [
+      {
+        "idOnPlatform": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+        "nameOnPlatform": "ExamplePlayer",
+        "platform": "Ubisoft",
+        "platformType": "uplay",
+        "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+        "profileUrl": null,
+        "r6TrackerUrl": "https://r6.tracker.network/example",
+        "source": "profiles"
+      }
+    ],
+    "partialErrors": [],
+    "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "linked-accounts",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "ubisoft"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ubisoft/games" icon="code">
+
+```json
+{
+  "data": {
+    "games": [
+      {
+        "applicationId": "e2d7de8b-59ed-13a6-42fe-38739b5e5c08",
+        "applicationName": "Rainbow Six 7 PC",
+        "artSource": "catalog",
+        "bannerUrl": "https://ubiservices.cdn.ubi.com/example/bannerurl.jpg",
+        "category": "pc",
+        "categoryLabel": "Ubisoft Connect (PC)",
+        "coverUrl": "https://ubiservices.cdn.ubi.com/example/coverurl.jpg",
+        "firstPlayed": "2025-06-17T12:00:00.000Z",
+        "kind": "game",
+        "lastPlayed": "2025-12-02T00:00:00.000Z",
+        "name": "Tom Clancy's Rainbow Six® Siege",
+        "platform": "PC",
+        "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+        "profilePlatformType": "uplay",
+        "sessions": 515,
+        "spaceId": "5966c052-40b0-6533-e2dd-c0b2a5c6558d"
+      }
+    ],
+    "partialErrors": [],
+    "summary": {
+      "categories": [
+        {
+          "count": 5,
+          "key": "pc",
+          "label": "Ubisoft Connect (PC)"
+        }
+      ],
+      "entries": 12,
+      "firstSeen": "2025-01-01T00:00:00.000Z",
+      "gamesPlayed": 1,
+      "lastSeen": "2025-12-02T00:00:00.000Z",
+      "totalSessions": 1300,
+      "truncated": false,
+      "uniqueApplications": 12,
+      "uniqueGames": 12
+    },
+    "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "games",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "ubisoft"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ubisoft/r6" icon="code">
+
+```json
+{
+  "data": {
+    "clearanceLevel": 113,
+    "hasPlayed": true,
+    "lastStatUpdate": "2025-01-01T00:00:00.000Z",
+    "partialErrors": [],
+    "persona": null,
+    "platforms": [
+      {
+        "platformFamily": "pc"
+      }
+    ],
+    "profileId": "affe4344-45de-5f3d-aa06-ec13f04222a9",
+    "timePlayedSeconds": 1200000,
+    "userId": "affe4344-45de-5f3d-aa06-ec13f04222a9"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "r6",
+  "query": {
+    "normalizedType": "username",
+    "type": "username",
+    "value": "ExamplePlayer"
+  },
+  "tool": "ubisoft"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## Caching
+
+Provider responses are cached by collector and normalized identifier or Ubisoft account ID:
+
+| Collector | Cached for |
+|---|---|
+| Resolve (name or linked ID to Ubisoft account) | 24 hours |
+| "Not found" answers | 6 hours |
+| Profile, avatar, and saves | 10 minutes |
+| Library, games, Rainbow Six Siege, and statistics | 1 hour; incomplete answers are not cached |
+| Presence | 1 minute |
+| Trackmania | 6 hours |
+| Store art, store search key, and game spaces | 7 days, 1 day, and 30 days |
+
+Cache entries reduce repeated provider calls and do not change route pricing.

@@ -70,8 +70,601 @@ The app provides an interactive map for available coordinates and clickable host
 
 The free `/risk` route summarizes network flags only. `/all` adds the available reputation and vulnerability observations when those sections are selected. A zero score is not a safety guarantee.
 
+## Response example
+
+A `POST /tools/ip-intelligence/all` response for 1.1.1.1. Lists are shortened to one item; counts show the full size.
+
+<Accordion title="IP Intelligence /all response" icon="code">
+
+```json
+{
+  "data": {
+    "partialErrors": [],
+    "collectedSections": [
+      "geo",
+      "network",
+      "bgp",
+      "whois",
+      "rdns",
+      "risk",
+      "ports",
+      "reputation",
+      "hosted-domains"
+    ],
+    "bgp": {
+      "routing": {
+        "observedAt": "2026-11-12T16:00:00",
+        "firstSeen": {
+          "prefix": "1.1.1.0/24",
+          "origin": "19855",
+          "time": "2001-11-14T00:00:00"
+        },
+        "lastSeen": {
+          "prefix": "1.1.1.0/24",
+          "origin": "13335",
+          "time": "2026-11-12T16:00:00"
+        },
+        "visibility": {
+          "v4": {
+            "ris_peers_seeing": 234,
+            "total_ris_peers": 235
+          },
+          "v6": {
+            "ris_peers_seeing": 0,
+            "total_ris_peers": 0
+          }
+        },
+        "origins": [
+          {
+            "origin": 13335,
+            "route_objects": [
+              "APNIC"
+            ]
+          }
+        ],
+        "lessSpecifics": [],
+        "moreSpecifics": []
+      },
+      "rpki": {
+        "status": "valid",
+        "prefix": "1.1.1.0/24",
+        "asn": "13335"
+      },
+      "partialErrors": [],
+      "prefixes": [
+        {
+          "prefix": "1.1.1.0/24",
+          "ip": "1.1.1.1",
+          "cidr": 24,
+          "asn": {
+            "asn": 13335,
+            "country_code": "",
+            "description": "",
+            "name": ""
+          }
+        }
+      ],
+      "allocation": null,
+      "prefix": {
+        "asDescription": "",
+        "asName": "",
+        "asn": 13335,
+        "cidr": 24,
+        "countryCode": "",
+        "prefix": "1.1.1.0/24"
+      },
+      "ptrRecord": null
+    },
+    "geo": {
+      "city": "South Brisbane",
+      "continent": "Oceania",
+      "coordinates": {
+        "latitude": -27.4766,
+        "longitude": 153.0166
+      },
+      "country": "Australia",
+      "countryCode": "AU",
+      "region": "Queensland",
+      "regionCode": "QLD",
+      "timezone": "Australia/Brisbane",
+      "zip": "4101"
+    },
+    "hostedDomains": {
+      "domains": [
+        "site-a.example.net"
+      ],
+      "total": 500
+    },
+    "hostnames": [
+      "one.one.one.one",
+      "host-a.example.com",
+      "host-b.example.org"
+    ],
+    "network": {
+      "asName": "CLOUDFLARENET",
+      "asn": "AS13335 Cloudflare, Inc.",
+      "isHosting": true,
+      "isMobile": false,
+      "isProxy": false,
+      "isp": "Cloudflare, Inc",
+      "organization": "APNIC and Cloudflare DNS Resolver project",
+      "reverse": "one.one.one.one"
+    },
+    "ports": {
+      "cpes": [
+        "cpe:/a:cloudflare:cloudflare"
+      ],
+      "hostnames": [
+        "one.one.one.one",
+        "host-a.example.com",
+        "host-b.example.org"
+      ],
+      "ports": [
+        53
+      ],
+      "tags": [
+        "pqc"
+      ],
+      "vulns": []
+    },
+    "reputation": {
+      "dnsbl": {
+        "checked": [
+          "zen.spamhaus.org",
+          "bl.spamcop.net",
+          "dnsbl.sorbs.net",
+          "psbl.surriel.com",
+          "b.barracudacentral.org",
+          "dnsbl-1.uceprotect.net",
+          "ix.dnsbl.manitu.net",
+          "all.s5h.net"
+        ],
+        "ip": "1.1.1.1",
+        "isTor": false,
+        "listedIn": []
+      },
+      "otx": {
+        "isMalicious": false,
+        "reports": [],
+        "pulseCount": 0,
+        "reputation": 0,
+        "topPulses": []
+      },
+      "urlhaus": {
+        "blacklists": [],
+        "queryStatus": "no_results",
+        "urlCount": 0
+      }
+    },
+    "risk": {
+      "labels": [
+        "Hosting / Datacenter"
+      ],
+      "score": 0
+    },
+    "rdns": {
+      "hostnames": [
+        "one.one.one.one"
+      ],
+      "ptrName": "1.1.1.1.in-addr.arpa"
+    },
+    "whois": {
+      "events": [
+        {
+          "eventAction": "registration",
+          "eventDate": "2011-08-10T23:12:35Z"
+        }
+      ],
+      "ipVersion": "v4",
+      "status": [
+        "active"
+      ],
+      "startAddress": "1.1.1.0",
+      "endAddress": "1.1.1.255",
+      "contacts": {
+        "technical": {
+          "name": "APNICRANDNET Infrastructure Contact",
+          "phone": "+1.0000000000",
+          "email": "contact@example.com",
+          "handle": "AIC3-AP"
+        },
+        "abuse": {
+          "name": "IRT-APNICRANDNET-AU",
+          "email": "contact@example.com",
+          "handle": "IRT-APNICRANDNET-AU"
+        },
+        "registrant": {
+          "name": "APNIC Research and Development",
+          "phone": "+1.0000000000",
+          "email": "contact@example.com",
+          "handle": "ORG-ARAD1-AP"
+        }
+      },
+      "country": "AU",
+      "handle": "1.1.1.0 - 1.1.1.255",
+      "name": "APNIC-LABS",
+      "parentHandle": null,
+      "range": "1.1.1.0 - 1.1.1.255",
+      "rdapLink": "https://rdap.apnic.net/ip/1.1.1.0/24",
+      "registeredAt": "2011-08-10",
+      "type": "ASSIGNED PORTABLE",
+      "updatedAt": "2023-04-26",
+      "whoisServer": "whois.apnic.net"
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/ip-intelligence/geo" icon="code">
+
+```json
+{
+  "data": {
+    "city": "South Brisbane",
+    "continent": "Oceania",
+    "coordinates": {
+      "latitude": -27.4766,
+      "longitude": 153.0166
+    },
+    "country": "Australia",
+    "countryCode": "AU",
+    "region": "Queensland",
+    "regionCode": "QLD",
+    "timezone": "Australia/Brisbane",
+    "zip": "4101"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "geo",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/network" icon="code">
+
+```json
+{
+  "data": {
+    "asName": "CLOUDFLARENET",
+    "asn": "AS13335 Cloudflare, Inc.",
+    "isHosting": true,
+    "isMobile": false,
+    "isProxy": false,
+    "isp": "Cloudflare, Inc",
+    "organization": "APNIC and Cloudflare DNS Resolver project",
+    "reverse": "one.one.one.one"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "network",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/bgp" icon="code">
+
+```json
+{
+  "data": {
+    "routing": {
+      "observedAt": "2026-11-12T16:00:00",
+      "firstSeen": {
+        "prefix": "1.1.1.0/24",
+        "origin": "19855",
+        "time": "2001-11-14T00:00:00"
+      },
+      "lastSeen": {
+        "prefix": "1.1.1.0/24",
+        "origin": "13335",
+        "time": "2026-11-12T16:00:00"
+      },
+      "visibility": {
+        "v4": {
+          "ris_peers_seeing": 234,
+          "total_ris_peers": 235
+        },
+        "v6": {
+          "ris_peers_seeing": 0,
+          "total_ris_peers": 0
+        }
+      },
+      "origins": [
+        {
+          "origin": 13335,
+          "route_objects": [
+            "APNIC"
+          ]
+        }
+      ],
+      "lessSpecifics": [],
+      "moreSpecifics": []
+    },
+    "rpki": {
+      "status": "valid",
+      "prefix": "1.1.1.0/24",
+      "asn": "13335"
+    },
+    "partialErrors": [],
+    "prefixes": [
+      {
+        "prefix": "1.1.1.0/24",
+        "ip": "1.1.1.1",
+        "cidr": 24,
+        "asn": {
+          "asn": 13335,
+          "country_code": "",
+          "description": "",
+          "name": ""
+        }
+      }
+    ],
+    "allocation": null,
+    "prefix": {
+      "asDescription": "",
+      "asName": "",
+      "asn": 13335,
+      "cidr": 24,
+      "countryCode": "",
+      "prefix": "1.1.1.0/24"
+    },
+    "ptrRecord": null
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "bgp",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/whois" icon="code">
+
+```json
+{
+  "data": {
+    "events": [
+      {
+        "eventAction": "registration",
+        "eventDate": "2011-08-10T23:12:35Z"
+      }
+    ],
+    "ipVersion": "v4",
+    "status": [
+      "active"
+    ],
+    "startAddress": "1.1.1.0",
+    "endAddress": "1.1.1.255",
+    "contacts": {
+      "technical": {
+        "name": "APNICRANDNET Infrastructure Contact",
+        "phone": "+1.0000000000",
+        "email": "contact@example.com",
+        "handle": "AIC3-AP"
+      },
+      "abuse": {
+        "name": "IRT-APNICRANDNET-AU",
+        "email": "contact@example.com",
+        "handle": "IRT-APNICRANDNET-AU"
+      },
+      "registrant": {
+        "name": "APNIC Research and Development",
+        "phone": "+1.0000000000",
+        "email": "contact@example.com",
+        "handle": "ORG-ARAD1-AP"
+      }
+    },
+    "country": "AU",
+    "handle": "1.1.1.0 - 1.1.1.255",
+    "name": "APNIC-LABS",
+    "parentHandle": null,
+    "range": "1.1.1.0 - 1.1.1.255",
+    "rdapLink": "https://rdap.apnic.net/ip/1.1.1.0/24",
+    "registeredAt": "2011-08-10",
+    "type": "ASSIGNED PORTABLE",
+    "updatedAt": "2023-04-26",
+    "whoisServer": "whois.apnic.net"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "whois",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/rdns" icon="code">
+
+```json
+{
+  "data": {
+    "hostnames": [
+      "one.one.one.one"
+    ],
+    "ptrName": "1.1.1.1.in-addr.arpa"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "rdns",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/risk" icon="code">
+
+```json
+{
+  "data": {
+    "labels": [
+      "Hosting / Datacenter"
+    ],
+    "score": 0
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "risk",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/ports" icon="code">
+
+```json
+{
+  "data": {
+    "cpes": [
+      "cpe:/a:cloudflare:cloudflare"
+    ],
+    "hostnames": [
+      "one.one.one.one",
+      "host-a.example.com",
+      "host-b.example.org"
+    ],
+    "ports": [
+      53
+    ],
+    "tags": [
+      "pqc"
+    ],
+    "vulns": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "ports",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/reputation" icon="code">
+
+```json
+{
+  "data": {
+    "dnsbl": {
+      "checked": [
+        "zen.spamhaus.org",
+        "bl.spamcop.net",
+        "dnsbl.sorbs.net",
+        "psbl.surriel.com",
+        "b.barracudacentral.org",
+        "dnsbl-1.uceprotect.net",
+        "ix.dnsbl.manitu.net",
+        "all.s5h.net"
+      ],
+      "ip": "1.1.1.1",
+      "isTor": false,
+      "listedIn": []
+    },
+    "otx": {
+      "isMalicious": false,
+      "reports": [],
+      "pulseCount": 0,
+      "reputation": 0,
+      "topPulses": []
+    },
+    "urlhaus": {
+      "blacklists": [],
+      "queryStatus": "no_results",
+      "urlCount": 0
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "reputation",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/ip-intelligence/hosted-domains" icon="code">
+
+```json
+{
+  "data": {
+    "domains": [
+      "site-a.example.net"
+    ],
+    "total": 500
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "hosted-domains",
+  "query": {
+    "ip": "1.1.1.1"
+  },
+  "tool": "ip-intelligence"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
 ## Cache and errors
 
-Production collector cache: geo/network and reverse DNS 1h; BGP and hosted domains 12h; registration 24h; services 6h; reputation 30min. Non-production bypasses the tool cache. Cache hits do not alter pricing.
+Collector cache: geo/network and reverse DNS 1h; BGP and hosted domains 12h; registration 24h; services 6h; reputation 30min. Cache hits do not alter pricing.
 
-Invalid input returns `400 VALIDATION_ERROR`. Split provider failures return generic `502 PROVIDER_ERROR` or `504 PROVIDER_TIMEOUT`. `/all` preserves successful collectors and reports failed ones in `partialErrors`, without exposing provider error text. No provider secret is required for baseline data; URLhaus enrichment depends on the optional server-side `URLHAUS_API_KEY`.
+Invalid input returns `400 VALIDATION_ERROR`. Split provider failures return generic `502 PROVIDER_ERROR` or `504 PROVIDER_TIMEOUT`. `/all` preserves successful collectors and reports failed ones in `partialErrors`, without exposing provider error text. Some reputation details can be missing when their source is unavailable.

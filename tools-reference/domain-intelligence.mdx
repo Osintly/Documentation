@@ -40,7 +40,7 @@ of current revocation status. Missing values do not imply a negative finding.
 Port results use passive IP observations on the domain's primary IP, not a live
 scan or proof that a service belongs exclusively to this domain. The response
 includes `ip`, `collection: "passive"`, `count` and `openPorts`; service names
-are `null` when unknown. No C99 credential is needed for this operation.
+are `null` when unknown.
 
 ## Full lookup
 
@@ -98,7 +98,7 @@ year index and once per day for a selected year. These are not total capture
 counts. Provider responses are bounded to 400 rows; `truncated` signals the cap.
 `save` and `sections` are not accepted on this route.
 
-Archive metadata is cached for 24 hours in production. The app loads the index
+Archive metadata is cached for 24 hours. The app loads the index
 near the viewport, then the selected year's dates. Selecting a date opens an
 isolated fullscreen archive viewer. Archived content is served by Wayback, not
 proxied through the Osintly application origin. Playback availability and speed
@@ -106,6 +106,764 @@ depend on the archive; the viewer provides an external fallback link.
 Upstream throttling returns `503 PROVIDER_RATE_LIMITED` with `Retry-After: 60`;
 the caller should wait before retrying. Other failures remain `502`/`504` and
 are never presented as an empty archive history.
+
+## Response example
+
+A `POST /tools/domain-intelligence/all` response for example.com. Lists are shortened to one item; counts show the full size.
+
+<Accordion title="Domain Intelligence /all response" icon="code">
+
+```json
+{
+  "data": {
+    "dns": {
+      "dnssec": {
+        "authenticated": true,
+        "dsPresent": true
+      },
+      "emailAuth": {
+        "bimi": null,
+        "dkim": {
+          "selectorsChecked": [
+            "default"
+          ]
+        },
+        "dmarc": "v=DMARC1;p=reject;sp=reject;adkim=s;aspf=s",
+        "dmarcTags": {
+          "adkim": "s",
+          "aspf": "s",
+          "p": "reject",
+          "pct": null,
+          "rua": null,
+          "ruf": null,
+          "sp": "reject"
+        },
+        "mtaSts": null,
+        "spf": "v=spf1 -all",
+        "tlsRpt": null
+      },
+      "primaryIp": "172.66.147.243",
+      "addresses": {
+        "ipv4": [
+          "172.66.147.243",
+          "104.20.23.154"
+        ],
+        "ipv6": [
+          "2606:4700:10::ac42:93f3",
+          "2606:4700:10::6814:179a"
+        ]
+      },
+      "records": {
+        "A": [
+          "172.66.147.243"
+        ],
+        "AAAA": [
+          "2606:4700:10::ac42:93f3"
+        ],
+        "CAA": [],
+        "CNAME": [],
+        "DS": [
+          "2371 13 2 c988ec423e3880eb8dd8a46fe06ca230ee23f35b578d64e78b29c3e1c83d245a"
+        ],
+        "MX": [
+          "0 ."
+        ],
+        "NS": [
+          "hera.ns.cloudflare.com."
+        ],
+        "PTR": [],
+        "SOA": [
+          "elliott.ns.cloudflare.com. dns.cloudflare.com. 2418004112 10000 2400 604800 1800"
+        ],
+        "TXT": [
+          "v=spf1 -all"
+        ]
+      }
+    },
+    "http": {
+      "finalUrl": "https://example.com/",
+      "protocol": "https",
+      "reachable": true,
+      "securityHeaders": {
+        "missing": [
+          "CSP",
+          "Permissions-Policy",
+          "Referrer-Policy",
+          "HSTS",
+          "X-Content-Type-Options",
+          "X-Frame-Options"
+        ],
+        "present": []
+      },
+      "server": "cloudflare",
+      "status": 200,
+      "supportsHttp3": false
+    },
+    "ssl": {
+      "found": true,
+      "certificate": {
+        "dnsNames": [
+          "*.example.com"
+        ],
+        "expiresAt": "2026-12-25T22:56:35Z",
+        "issuedAt": "2026-09-26T22:49:11Z",
+        "issuer": "SSL.com",
+        "issuerFull": "C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3",
+        "remainingDays": 43,
+        "revoked": false,
+        "fingerprint": "6ecee9752dd17d6ab36befdda1a90849a5c9227e6a7806621ac8ef42cd621d9c"
+      }
+    },
+    "technologies": {
+      "status": 200,
+      "technologies": [
+        {
+          "category": "Protocol",
+          "name": "HTTPS"
+        }
+      ]
+    },
+    "whois": {
+      "found": true,
+      "abuse": {
+        "name": "",
+        "phone": "+1.0000000000",
+        "email": ""
+      },
+      "technical": null,
+      "administrative": null,
+      "handle": "2336799_DOMAIN_COM-VRSN",
+      "unicodeName": null,
+      "dnssec": {
+        "delegationSigned": true
+      },
+      "events": [
+        {
+          "eventAction": "registration",
+          "eventDate": "1995-08-14T04:00:00Z"
+        }
+      ],
+      "dates": {
+        "expiration": "2027-08-13T04:00:00Z",
+        "lastChanged": "2026-08-14T08:01:43Z",
+        "registration": "1995-08-14T04:00:00Z"
+      },
+      "domain": "example.com",
+      "nameservers": [
+        "elliott.ns.cloudflare.com"
+      ],
+      "registrar": {
+        "name": "RESERVED-Internet Assigned Numbers Authority"
+      },
+      "registrant": null,
+      "source": "rdap",
+      "status": [
+        "client delete prohibited"
+      ]
+    },
+    "security": {
+      "mtaStsPolicy": {
+        "found": false,
+        "mode": null,
+        "url": null
+      },
+      "robots": {
+        "disallowSample": [],
+        "found": false,
+        "url": null
+      },
+      "securityTxt": {
+        "canonical": [],
+        "contact": [],
+        "encryption": [],
+        "expires": null,
+        "found": false,
+        "url": null
+      },
+      "sitemap": {
+        "found": false,
+        "hasIndex": false,
+        "url": null
+      }
+    },
+    "risk": {
+      "score": 0,
+      "signals": []
+    },
+    "subdomains": {
+      "count": 995,
+      "geo": {
+        "asn": "AS13335",
+        "city": "San Francisco",
+        "continent": "North America",
+        "countryCode": "US",
+        "countryName": "United States of America",
+        "hostname": null,
+        "ip": "104.20.23.154",
+        "isp": "CloudFlare Inc",
+        "latitude": "37.77493",
+        "longitude": "-122.41942",
+        "organization": "CloudFlare Inc",
+        "region": "California",
+        "timezone": "America/Los_Angeles"
+      },
+      "primaryIp": "104.20.23.154",
+      "subdomains": [
+        {
+          "cloudflare": false,
+          "ip": null,
+          "name": "autodiscover.example.com"
+        }
+      ]
+    },
+    "emails": {
+      "count": 0,
+      "emails": []
+    },
+    "ports": {
+      "ip": "172.66.147.243",
+      "count": 11,
+      "openPorts": [
+        {
+          "port": 80,
+          "service": null
+        }
+      ],
+      "hostnames": [
+        "www.example.com"
+      ],
+      "cpes": [
+        "cpe:/a:cloudflare:cloudflare"
+      ],
+      "vulns": [],
+      "tags": [
+        "cdn"
+      ],
+      "collection": "passive"
+    },
+    "reputation": {
+      "dnsbl": {
+        "checked": [
+          "zen.spamhaus.org",
+          "bl.spamcop.net",
+          "dnsbl.sorbs.net",
+          "psbl.surriel.com"
+        ],
+        "ip": "172.66.147.243",
+        "listedIn": []
+      },
+      "primaryIp": "172.66.147.243",
+      "urlhaus": {
+        "blacklists": [],
+        "queryStatus": "ok",
+        "urlCount": 1,
+        "urls": [
+          "http://example.com/test_drop_check"
+        ]
+      }
+    },
+    "collectedSections": [
+      "dns",
+      "http",
+      "ssl",
+      "technologies",
+      "whois",
+      "security",
+      "risk",
+      "subdomains",
+      "emails",
+      "ports",
+      "reputation"
+    ],
+    "partialErrors": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "all",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+### Individual endpoints
+
+Each endpoint returns the same envelope with its own `operation` and `query`. Examples are anonymized and lists are shortened to one item.
+
+<AccordionGroup>
+
+<Accordion title="POST /tools/domain-intelligence/archives" icon="code">
+
+```json
+{
+  "data": {
+    "domain": "example.com",
+    "path": "/",
+    "year": null,
+    "years": [
+      2026
+    ],
+    "captures": [],
+    "sampled": true,
+    "granularity": "year",
+    "truncated": false,
+    "returnedCount": 0,
+    "unavailableSchemes": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "archives",
+  "query": {
+    "domain": "example.com",
+    "path": "/"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/dns" icon="code">
+
+```json
+{
+  "data": {
+    "dnssec": {
+      "authenticated": true,
+      "dsPresent": true
+    },
+    "emailAuth": {
+      "bimi": null,
+      "dkim": {
+        "selectorsChecked": [
+          "default"
+        ]
+      },
+      "dmarc": "v=DMARC1;p=reject;sp=reject;adkim=s;aspf=s",
+      "dmarcTags": {
+        "adkim": "s",
+        "aspf": "s",
+        "p": "reject",
+        "pct": null,
+        "rua": null,
+        "ruf": null,
+        "sp": "reject"
+      },
+      "mtaSts": null,
+      "spf": "v=spf1 -all",
+      "tlsRpt": null
+    },
+    "primaryIp": "172.66.147.243",
+    "addresses": {
+      "ipv4": [
+        "172.66.147.243",
+        "104.20.23.154"
+      ],
+      "ipv6": [
+        "2606:4700:10::ac42:93f3",
+        "2606:4700:10::6814:179a"
+      ]
+    },
+    "records": {
+      "A": [
+        "172.66.147.243"
+      ],
+      "AAAA": [
+        "2606:4700:10::ac42:93f3"
+      ],
+      "CAA": [],
+      "CNAME": [],
+      "DS": [
+        "2371 13 2 c988ec423e3880eb8dd8a46fe06ca230ee23f35b578d64e78b29c3e1c83d245a"
+      ],
+      "MX": [
+        "0 ."
+      ],
+      "NS": [
+        "hera.ns.cloudflare.com."
+      ],
+      "PTR": [],
+      "SOA": [
+        "elliott.ns.cloudflare.com. dns.cloudflare.com. 2418004112 10000 2400 604800 1800"
+      ],
+      "TXT": [
+        "v=spf1 -all"
+      ]
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "dns",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/http" icon="code">
+
+```json
+{
+  "data": {
+    "finalUrl": "https://example.com/",
+    "protocol": "https",
+    "reachable": true,
+    "securityHeaders": {
+      "missing": [
+        "CSP",
+        "Permissions-Policy",
+        "Referrer-Policy",
+        "HSTS",
+        "X-Content-Type-Options",
+        "X-Frame-Options"
+      ],
+      "present": []
+    },
+    "server": "cloudflare",
+    "status": 200,
+    "supportsHttp3": false
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "http",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/ssl" icon="code">
+
+```json
+{
+  "data": {
+    "found": true,
+    "certificate": {
+      "dnsNames": [
+        "*.example.com"
+      ],
+      "expiresAt": "2026-12-25T22:56:35Z",
+      "issuedAt": "2026-09-26T22:49:11Z",
+      "issuer": "SSL.com",
+      "issuerFull": "C=US, O=SSL Corporation, CN=Cloudflare TLS Issuing ECC CA 3",
+      "remainingDays": 43,
+      "revoked": false,
+      "fingerprint": "6ecee9752dd17d6ab36befdda1a90849a5c9227e6a7806621ac8ef42cd621d9c"
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "ssl",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/technologies" icon="code">
+
+```json
+{
+  "data": {
+    "status": 200,
+    "technologies": [
+      {
+        "category": "Protocol",
+        "name": "HTTPS"
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "technologies",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/whois" icon="code">
+
+```json
+{
+  "data": {
+    "found": true,
+    "abuse": {
+      "name": "",
+      "phone": "+1.0000000000",
+      "email": ""
+    },
+    "technical": null,
+    "administrative": null,
+    "handle": "2336799_DOMAIN_COM-VRSN",
+    "unicodeName": null,
+    "dnssec": {
+      "delegationSigned": true
+    },
+    "events": [
+      {
+        "eventAction": "registration",
+        "eventDate": "1995-08-14T04:00:00Z"
+      }
+    ],
+    "dates": {
+      "expiration": "2027-08-13T04:00:00Z",
+      "lastChanged": "2026-08-14T08:01:43Z",
+      "registration": "1995-08-14T04:00:00Z"
+    },
+    "domain": "example.com",
+    "nameservers": [
+      "elliott.ns.cloudflare.com"
+    ],
+    "registrar": {
+      "name": "RESERVED-Internet Assigned Numbers Authority"
+    },
+    "registrant": null,
+    "source": "rdap",
+    "status": [
+      "client delete prohibited"
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "whois",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/security" icon="code">
+
+```json
+{
+  "data": {
+    "mtaStsPolicy": {
+      "found": false,
+      "mode": null,
+      "url": null
+    },
+    "robots": {
+      "disallowSample": [],
+      "found": false,
+      "url": null
+    },
+    "securityTxt": {
+      "canonical": [],
+      "contact": [],
+      "encryption": [],
+      "expires": null,
+      "found": false,
+      "url": null
+    },
+    "sitemap": {
+      "found": false,
+      "hasIndex": false,
+      "url": null
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "security",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/risk" icon="code">
+
+```json
+{
+  "data": {
+    "score": 0,
+    "signals": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "risk",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/subdomains" icon="code">
+
+```json
+{
+  "data": {
+    "count": 995,
+    "geo": {
+      "asn": "AS13335",
+      "city": "San Francisco",
+      "continent": "North America",
+      "countryCode": "US",
+      "countryName": "United States of America",
+      "hostname": null,
+      "ip": "104.20.23.154",
+      "isp": "CloudFlare Inc",
+      "latitude": "37.77493",
+      "longitude": "-122.41942",
+      "organization": "CloudFlare Inc",
+      "region": "California",
+      "timezone": "America/Los_Angeles"
+    },
+    "primaryIp": "104.20.23.154",
+    "subdomains": [
+      {
+        "cloudflare": false,
+        "ip": null,
+        "name": "autodiscover.example.com"
+      }
+    ]
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "subdomains",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/emails" icon="code">
+
+```json
+{
+  "data": {
+    "count": 0,
+    "emails": []
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "emails",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/ports" icon="code">
+
+```json
+{
+  "data": {
+    "ip": "172.66.147.243",
+    "count": 11,
+    "openPorts": [
+      {
+        "port": 80,
+        "service": null
+      }
+    ],
+    "hostnames": [
+      "www.example.com"
+    ],
+    "cpes": [
+      "cpe:/a:cloudflare:cloudflare"
+    ],
+    "vulns": [],
+    "tags": [
+      "cdn"
+    ],
+    "collection": "passive"
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "ports",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+<Accordion title="POST /tools/domain-intelligence/reputation" icon="code">
+
+```json
+{
+  "data": {
+    "dnsbl": {
+      "checked": [
+        "zen.spamhaus.org",
+        "bl.spamcop.net",
+        "dnsbl.sorbs.net",
+        "psbl.surriel.com"
+      ],
+      "ip": "172.66.147.243",
+      "listedIn": []
+    },
+    "primaryIp": "172.66.147.243",
+    "urlhaus": {
+      "blacklists": [],
+      "queryStatus": "ok",
+      "urlCount": 1,
+      "urls": [
+        "http://example.com/test_drop_check"
+      ]
+    }
+  },
+  "meta": {
+    "timestamp": "2026-11-13T10:00:00.000Z"
+  },
+  "operation": "reputation",
+  "query": {
+    "domain": "example.com"
+  },
+  "tool": "domain-intelligence"
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+---
 
 ## Snapshot storage
 
@@ -118,9 +876,8 @@ Provider cache is shared by `/all` and split routes and never changes pricing.
 DNS is cached for 10 minutes; HTTP, technologies and security files for 30 minutes;
 certificates for 12 hours; registration and subdomains for 24 hours; emails and
 ports for 6 hours; geolocation for 7 days; reputation for 30 minutes.
-Cache is disabled outside production.
 
 Errors include `401` for invalid authentication, `403 PLAN_FEATURE_REQUIRED`,
 `429 RATE_LIMIT_EXCEEDED` on paid routes, and `502`/`503`/`504` for unavailable
-enrichment. A missing server-side provider configuration returns `503` only when
-the selected operation requires it. Failed requests do not incur a success usage event.
+enrichment. `503` is returned only when a source needed by the selected
+operation is unavailable. Failed requests do not incur a success usage event.
