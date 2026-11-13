@@ -625,10 +625,10 @@
           "429": {
             "$ref": "#/components/responses/SearchApiError"
           },
-          "503": {
+          "500": {
             "$ref": "#/components/responses/SearchApiError"
           },
-          "500": {
+          "503": {
             "$ref": "#/components/responses/SearchApiError"
           }
         }
@@ -699,8 +699,173 @@
           "429": {
             "$ref": "#/components/responses/SearchApiError"
           },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
           "503": {
             "description": "Registered-account checks for an email search are currently unavailable in temporary mode."
+          }
+        }
+      }
+    },
+    "/search/temporary/{id}/leaks": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get temporary search leaks overview",
+        "description": "List the leak sources of a temporary search with status, counts, pagination hints, and fetch URLs. {id} is the X-Search-Id header of the temporary search stream, and the call must use the API key that started the search. Leak records stay available for one hour after the search ends. With X-Osintly-Progressive-Leaks: 1, processing sources may expose readable early pages; counts and pagination are provisional until the source finishes.",
+        "operationId": "getTemporarySearchLeaksOverview",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          },
+          {
+            "$ref": "#/components/parameters/ProgressiveLeaks"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leaks sources overview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchLeaksOverviewResponse"
+                },
+                "examples": {
+                  "overview": {
+                    "value": {
+                      "data": {
+                        "sources": [
+                          {
+                            "name": "Snusbase",
+                            "key": "snusbase",
+                            "status": "success",
+                            "count": 214,
+                            "fetch_url": "https://api.osint.ly/search/temporary/d290f1ee-6c54-4b01-90e6-d701748f0851/leaks/snusbase",
+                            "pagination": {
+                              "page_size": 100,
+                              "total_pages": 3
+                            },
+                            "logo": null,
+                            "description": null
+                          }
+                        ]
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:30.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "500": {
+            "$ref": "#/components/responses/SearchApiError"
+          }
+        }
+      }
+    },
+    "/search/temporary/{id}/leaks/{source}": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Get temporary search leak source results",
+        "description": "Return normalized results for one leak source of a temporary search, page by page. {id} is the X-Search-Id header of the temporary search stream, and the call must use the API key that started the search. Leak records stay available for one hour after the search ends. With X-Osintly-Progressive-Leaks: 1, published pages can be fetched while the source is processing; unpublished pages return 404.",
+        "operationId": "getTemporarySearchLeakSource",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchId"
+          },
+          {
+            "$ref": "#/components/parameters/LeakSource"
+          },
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/ProgressiveLeaks"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Leak source items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchLeakSourceResponse"
+                },
+                "examples": {
+                  "page_1": {
+                    "value": {
+                      "data": {
+                        "source": {
+                          "name": "Snusbase",
+                          "key": "snusbase",
+                          "status": "success",
+                          "logo": null,
+                          "description": null
+                        },
+                        "pagination": {
+                          "page": 1,
+                          "page_size": 100,
+                          "total_pages": 3,
+                          "has_next_page": true
+                        },
+                        "template": {
+                          "informations": [],
+                          "stats": [],
+                          "additional": []
+                        },
+                        "results": [
+                          {
+                            "key": "snusbase-collection-1",
+                            "items": [
+                              {
+                                "label": "Email",
+                                "value": "target@example.com",
+                                "copy": true,
+                                "isdate": false,
+                                "islink": false
+                              }
+                            ]
+                          }
+                        ],
+                        "count": 214
+                      },
+                      "meta": {
+                        "environment": "production",
+                        "timestamp": "2026-05-27T12:00:32.000Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/SearchApiError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/SearchApiError"
           },
           "500": {
             "$ref": "#/components/responses/SearchApiError"
@@ -801,10 +966,10 @@
           "429": {
             "$ref": "#/components/responses/SearchApiError"
           },
-          "503": {
+          "500": {
             "$ref": "#/components/responses/SearchApiError"
           },
-          "500": {
+          "503": {
             "$ref": "#/components/responses/SearchApiError"
           }
         }
@@ -884,10 +1049,10 @@
           "409": {
             "$ref": "#/components/responses/SearchApiError"
           },
-          "503": {
+          "500": {
             "$ref": "#/components/responses/SearchApiError"
           },
-          "500": {
+          "503": {
             "$ref": "#/components/responses/SearchApiError"
           }
         }
@@ -1744,7 +1909,12 @@
       },
       "ModulesAggregations": {
         "type": "object",
-        "required": ["categories", "featuredCount", "searchTypes", "totalCount"],
+        "required": [
+          "categories",
+          "featuredCount",
+          "searchTypes",
+          "totalCount"
+        ],
         "properties": {
           "categories": {
             "type": "object",
@@ -2054,8 +2224,8 @@
           "mode": {
             "type": "string",
             "enum": ["default", "selected", "none"],
-            "default": "default",
-            "description": "`default` queries the default leak sources for the query type, `selected` queries only the sources listed in `sources`, and `none` skips leak sources."
+            "default": "none",
+            "description": "`none` (default) skips leak sources, `default` queries the default leak sources for the query type, and `selected` queries only the sources listed in `sources`. Omitting `leaks` also skips leak sources."
           },
           "custom_mapping": {
             "type": "boolean",
@@ -2075,11 +2245,6 @@
       "SearchFeatures": {
         "type": "object",
         "properties": {
-          "crosssearch": {
-            "type": "boolean",
-            "default": false,
-            "description": "Automatically run compatible modules on profile links found in result cards. Disabled by default; set features.crosssearch to true to enable it for this search. Results use the same search stream and include their source provenance."
-          },
           "breached_accounts": {
             "type": "boolean",
             "default": true,
@@ -2088,8 +2253,7 @@
           "registered_accounts": {
             "type": "string",
             "enum": ["exclude", "include", "only"],
-            "default": "include",
-            "description": "Checks which online services have an account registered with the searched email address. `include` runs the check with the rest of the search, `exclude` skips it, and `only` runs this check alone, without modules, leak sources or breach lookups. Email Address only; for other query types, omit the field or set it to `exclude`."
+            "description": "Checks which online services have an account registered with the searched email address. `include` runs the check with the rest of the search, `exclude` skips it, and `only` runs this check alone, without modules, leak sources or breach lookups. Email Address only; for other query types, omit the field or set it to `exclude`. When omitted on an Email Address search, the check runs as with `include`."
           }
         },
         "additionalProperties": false
@@ -2356,6 +2520,11 @@
               "format": "uuid"
             },
             "description": "Search IDs to delete as a single all-or-nothing batch. Minimum 1 ID, maximum 100 IDs per request. Every ID must belong to the authenticated caller, and every referenced search must already be in a terminal state (`finished` or `failed`). If one ID is invalid, inaccessible, or still active, the whole request is rejected."
+          },
+          "ignore_missing": {
+            "type": "boolean",
+            "default": false,
+            "description": "Skip IDs that no longer exist for this API key instead of rejecting the batch. Useful when clearing searches mirrored in another system. Other checks still apply to the remaining IDs."
           }
         },
         "additionalProperties": false
@@ -2554,7 +2723,12 @@
                 "properties": {
                   "webhook": {
                     "type": "object",
-                    "required": ["status", "attempts", "sent_at", "last_attempt_at"],
+                    "required": [
+                      "status",
+                      "attempts",
+                      "sent_at",
+                      "last_attempt_at"
+                    ],
                     "properties": {
                       "status": {
                         "type": ["string", "null"],
@@ -2663,7 +2837,12 @@
         "properties": {
           "data": {
             "type": "object",
-            "required": ["modules", "byok", "breached_accounts", "registered_accounts"],
+            "required": [
+              "modules",
+              "byok",
+              "breached_accounts",
+              "registered_accounts"
+            ],
             "properties": {
               "modules": {
                 "type": "array",
@@ -2730,13 +2909,7 @@
                 "type": "array",
                 "items": {
                   "type": "object",
-                  "required": [
-                    "name",
-                    "domain",
-                    "section",
-                    "logo",
-                    "found"
-                  ],
+                  "required": ["name", "domain", "section", "logo", "found"],
                   "properties": {
                     "check_id": {
                       "type": "string",
@@ -2780,12 +2953,7 @@
                         },
                         "difficulty": {
                           "type": "string",
-                          "enum": [
-                            "easy",
-                            "medium",
-                            "hard",
-                            "impossible"
-                          ],
+                          "enum": ["easy", "medium", "hard", "impossible"],
                           "nullable": true,
                           "description": "How hard it is to delete the account."
                         },
@@ -2995,7 +3163,13 @@
         "properties": {
           "data": {
             "type": "object",
-              "required": ["source", "pagination", "template", "results", "count"],
+            "required": [
+              "source",
+              "pagination",
+              "template",
+              "results",
+              "count"
+            ],
             "properties": {
               "source": {
                 "type": "object",
@@ -3026,7 +3200,12 @@
               },
               "pagination": {
                 "type": "object",
-                "required": ["page", "page_size", "total_pages", "has_next_page"],
+                "required": [
+                  "page",
+                  "page_size",
+                  "total_pages",
+                  "has_next_page"
+                ],
                 "properties": {
                   "page": {
                     "type": "integer",
