@@ -36,6 +36,8 @@ curl -X GET "https://api.osint.ly/radar/breaches?limit=2&sortBy=recently-added" 
 
 ## 3) Create a search
 
+This request runs every compatible module, breach lookups, registered account checks, cache reuse, and a completion webhook.
+
 ```bash
 curl -X POST "https://api.osint.ly/search" \
   -H "Authorization: Bearer $OSINTLY_API_KEY" \
@@ -45,17 +47,40 @@ curl -X POST "https://api.osint.ly/search" \
       "type": "Email Address",
       "value": "target@example.com"
     },
+    "modules": {
+      "mode": "all"
+    },
     "features": {
       "breached_accounts": true,
       "registered_accounts": "include"
     },
     "cache": {
       "mode": "prefer"
+    },
+    "delivery": {
+      "webhook": {
+        "url": "https://client.example/webhooks/osintly",
+        "secret": "replace-with-your-webhook-secret"
+      }
     }
   }'
 ```
 
-Save the returned `data.search.id` for the next calls.
+Save the returned `data.search.id` for the next calls. Only `query` is required. `delivery` is optional, and `byok` adds your own OSINT Industries or Sherlockeye keys.
+
+### Optional: query leak sources
+
+Leak sources are not queried by default. Each source requires its own active API add-on: without it, the search is rejected with `403 ADDON_REQUIRED`, and an exhausted add-on returns `429 ADDON_QUOTA_EXCEEDED`. With the add-ons active, add `leaks` to the request above, as osint.ly does:
+
+```json
+"leaks": {
+  "mode": "selected",
+  "custom_mapping": true,
+  "sources": ["Hudson Rock", "Leak Check", "Snusbase", "Breach Base", "Leak Osint"]
+}
+```
+
+List only the sources you have an add-on for. `"mode": "default"` queries every default source for the query type and needs all of their add-ons.
 
 ### Optional: run selected modules only
 

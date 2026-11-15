@@ -18,15 +18,18 @@ curl -N --request POST 'https://api.osint.ly/search/temporary' \
   --header 'Content-Type: application/json' \
   --data '{
     "query": {
-      "type": "Pseudonym",
-      "value": "target"
+      "type": "Email Address",
+      "value": "target@example.com"
     },
     "modules": {
       "mode": "all"
     },
-    "leaks": {
-      "mode": "selected",
-      "sources": ["snusbase"]
+    "features": {
+      "breached_accounts": true,
+      "registered_accounts": "include"
+    },
+    "cache": {
+      "mode": "prefer"
     }
   }'
 ```
@@ -35,7 +38,7 @@ Temporary searches only run through this endpoint. `POST /search` rejects a `tem
 
 The request goes through the same authentication, plan limits, concurrency check, and blocklist as a normal search, and counts toward your API usage in the same way.
 
-Search options behave as they do on `POST /search`. For example, `features.registered_accounts: "only"` runs only the registered-account check, without modules, leak sources, or breached accounts, and `leaks.custom_mapping` selects the leak record format.
+Search options behave as they do on `POST /search`. For example, `features.registered_accounts: "only"` runs only the registered-account check, without modules, leak sources, or breached accounts, and `leaks.custom_mapping` selects the leak record format. Leak sources still require their API add-ons.
 
 ## Response
 

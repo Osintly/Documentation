@@ -570,6 +570,136 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SearchCreateRequest"
+              },
+              "examples": {
+                "full_search": {
+                  "summary": "Full search",
+                  "value": {
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
+                    },
+                    "modules": {
+                      "mode": "all"
+                    },
+                    "features": {
+                      "breached_accounts": true,
+                      "registered_accounts": "include"
+                    },
+                    "cache": {
+                      "mode": "prefer"
+                    },
+                    "delivery": {
+                      "webhook": {
+                        "url": "https://client.example/webhooks/osintly",
+                        "secret": "replace-with-your-webhook-secret"
+                      }
+                    }
+                  }
+                },
+                "with_leak_sources": {
+                  "summary": "Full search with leak sources (add-ons required)",
+                  "value": {
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
+                    },
+                    "modules": {
+                      "mode": "all"
+                    },
+                    "leaks": {
+                      "mode": "selected",
+                      "custom_mapping": true,
+                      "sources": [
+                        "Hudson Rock",
+                        "Leak Check",
+                        "Snusbase",
+                        "Breach Base",
+                        "Leak Osint"
+                      ]
+                    },
+                    "features": {
+                      "breached_accounts": true,
+                      "registered_accounts": "include"
+                    },
+                    "cache": {
+                      "mode": "prefer"
+                    },
+                    "delivery": {
+                      "webhook": {
+                        "url": "https://client.example/webhooks/osintly",
+                        "secret": "replace-with-your-webhook-secret"
+                      }
+                    }
+                  }
+                },
+                "selected_modules": {
+                  "summary": "Selected modules only",
+                  "value": {
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
+                    },
+                    "modules": {
+                      "mode": "selected",
+                      "ids": [
+                        "4a8cbb96-70df-4bd6-8f4a-9c0bf5ffde1f",
+                        "95c36c17-f76e-4911-bd4e-8ea57515b2fb"
+                      ]
+                    },
+                    "features": {
+                      "breached_accounts": true,
+                      "registered_accounts": "exclude"
+                    },
+                    "cache": {
+                      "mode": "bypass"
+                    }
+                  }
+                },
+                "registered_accounts_only": {
+                  "summary": "Registered accounts only",
+                  "value": {
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
+                    },
+                    "features": {
+                      "registered_accounts": "only"
+                    }
+                  }
+                },
+                "byok": {
+                  "summary": "Full search with BYOK providers",
+                  "value": {
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
+                    },
+                    "modules": {
+                      "mode": "all"
+                    },
+                    "features": {
+                      "breached_accounts": true,
+                      "registered_accounts": "include"
+                    },
+                    "cache": {
+                      "mode": "prefer"
+                    },
+                    "byok": {
+                      "mode": "default",
+                      "osint_industries": {
+                        "api_key": "YOUR_OSINT_INDUSTRIES_API_KEY",
+                        "timeout": 60,
+                        "exact_match": true,
+                        "premium": false,
+                        "premium_modules_only": false
+                      },
+                      "sherlockeye": {
+                        "api_key": "YOUR_SHERLOCKEYE_API_KEY"
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -654,6 +784,57 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SearchCreateRequest"
+              },
+              "examples": {
+                "full_search": {
+                  "summary": "Full temporary search",
+                  "value": {
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
+                    },
+                    "modules": {
+                      "mode": "all"
+                    },
+                    "features": {
+                      "breached_accounts": true,
+                      "registered_accounts": "include"
+                    },
+                    "cache": {
+                      "mode": "prefer"
+                    }
+                  }
+                },
+                "with_leak_sources": {
+                  "summary": "Full temporary search with leak sources (add-ons required)",
+                  "value": {
+                    "query": {
+                      "type": "Email Address",
+                      "value": "target@example.com"
+                    },
+                    "modules": {
+                      "mode": "all"
+                    },
+                    "leaks": {
+                      "mode": "selected",
+                      "custom_mapping": true,
+                      "sources": [
+                        "Hudson Rock",
+                        "Leak Check",
+                        "Snusbase",
+                        "Breach Base",
+                        "Leak Osint"
+                      ]
+                    },
+                    "features": {
+                      "breached_accounts": true,
+                      "registered_accounts": "include"
+                    },
+                    "cache": {
+                      "mode": "prefer"
+                    }
+                  }
+                }
               }
             }
           }
@@ -2225,7 +2406,7 @@
             "type": "string",
             "enum": ["default", "selected", "none"],
             "default": "none",
-            "description": "`none` (default) skips leak sources, `default` queries the default leak sources for the query type, and `selected` queries only the sources listed in `sources`. Omitting `leaks` also skips leak sources."
+            "description": "`none` (default) skips leak sources, `default` queries the default leak sources for the query type, and `selected` queries only the sources listed in `sources`. Omitting `leaks` also skips leak sources. With `default`, you need the add-on of every default source for the query type. Each leak source requires its own active API add-on: a missing add-on returns `403 ADDON_REQUIRED` and an exhausted one returns `429 ADDON_QUOTA_EXCEEDED`."
           },
           "custom_mapping": {
             "type": "boolean",
@@ -2399,7 +2580,7 @@
           },
           "leaks": {
             "$ref": "#/components/schemas/SearchLeaks",
-            "description": "Which leak sources to query. Defaults to the default sources for the query type."
+            "description": "Which leak sources to query. Omit it unless you have leak source add-ons: when omitted, no leak source is queried. Send `mode: default` for the default sources of the query type, or `mode: selected` with `sources` to choose them. Each leak source requires its own active API add-on: a missing add-on returns `403 ADDON_REQUIRED` and an exhausted one returns `429 ADDON_QUOTA_EXCEEDED`."
           },
           "features": {
             "$ref": "#/components/schemas/SearchFeatures",
