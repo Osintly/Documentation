@@ -41,7 +41,8 @@
               "search-analysis/real-time-results",
               "search-analysis/analysis-panels",
               "search-analysis/card-annotations",
-              "search-analysis/ai-analyst"
+              "search-analysis/ai-analyst",
+              "guides/chatgpt-claude"
             ]
           },
           {

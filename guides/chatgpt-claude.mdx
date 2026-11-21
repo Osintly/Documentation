@@ -1,0 +1,86 @@
+---
+title: Osintly in ChatGPT and Claude
+description: "Connect your Osintly account to ChatGPT or Claude and run lookups and full searches from a conversation, with your plan and credits."
+icon: plug
+---
+
+You can connect your Osintly account to ChatGPT or Claude. The assistant then runs Osintly lookups for you during a conversation, and every result is saved in your Osintly history like a search made on the website.
+
+The assistant uses the workspace you choose when connecting. It follows that workspace's plan: the same research types, tool limits and credits as osint.ly. Nothing is billed separately.
+
+<Note>
+Every plan can connect, including Free. Full searches follow the research types of your plan, and each one uses 1 credit after you confirm it.
+</Note>
+
+---
+
+## Connect
+
+Osintly's server URL is `https://mcp.osint.ly/mcp`. You will also find it in **Settings → Connected apps** on osint.ly.
+
+<Tabs>
+  <Tab title="ChatGPT">
+    1. Open **Settings → Apps** in ChatGPT and add Osintly, or create an app with the server URL.
+    2. ChatGPT opens an Osintly page. Sign in if needed.
+    3. Choose the workspace ChatGPT will use, review the permissions, then select **Connect ChatGPT**.
+  </Tab>
+  <Tab title="Claude">
+    1. Open **Settings → Connectors** in Claude and select **Add custom connector**.
+    2. Paste the server URL, then select **Connect**.
+    3. On the Osintly page, choose the workspace Claude will use, review the permissions, then select **Connect Claude**.
+  </Tab>
+</Tabs>
+
+You return to the assistant automatically once the connection is approved. If you cancel, nothing is shared.
+
+---
+
+## What the assistant can do
+
+| Permission | What it allows |
+| --- | --- |
+| Read your workspace | See your plan, usage, Radar breaches, search history and saved results. |
+| Run focused tools | IP and domain intelligence, domain archives, gaming and platform accounts (Steam, Xbox, PlayStation, Epic Games, Roblox, Social Club, Ubisoft, Reddit) and vehicle history. Each lookup counts toward your tool limits. |
+| Run full searches | Search a pseudonym, email address, IP address, domain or crypto wallet across all modules, leak sources and account checks. |
+
+Example prompts:
+
+- *"Look up 8.8.8.8 with Osintly."*
+- *"Find the Steam profile for this username."*
+- *"Which Radar breaches were added this week?"*
+- *"Run a full Osintly search on this email address."*
+- *"Reopen my last Osintly search and summarize the accounts it found."*
+
+---
+
+## Credits and confirmations
+
+Focused tools use your hourly and daily tool limits, as on the website. When a limit is reached, the assistant tells you when it resets. If your plan allows it, it can offer to spend 1 credit to continue, and it asks you first.
+
+A full search always uses 1 credit. The assistant first shows you the target and the cost, and the search starts only after you agree. The confirmation is tied to that exact target and expires after 10 minutes, so the assistant cannot spend a credit on a different value.
+
+Results arrive over a few minutes. The assistant can check progress and read the results page by page. A registered account is a lead: it does not prove the account belongs to the person you are researching.
+
+---
+
+## Manage your connections
+
+**Settings → Connected apps** lists each connected app with its workspace, last use and activity over the past 30 days. Select **Disconnect** to revoke an app's access immediately.
+
+To use a different workspace, disconnect the app and connect it again. An app that stays unused for 30 days must reconnect.
+
+---
+
+## Organizations
+
+In an organization workspace, the assistant uses the organization's plan, limits and shared credits, and searches appear in the organization's history.
+
+Owners and admins control access from **Organization settings → ChatGPT & Claude**. They can see which members connected an app and disconnect any of them. Turning the setting off disconnects every member and blocks new connections to the organization.
+
+---
+
+## Privacy
+
+Osintly never shares your password with ChatGPT or Claude. Each app receives its own access that you can revoke at any time, and the searched values are not stored in the connection activity log.
+
+Use Osintly from an assistant under the same rules as the website: see [Ethics & Law](https://osint.ly/ethics).
