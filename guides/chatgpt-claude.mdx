@@ -9,7 +9,7 @@ You can connect your Osintly account to ChatGPT or Claude. The assistant then ru
 The assistant uses the workspace you choose when connecting. It follows that workspace's plan: the same research types, tool limits and credits as osint.ly. Nothing is billed separately.
 
 <Note>
-Every plan can connect, including Free. Full searches follow the research types of your plan, and each one uses 1 credit after you confirm it.
+ChatGPT and Claude are included in the Standard, Pro and Ultimate plans; Free accounts cannot connect. Full searches follow the research types of your plan, and each one uses 1 credit.
 </Note>
 
 ---
@@ -41,7 +41,7 @@ You return to the assistant automatically once the connection is approved. If yo
 | --- | --- |
 | Read your workspace | See your plan, usage, Radar breaches, search history and saved results. |
 | Run focused tools | IP and domain intelligence, domain archives, gaming and platform accounts (Steam, Xbox, PlayStation, Epic Games, Roblox, Social Club, Ubisoft, Reddit) and vehicle history. Each lookup counts toward your tool limits. |
-| Run full searches | Search a pseudonym, email address, IP address, domain or crypto wallet across all modules, leak sources and account checks. |
+| Run full searches | Search a pseudonym, email address, IP address, domain or crypto wallet across all modules, account checks and known breaches. Leaked results stay in the full report on osint.ly. |
 
 Example prompts:
 
@@ -53,11 +53,11 @@ Example prompts:
 
 ---
 
-## Credits and confirmations
+## Credits
 
 Focused tools use your hourly and daily tool limits, as on the website. When a limit is reached, the assistant tells you when it resets. If your plan allows it, it can offer to spend 1 credit to continue, and it asks you first.
 
-A full search always uses 1 credit. The assistant first shows you the target and the cost, and the search starts only after you agree. The confirmation is tied to that exact target and expires after 10 minutes, so the assistant cannot spend a credit on a different value.
+A full search always uses 1 credit. When you ask for one, or ask the assistant to investigate a target, it runs the search right away and tells you a credit was used. It asks you first before any search you did not request, such as a follow-up on a new username it found. Each search is tied to the exact target the assistant prepared, so it cannot spend a credit on a different value.
 
 Results arrive over a few minutes. The assistant can check progress and read the results page by page. A registered account is a lead: it does not prove the account belongs to the person you are researching.
 
