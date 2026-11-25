@@ -1,0 +1,66 @@
+---
+title: The search card
+description: "How a full search appears in the conversation: live progress, findings, follow-ups and comparisons."
+icon: rectangle-list
+---
+
+In ChatGPT, Claude and Codex, a full search appears as an Osintly card inside the assistant's answer. The card follows the host's light or dark theme and links to the full report on osint.ly.
+
+---
+
+## Live progress
+
+As soon as the search starts, the card shows the target and its type, then follows the search live:
+
+- a status line with the latest module that returned a result;
+- the time elapsed and the number of module results;
+- the logos of the services found, as they arrive.
+
+When the search finishes, the card shows **Search complete** with its duration and totals. Select **Open the full report** to view it on osint.ly.
+
+If the same target was searched in the last 7 days, the assistant reopens that search instead of paying again. The card then reads **Reopened the search from** with its date, and **no credit used**.
+
+---
+
+## Findings
+
+Once the search is complete, the assistant presents the findings: a short sentence, then the Osintly section it introduces.
+
+| Section | What it shows |
+| --- | --- |
+| **Module results** | The profiles the modules found, with their main fields. **Open** opens the profile on its site. |
+| **Accounts found** | The services where an account exists for an email address. |
+| **Known breaches** | The breaches that contain the target, with their date. |
+| **Follow-ups** | The next lookups worth running. |
+
+Long lists show the first items: select **Show more** to expand them. A section with nothing to show is left out, and the assistant says so in its answer.
+
+The assistant then gives its analysis: what the findings support, how confident it is and the next step.
+
+<Warning>
+A registered account or a matching username is a lead, not proof of identity. Check the full report before you rely on a finding.
+</Warning>
+
+---
+
+## Follow-ups
+
+Follow-ups come from the search itself: a username found on a profile, an email address, a website. They are ranked by how many modules confirm them, and each one shows what it costs:
+
+- **IP lookup**, **Domain lookup** or **Web archives · tool limit**: a focused lookup, within your tool limits;
+- **Full search · 1 credit**: a new full search;
+- **Searched … · free**: a target searched in the last 7 days, reopened at no cost.
+
+Select a follow-up to ask the assistant to run it. A full search you did not request always needs your confirmation first.
+
+---
+
+## Comparing two searches
+
+When two searches may concern the same person, ask the assistant to compare them. The card lists the identifiers they share:
+
+- **Same account ID**: the same platform identifier, such as a Ubisoft or Xbox ID;
+- **Same email**;
+- **Same username**.
+
+An identical ID or email links the accounts in the data. It does not show who controls them.

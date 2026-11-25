@@ -41,8 +41,19 @@
               "search-analysis/real-time-results",
               "search-analysis/analysis-panels",
               "search-analysis/card-annotations",
-              "search-analysis/ai-analyst",
-              "guides/chatgpt-claude"
+              "search-analysis/ai-analyst"
+            ]
+          },
+          {
+            "group": "ChatGPT, Claude & Codex",
+            "pages": [
+              "assistants/overview",
+              "assistants/connect",
+              "assistants/tools",
+              "assistants/search-card",
+              "assistants/credits-limits",
+              "assistants/manage-connections",
+              "assistants/privacy-security"
             ]
           },
           {
@@ -182,18 +193,18 @@
     }
   },
   "contextual": {
-   "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "grok",
-     "mcp",
-     "cursor",
-    "vscode"
-   ]
- },
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "grok",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
   "navbar": {
     "links": [
       {
@@ -222,5 +233,11 @@
       "apiKey": "phc_HEJ9Hwdt4G85AgPYkDkOZ0m5SmQSClFWDoYldiOQ1Hf",
       "apiHost": "https://us.i.posthog.com"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/guides/chatgpt-claude",
+      "destination": "/assistants/overview"
+    }
+  ]
 }
