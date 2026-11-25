@@ -1,0 +1,78 @@
+---
+title: Osintly in ChatGPT, Claude and Codex
+sidebarTitle: Overview
+description: "Connect your Osintly account to an AI assistant and run lookups and full searches from a conversation, with your plan and credits."
+icon: plug
+---
+
+You can connect your Osintly account to ChatGPT, Claude or Codex. The assistant then runs Osintly for you during a conversation: it looks up an IP address or a gaming account, starts a full search, follows it live and explains what it found. Every result is saved in your Osintly history, like a search made on the website.
+
+<Note>
+Assistants are included in the Standard, Pro and Ultimate plans. You connect one workspace, your Personal workspace or an organization you belong to, and that workspace needs one of these plans. A workspace on the Free plan cannot connect.
+</Note>
+
+---
+
+## How it works
+
+When you connect an assistant, you choose one Osintly workspace: your Personal workspace or an organization you belong to. The assistant then works inside that workspace:
+
+- it follows the workspace's plan: the same research types, tool limits and credits as on osint.ly;
+- it spends the workspace's credits, with your confirmation rules (see [Credits and limits](/assistants/credits-limits));
+- its searches and lookups appear in the workspace's history, marked **Started from ChatGPT**, **Claude** or **Codex**.
+
+Nothing is billed separately. The assistant never sees your password: you sign in on osint.ly and approve access, and you can [disconnect it](/assistants/manage-connections) at any time.
+
+<Info>
+A connection is for interactive use in a conversation. It is not an API: to call Osintly from code, use the [Search API](/api-reference/introduction) or the [Tools API](/tools-reference/introduction). See [Interactive use only](/assistants/privacy-security#interactive-use-only).
+</Info>
+
+---
+
+## What you can do
+
+<CardGroup cols={2}>
+  <Card title="Focused lookups" icon="magnifying-glass" href="/assistants/tools">
+    IP and domain intelligence, web archives, gaming and platform accounts, vehicles.
+  </Card>
+  <Card title="Full searches" icon="radar" href="/assistants/search-card">
+    Pseudonyms, emails, IP addresses, domains and crypto wallets, followed live in a result card.
+  </Card>
+  <Card title="Radar" icon="shield-halved" href="/assistants/tools#radar">
+    Browse publicly disclosed data breaches and read their details.
+  </Card>
+  <Card title="Follow-ups and comparisons" icon="code-compare" href="/assistants/search-card#follow-ups">
+    Suggested next lookups, and the identifiers two searches have in common.
+  </Card>
+</CardGroup>
+
+Try asking:
+
+- *"Investigate the username johndoe with Osintly and tell me what you find."*
+- *"Who owns the IP address 8.8.8.8 and is it flagged as malicious?"*
+- *"Check the DNS, certificate and email security of example.com."*
+- *"Compare my last two Osintly searches: is it the same person?"*
+- *"What are the largest data breaches added to Radar recently?"*
+- *"Show my Osintly plan, credits and the lookups I have left today."*
+
+---
+
+## What stays on osint.ly
+
+Some features remain on the website:
+
+- **Leaked results.** The assistant sees which known breaches contain a target (breach name and date), never the leaked data itself. Open the full report on osint.ly to review it.
+- **Projects and monitoring.** They are managed on the website only.
+
+---
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Connect an assistant" icon="link" href="/assistants/connect">
+    Step-by-step setup for ChatGPT, Claude and Codex.
+  </Card>
+  <Card title="Privacy and security" icon="lock" href="/assistants/privacy-security">
+    What the assistant can access and what it receives.
+  </Card>
+</CardGroup>

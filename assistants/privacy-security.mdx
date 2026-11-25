@@ -1,0 +1,52 @@
+---
+title: Privacy and security
+description: "How Osintly protects your account when an assistant is connected, and what the assistant receives."
+icon: lock
+---
+
+## Your account stays on osint.ly
+
+You always sign in on osint.ly, never in the assistant. Osintly uses OAuth with PKCE: the assistant receives its own access, limited to the workspace and permissions you approved.
+
+- Each app has its own access. Disconnecting one does not affect the others.
+- Access tokens expire after one hour and are renewed in the background. A connection unused for 30 days must sign in again.
+- Osintly checks the connection, the workspace and the plan on every request. A disconnected app, a member removed from an organization or a suspended account loses access immediately.
+- The Osintly approval page cannot be embedded in another website, which protects it against clickjacking.
+
+---
+
+## What the assistant receives
+
+The assistant receives the results of the tools it runs: profile fields, accounts found, breach names and dates, follow-ups. It processes them under the assistant provider's own terms and privacy policy (OpenAI or Anthropic).
+
+It never receives:
+
+- your password or your session on osint.ly;
+- the contents of leaked data, which stay in the full report on osint.ly;
+- the results of other users or of a workspace you did not connect.
+
+Osintly records each app's activity for **Settings → Connected apps**: the tool used, the time and the outcome. The values you searched are not stored in this activity log. Your results are saved in your history, as on the website.
+
+---
+
+## Responsible use
+
+Use Osintly from an assistant under the same rules as on the website. See [Ethics & Law](https://osint.ly/ethics) and the [Privacy Policy](https://osint.ly/privacy).
+
+---
+
+## Interactive use only
+
+A connection is for you to use Osintly in a conversation with your assistant. It is not an API. To call Osintly from code, use the [Search API](/api-reference/introduction) or the [Tools API](/tools-reference/introduction), which have their own plans.
+
+You must not:
+
+- **Use a connection as an API.** Do not call the Osintly MCP server, or reuse a connection's access, from your own scripts, backends, bots, scheduled jobs or applications, or through an assistant or agent that runs without you.
+- **Build a service on it.** Do not wrap a connection in your own API, gateway, plugin or product, or let other people use Osintly through your connection.
+- **Share or resell access.** Do not share, sell or transfer a connection, or resell or redistribute the results you get through it.
+- **Run bulk or unattended lookups.** Do not use an assistant to automate lookups or searches at volume, process lists of targets or build datasets.
+- **Multiply your limits.** Do not connect several apps, workspaces or accounts to get around your plan's limits.
+
+<Warning>
+Osintly monitors how connections are used, including request rates and signs of automation. A connection used this way can be slowed down or revoked, the app blocked and the account suspended. Credits spent through it are not refunded, except where required by law. See the [Terms of Service](https://osint.ly/terms#connected-apps-interactive-use).
+</Warning>

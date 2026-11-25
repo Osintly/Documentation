@@ -1,0 +1,133 @@
+---
+title: Connect an assistant
+description: "Connect ChatGPT, Claude or Codex to your Osintly workspace."
+icon: link
+---
+
+Osintly's server URL is:
+
+```text
+https://mcp.osint.ly/mcp
+```
+
+You will also find it in **Settings → Connected apps** on osint.ly, with a copy button.
+
+<Note>
+The workspace you connect needs a Standard, Pro or Ultimate plan and a free app slot. It can be your Personal workspace or an organization you belong to. See [apps per plan](/assistants/credits-limits#connected-apps-per-plan).
+</Note>
+
+---
+
+## Add Osintly to your assistant
+
+<Tabs>
+  <Tab title="ChatGPT">
+    <Steps>
+      <Step title="Add the server">
+        In ChatGPT, open **Plugins**, select **+**, then **Add custom MCP server**. Name it Osintly and paste the server URL.
+      </Step>
+      <Step title="Create the plugin">
+        Accept the warning about custom servers, then select **Create as a plugin**.
+      </Step>
+      <Step title="Sign in with Osintly">
+        ChatGPT opens an Osintly page. Sign in if needed, then [approve the connection](#approve-the-connection).
+      </Step>
+      <Step title="Install the plugin">
+        Back in ChatGPT, review the tools Osintly exposes, then select **Install**.
+      </Step>
+      <Step title="Use it in a conversation">
+        Start a new conversation, type **@** and select Osintly, then send your request.
+      </Step>
+    </Steps>
+
+    Custom MCP servers need ChatGPT on the web, and your plan or workspace permissions must allow them. They are not available in the mobile apps. See [OpenAI's help article](https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt).
+  </Tab>
+  <Tab title="Claude">
+    On a Claude Team or Enterprise plan, an owner first adds Osintly for the organization in **Organization settings → Connectors**: **Add → Custom → Web**, with the name Osintly and the server URL. Each member then turns Osintly on in a conversation from **+ → Connectors** and signs in with their own Osintly account.
+
+    On other Claude plans, add it yourself:
+
+    <Steps>
+      <Step title="Add a custom connector">
+        In Claude, open **Settings → Connectors** and select **Add custom connector**.
+      </Step>
+      <Step title="Paste the server URL">
+        Name it Osintly, paste the server URL, then confirm.
+      </Step>
+      <Step title="Connect">
+        Select **Connect** next to Osintly. Claude opens an Osintly page: sign in if needed, then [approve the connection](#approve-the-connection).
+      </Step>
+      <Step title="Use it in a conversation">
+        In a conversation, open **+ → Connectors** and make sure Osintly is turned on.
+      </Step>
+    </Steps>
+
+    See [Anthropic's help article](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp) for the connectors available on your Claude plan.
+  </Tab>
+  <Tab title="Codex">
+    In the Codex app, open the **Plugins Directory**, find **Osintly Assistant** and select **Install plugin**. Select **Connect** if Codex asks you to sign in.
+
+    In the Codex CLI, add the server and sign in:
+
+    ```bash
+    codex mcp add osintly --url https://mcp.osint.ly/mcp
+    codex mcp login osintly
+    ```
+
+    `codex mcp login` opens your browser on an Osintly page, where you [approve the connection](#approve-the-connection). Run `codex mcp list` to check that Osintly is connected.
+  </Tab>
+</Tabs>
+
+---
+
+## Approve the connection
+
+The Osintly page has two steps:
+
+1. **Choose a workspace.** Pick your Personal workspace or one of your organizations. The assistant will use its plan, limits and credits. A workspace that cannot take the app is greyed out with the reason, for example *Not included in this plan*, *Turned off by your organization* or *3 of 3 apps connected*.
+2. **Review access.** The page lists what the assistant will be able to do. Select **Connect** to approve.
+
+| Permission | What it allows |
+| --- | --- |
+| Read your workspace | See your plan, usage, Radar breaches, history and saved results. |
+| Run focused tools | Run focused lookups such as IP, domain, gaming or vehicle, within your plan limits. |
+| Run full searches | Start full searches. Each one uses 1 credit. |
+
+You return to the assistant automatically. If you select **Cancel**, nothing is shared.
+
+---
+
+## Change workspace or reconnect
+
+An assistant stays connected to the workspace you chose. To use another one, [disconnect the app](/assistants/manage-connections) on osint.ly, then connect it again and pick the other workspace.
+
+The assistant asks you to sign in again when:
+
+- you disconnected it, or an organization admin did;
+- it has not been used for 30 days;
+- you left the organization it was connected to.
+
+---
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="“needs a paid plan”">
+    None of the workspaces you can use is on a Standard, Pro or Ultimate plan. Upgrade your Personal workspace, or connect an organization on one of these plans: see [pricing](https://osint.ly/pricing).
+  </Accordion>
+  <Accordion title="“No room for ChatGPT” (or Claude, Codex)">
+    Every workspace you can use already has as many apps as its plan allows. Disconnect an app in **Settings → Connected apps**, or upgrade the plan. See [apps per plan](/assistants/credits-limits#connected-apps-per-plan).
+  </Accordion>
+  <Accordion title="“Turned off by your organization”">
+    An owner or admin of the organization turned assistants off. Ask them to turn them on in **Organization settings**, or connect your Personal workspace.
+  </Accordion>
+  <Accordion title="The assistant says the access token is invalid">
+    The connection was revoked or expired. Reconnect Osintly from the assistant's settings.
+  </Accordion>
+  <Accordion title="Claude or ChatGPT cannot reach the server">
+    Check that the URL is exactly `https://mcp.osint.ly/mcp`, then try again.
+
+    - **The Osintly sign-in page does not open or load**: this page opens in your browser, so a company network or browser extension that blocks osint.ly can stop it.
+    - **Sign-in works but the assistant cannot use Osintly**: the assistant reaches the server from its own cloud, not from your computer. Blocking or allowing `mcp.osint.ly` on your network does not change this. Try again later, or contact Osintly support if it keeps failing.
+  </Accordion>
+</AccordionGroup>
